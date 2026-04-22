@@ -103,6 +103,7 @@ const defaultForm = {
   core: "자기조절",
   action: "기다리기",
   memo: "",
+  images: [],
 };
 
 function pick(arr) {
@@ -201,7 +202,13 @@ function meaningFor(form) {
     "11–13세": "이 시기에는 자기 생각이 분명해지는 만큼 선택과 관계를 함께 배워가는 경험이 중요합니다.",
   }[form.ageBand];
 
-  return `${form.stage} 단계 안에서 ${stageEasy}과 연결되는 모습이 조금씩 쌓이고 있다는 점이 의미 있었습니다. ${ageLine}`;
+  const projectLine = {
+    "연작": "연작은 한 가지를 이어가며 몰입과 발전 경험을 쌓는 데 의미가 있습니다.",
+    "협동작업": "협동작업은 또래와 함께 맞춰가며 관계 속 경험을 배우는 데 의미가 있습니다.",
+    "100호캔버스": "100호캔버스는 크게 시도하고 끝까지 이어가며 도전 경험을 쌓는 데 의미가 있습니다.",
+  }[form.project];
+
+  return `${form.stage} 단계 안에서 ${stageEasy}과 연결되는 모습이 조금씩 쌓이고 있다는 점이 의미 있었습니다. ${projectLine} ${ageLine}`;
 }
 
 function nextPlanFor(form) {
@@ -213,6 +220,16 @@ function nextPlanFor(form) {
   return projectPlan[form.project] || "다음 시간에도 오늘의 흐름을 이어가며 성장의 경험을 쌓을 수 있도록 도울 예정입니다.";
 }
 
+function imagePlanLine(imageCount) {
+  if (imageCount >= 4) {
+    return "첨부된 작품 흐름을 함께 보면, 아이가 시도하고 수정하며 조금씩 발전시켜가는 과정까지 더 분명하게 살펴볼 수 있었습니다.";
+  }
+  if (imageCount > 0) {
+    return "첨부된 작품 사진을 바탕으로 오늘의 시도와 결과를 함께 살펴볼 수 있었습니다.";
+  }
+  return "";
+}
+
 function generatePrompt(form) {
   return `너는 자라다교육의 남아 전문 상담 교사다.
 입력된 정보를 바탕으로 학부모에게 전달할 상담 브리핑을 작성하라.
@@ -222,6 +239,7 @@ function generatePrompt(form) {
 - 재원기간별, 연령별, 프로젝트별 메인 키워드를 중심으로 현재 아이에게 필요한 경험이 무엇인지 자연스럽게 담아낸다.
 - 오늘 수업의 교육적 의미와 아이의 성장 흐름이 보이도록 작성한다.
 - 다음 시간에 어떤 방향으로 이어갈지 계획이 느껴지도록 작성한다.
+- 메모가 짧더라도 교사의 관찰과 해석을 통해 전문적인 상담 브리핑으로 완성한다.
 
 [작성 기준]
 1. 어려운 용어는 학부모가 이해하기 쉬운 말로 풀어서 설명한다.
@@ -231,6 +249,7 @@ function generatePrompt(form) {
 5. 아이의 가능성을 긍정적으로 전달하되, 과장하지 않고 신뢰감 있게 작성한다.
 6. 메모가 짧더라도 그 안의 의미를 잘 해석해 자연스럽고 전문적인 상담 브리핑으로 이어가야 한다.
 7. 어색한 표현 없이, 실제 교사가 학부모에게 보내는 것처럼 자연스럽게 작성한다.
+8. 사진이 첨부된 경우 결과만 보지 말고 과정의 흐름과 변화도 함께 반영한다.
 
 [문장 구성 원칙]
 - 오늘 수업에서 보인 구체적인 장면
@@ -244,14 +263,17 @@ function generatePrompt(form) {
 - '효능감', '소속감' 같은 단어는 꼭 필요한 경우에만 자연스럽게 풀어서 사용한다.
 - 아이를 단정하거나 평가하지 않는다.
 - 메모를 그대로 옮기지 말고, 의미를 해석해 문장으로 재구성한다.
+- 제목은 짧고 눈에 띄되, 수업의 핵심 의미가 담기게 작성한다.
 
 [출력 형식]
 - 학부모가 읽기 쉬운 자연스러운 문단
-- 4~6문장 내외
+- 제목 1줄 + 본문 5~7문장
 - 짧지만 의미가 정확한 문장
 - 마지막 문장에는 다음 시간의 방향이 자연스럽게 담기도록 작성
+- 어머니(또는 학부모님)께 인사하는 문장으로 시작
 
 [입력값]
+- 학생명: ${form.student}
 - 재원기간: ${form.months}
 - 재원기간별 키워드: ${form.stage}
 - 연령대: ${form.ageBand}
@@ -262,6 +284,7 @@ function generatePrompt(form) {
 - 사회성훈련: ${form.core}
 - 행동 키워드: ${form.action}
 - 관찰 메모: ${form.memo}
+- 첨부 이미지 수: ${form.images.length}장
 
 위 기준에 따라, 학부모에게 바로 전달할 수 있는 자연스럽고 전문적인 브리핑을 작성하라.`;
 }
@@ -276,12 +299,13 @@ function generatePreview(form) {
 
   let observationLine = "";
   if (memoParts.length >= 2) {
-    observationLine = `${memoParts[0]}이 보였고, 이어 ${memoParts[1]} 흐름으로 자연스럽게 연결되었습니다.`;
+    observationLine = `${memoParts[0]}이 보였고, 이어 ${memoParts[1]} 흐름으로 자연스럽게 연결되었습니다. 짧은 장면 안에서도 아이가 다음 과정으로 스스로 이어가려는 의도가 드러났습니다.`;
   } else if (memoParts.length === 1) {
-    observationLine = `${memoParts[0]}이 특히 인상적이었고, 그 안에서 아이가 자신의 방식으로 계속 시도해보는 모습이 보였습니다.`;
+    observationLine = `${memoParts[0]}이 특히 인상적이었고, 그 안에서 아이가 자신의 방식으로 계속 시도해보는 모습이 보였습니다. 메모는 짧지만 오늘 수업의 중심 장면이 분명하게 드러난 순간이었습니다.`;
   }
 
   const meaningLine = meaningFor(form);
+  const imageLine = imagePlanLine(form.images.length);
   const nextLine = nextPlanFor(form);
 
   return `"${title}"
@@ -291,6 +315,7 @@ ${greeting}
 ${projectLine}
 ${observationLine}
 ${meaningLine}
+${imageLine}
 ${nextLine}`;
 }
 
@@ -308,7 +333,7 @@ function Chip({ active, onClick, children }) {
     <button
       onClick={onClick}
       className={`rounded-xl border px-3 py-2 text-sm transition ${
-        active ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+        active ? "border-slate-900 bg-slate-900 text-white" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
       }`}
     >
       {children}
@@ -322,12 +347,12 @@ export default function App() {
   const [copied, setCopied] = useState("");
 
   useEffect(() => {
-    const saved = localStorage.getItem("jarada-briefing-records-v2");
+    const saved = localStorage.getItem("jarada-briefing-records-v3");
     if (saved) setRecords(JSON.parse(saved));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("jarada-briefing-records-v2", JSON.stringify(records));
+    localStorage.setItem("jarada-briefing-records-v3", JSON.stringify(records));
   }, [records]);
 
   useEffect(() => {
@@ -377,6 +402,22 @@ export default function App() {
     setRecords((prev) => [item, ...prev]);
   };
 
+  const onImageChange = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const results = [];
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        results.push(reader.result);
+        if (results.length === files.length) {
+          setForm((prev) => ({ ...prev, images: results.slice(0, 8) }));
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
@@ -395,6 +436,7 @@ export default function App() {
               <li>• 평가보다 관찰 중심</li>
               <li>• 짧은 메모도 자연스럽게 해석</li>
               <li>• 다음 시간의 계획까지 포함</li>
+              <li>• 작품 사진은 최소 4장 첨부 권장</li>
             </ul>
           </div>
         </div>
@@ -525,6 +567,19 @@ export default function App() {
               </div>
 
               <div className="mt-5">
+                <Field label="작품 사진 첨부 (최소 4장 권장)">
+                  <input type="file" accept="image/*" multiple onChange={onImageChange} className="w-full rounded-xl border border-slate-200 px-4 py-3" />
+                  {form.images.length > 0 && (
+                    <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+                      {form.images.map((img, idx) => (
+                        <img key={idx} src={img} alt={`preview-${idx}`} className="h-32 w-full rounded-xl object-cover ring-1 ring-slate-200" />
+                      ))}
+                    </div>
+                  )}
+                </Field>
+              </div>
+
+              <div className="mt-5">
                 <Field label="관찰 메모">
                   <textarea
                     value={form.memo}
@@ -569,6 +624,7 @@ export default function App() {
                     <div className="font-semibold">{item.student || "이름 미입력"}</div>
                     <div className="mt-1 text-xs text-slate-500">{item.date} · {item.project} · {item.stage}</div>
                     <div className="mt-3 rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-700">{item.memo}</div>
+                    <div className="mt-2 text-xs text-slate-500">첨부 사진 {item.images?.length || 0}장</div>
                     <div className="mt-3 flex gap-2">
                       <button onClick={() => copyText(item.prompt, `p-${item.id}`)} className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700">
                         {copied === `p-${item.id}` ? "복사됨" : "프롬프트 복사"}
