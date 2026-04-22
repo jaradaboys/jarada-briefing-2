@@ -329,10 +329,6 @@ function Field({ label, children, hint }) {
       {children}
     </div>
   );
-}</div>
-      {children}
-    </div>
-  );
 }
 
 function Chip({ active, onClick, children }) {
