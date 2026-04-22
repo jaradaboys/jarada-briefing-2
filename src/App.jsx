@@ -909,7 +909,13 @@ export default function App() {
                   <textarea
                     value={form.memo}
                     onChange={(e) => setForm((prev) => ({ ...prev, memo: e.target.value }))}
-                    placeholder="예: 도라에몽 다리 만드는 중, 다음 시간 아이디어 스케치 구상"
+                    placeholder={`수업 중 관찰된 장면을 짧게 적어주세요
+(해석하지 말고, 실제 행동만 기록)
+
+예:
+- 친구와 색 의견이 달라 멈췄다가 다시 맞추며 진행함
+- 혼자 하다가 친구와 역할을 나눠 작업으로 전환함
+- 어려워서 멈췄다가 도움 받아 다시 이어감`}
                     style={styles.textarea}
                   />
                 </Field>
