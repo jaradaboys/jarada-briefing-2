@@ -18,26 +18,26 @@ const ageBands = ["6–7세", "8–10세", "11–13세"];
 
 const ageDomains = {
   "6–7세": {
-    "조절": ["자기조절", "감정조절", "충동조절", "지연만족", "주의집중", "전환능력", "회복탄력성"],
-    "규칙": ["경계인식", "일관성경험", "예측가능성", "결과인식", "순서지키기", "타인인식"],
-    "안정감": ["애착안정", "정서안정", "부모신뢰", "환경예측성"],
+    조절: ["자기조절", "감정조절", "충동조절", "지연만족", "주의집중", "전환능력", "회복탄력성"],
+    규칙: ["경계인식", "일관성경험", "예측가능성", "결과인식", "순서지키기", "타인인식"],
+    안정감: ["애착안정", "정서안정", "부모신뢰", "환경예측성"],
   },
   "8–10세": {
-    "생활자립": ["자기관리", "시간관리", "과제습관", "책임감", "루틴형성", "문제해결기초"],
-    "기본사회성": ["협력", "규칙준수", "갈등경험", "조율능력", "양보", "공감기초", "관계형성"],
+    생활자립: ["자기관리", "시간관리", "과제습관", "책임감", "루틴형성", "문제해결기초"],
+    기본사회성: ["협력", "규칙준수", "갈등경험", "조율능력", "양보", "공감기초", "관계형성"],
   },
   "11–13세": {
-    "자립": ["심리적분리", "자기결정", "자기관리확장", "선택책임"],
-    "정체성": ["자기탐색", "가치형성", "강점인식", "약점인식", "비교의식"],
-    "심화경험": ["몰입", "성취", "실패경험", "회복경험", "지속성", "자기효능감", "또래관계", "친밀감"],
+    자립: ["심리적분리", "자기결정", "자기관리확장", "선택책임"],
+    정체성: ["자기탐색", "가치형성", "강점인식", "약점인식", "비교의식"],
+    심화경험: ["몰입", "성취", "실패경험", "회복경험", "지속성", "자기효능감", "또래관계", "친밀감"],
   },
 };
 
 const projects = ["연작", "100호캔버스", "협동작업"];
 
 const projectKeywords = {
-  "연작": ["주제지속", "반복탐구", "관찰심화", "표현확장", "몰입", "발전경험"],
-  "협동작업": ["협력", "역할분담", "의사소통", "조율", "갈등해결", "공동책임"],
+  연작: ["주제지속", "반복탐구", "관찰심화", "표현확장", "몰입", "발전경험"],
+  협동작업: ["협력", "역할분담", "의사소통", "조율", "갈등해결", "공동책임"],
   "100호캔버스": ["스케일확장", "공간이해", "계획력", "몰입지속", "도전극복", "자기효능감"],
 };
 
@@ -133,7 +133,7 @@ function splitMemo(memo) {
 
 function actionSentence(action) {
   const map = {
-    "기다리기": "기다려보는 모습",
+    기다리기: "기다려보는 모습",
     "충동 멈추기": "하고 싶은 행동을 잠시 멈춰보는 모습",
     "감정 표현하기": "감정을 말이나 행동으로 표현해보는 모습",
     "좌절 버티기": "쉽지 않은 순간에도 버텨보는 모습",
@@ -149,7 +149,7 @@ function actionSentence(action) {
     "상황 살피기": "주변 상황을 살펴보는 모습",
     "기본 배려": "기본적인 배려를 보여주는 모습",
     "기다렸다 말하기": "기다렸다가 말해보는 모습",
-    "요청하기": "필요한 것을 요청해보는 모습",
+    요청하기: "필요한 것을 요청해보는 모습",
     "도움 요청": "도움이 필요할 때 요청해보는 모습",
     "도움 주기": "다른 친구를 도와주는 모습",
     "긍정 피드백": "긍정적으로 반응해주는 모습",
@@ -157,7 +157,7 @@ function actionSentence(action) {
     "양해 구하기": "상황에 맞게 양해를 구해보는 모습",
     "의견 표현": "자기 생각을 말해보는 모습",
     "의견 수용": "다른 의견을 받아들이는 모습",
-    "사과하기": "사과가 필요한 상황에서 표현해보는 모습",
+    사과하기: "사과가 필요한 상황에서 표현해보는 모습",
     "갈등 해결": "부딪힌 상황을 풀어보는 경험",
     "역할 수행": "맡은 역할을 해보는 모습",
     "역할 분담": "역할을 나누어 맡아보는 경험",
@@ -166,8 +166,8 @@ function actionSentence(action) {
     "도움 주고받기": "서로 도움을 주고받는 모습",
     "자발적 시작": "스스로 시작해보는 모습",
     "자발적 지속": "스스로 이어가려는 모습",
-    "선택하기": "스스로 선택해보는 모습",
-    "책임지기": "선택한 것을 책임지려는 모습",
+    선택하기: "스스로 선택해보는 모습",
+    책임지기: "선택한 것을 책임지려는 모습",
     "끝까지 완성": "끝까지 완성해보는 모습",
   };
   return map[action] || action;
@@ -175,12 +175,12 @@ function actionSentence(action) {
 
 function titleFor(form) {
   const byProject = {
-    "연작": [
+    연작: [
       "끝까지 이어가는 힘이 보인 연작",
       "한 가지를 깊이 있게 이어간 연작",
       "스스로 발전시켜가는 흐름이 보인 연작",
     ],
-    "협동작업": [
+    협동작업: [
       "함께 맞춰가며 완성한 협동작업",
       "친구와 함께 해보는 경험이 보인 협동작업",
       "관계 속에서 배워간 협동작업",
@@ -203,8 +203,8 @@ function meaningFor(form) {
   }[form.ageBand];
 
   const projectLine = {
-    "연작": "연작은 한 가지를 이어가며 몰입과 발전 경험을 쌓는 데 의미가 있습니다.",
-    "협동작업": "협동작업은 또래와 함께 맞춰가며 관계 속 경험을 배우는 데 의미가 있습니다.",
+    연작: "연작은 한 가지를 이어가며 몰입과 발전 경험을 쌓는 데 의미가 있습니다.",
+    협동작업: "협동작업은 또래와 함께 맞춰가며 관계 속 경험을 배우는 데 의미가 있습니다.",
     "100호캔버스": "100호캔버스는 크게 시도하고 끝까지 이어가며 도전 경험을 쌓는 데 의미가 있습니다.",
   }[form.project];
 
@@ -213,9 +213,10 @@ function meaningFor(form) {
 
 function nextPlanFor(form) {
   const projectPlan = {
-    "연작": "다음 시간에는 오늘 이어간 흐름을 바탕으로 주제를 더 깊이 발전시켜볼 수 있도록 도울 예정입니다.",
-    "협동작업": "다음 시간에는 함께 맞춰가는 경험이 자연스럽게 이어질 수 있도록 역할과 관계 흐름을 더 살펴볼 예정입니다.",
-    "100호캔버스": "다음 시간에는 크게 시도하는 과정 안에서 스스로 계획하고 이어가는 힘이 더 드러날 수 있도록 도울 예정입니다.",
+    연작: "다음 시간에는 오늘 이어간 흐름을 바탕으로 주제를 더 깊이 발전시켜볼 수 있도록 도울 예정입니다.",
+    협동작업: "다음 시간에는 함께 맞춰가는 경험이 자연스럽게 이어질 수 있도록 역할과 관계 흐름을 더 살펴볼 예정입니다.",
+    "100호캔버스":
+      "다음 시간에는 크게 시도하는 과정 안에서 스스로 계획하고 이어가는 힘이 더 드러날 수 있도록 도울 예정입니다.",
   };
   return projectPlan[form.project] || "다음 시간에도 오늘의 흐름을 이어가며 성장의 경험을 쌓을 수 있도록 도울 예정입니다.";
 }
@@ -334,19 +335,12 @@ function Field({ label, children, hint }) {
 function Chip({ active, onClick, children }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
         active
           ? "border-slate-900 bg-slate-900 text-white shadow-sm"
           : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-      className={`rounded-xl border px-3 py-2 text-sm transition ${
-        active ? "border-slate-900 bg-slate-900 text-white" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
       }`}
     >
       {children}
@@ -370,7 +364,9 @@ export default function App() {
 
   useEffect(() => {
     const list = stageKeywords[form.months] || [];
-    if (!list.includes(form.stage)) setForm((prev) => ({ ...prev, stage: list[0] || "" }));
+    if (!list.includes(form.stage)) {
+      setForm((prev) => ({ ...prev, stage: list[0] || "" }));
+    }
   }, [form.months]);
 
   useEffect(() => {
@@ -382,17 +378,23 @@ export default function App() {
       return;
     }
     const subs = ageDomains[form.ageBand]?.[form.ageDomain] || [];
-    if (!subs.includes(form.ageSubKeyword)) setForm((prev) => ({ ...prev, ageSubKeyword: subs[0] || "" }));
+    if (!subs.includes(form.ageSubKeyword)) {
+      setForm((prev) => ({ ...prev, ageSubKeyword: subs[0] || "" }));
+    }
   }, [form.ageBand, form.ageDomain]);
 
   useEffect(() => {
     const list = projectKeywords[form.project] || [];
-    if (!list.includes(form.projectKeyword)) setForm((prev) => ({ ...prev, projectKeyword: list[0] || "" }));
+    if (!list.includes(form.projectKeyword)) {
+      setForm((prev) => ({ ...prev, projectKeyword: list[0] || "" }));
+    }
   }, [form.project]);
 
   useEffect(() => {
     const list = coreKeywords[form.core] || [];
-    if (!list.includes(form.action)) setForm((prev) => ({ ...prev, action: list[0] || "" }));
+    if (!list.includes(form.action)) {
+      setForm((prev) => ({ ...prev, action: list[0] || "" }));
+    }
   }, [form.core]);
 
   const prompt = useMemo(() => generatePrompt(form), [form]);
@@ -405,7 +407,11 @@ export default function App() {
   };
 
   const saveRecord = () => {
-    if (!form.memo.trim()) return alert("관찰 메모를 입력해 주세요.");
+    if (!form.memo.trim()) {
+      alert("관찰 메모를 입력해 주세요.");
+      return;
+    }
+
     const item = {
       id: crypto.randomUUID(),
       ...form,
@@ -418,16 +424,18 @@ export default function App() {
   const onImageChange = (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
-    const results = [];
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        results.push(reader.result);
-        if (results.length === files.length) {
-          setForm((prev) => ({ ...prev, images: results.slice(0, 8) }));
-        }
-      };
-      reader.readAsDataURL(file);
+
+    const readers = files.slice(0, 8).map(
+      (file) =>
+        new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(file);
+        })
+    );
+
+    Promise.all(readers).then((results) => {
+      setForm((prev) => ({ ...prev, images: results }));
     });
   };
 
@@ -436,31 +444,36 @@ export default function App() {
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
         <div className="mb-8 grid gap-4 lg:grid-cols-[1.15fr_.85fr]">
           <div className="rounded-[28px] bg-white p-7 shadow-sm ring-1 ring-slate-200">
-            <div className="mb-3 inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">자라다 브리핑 MVP</div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-950">교사용 브리핑 입력 + 프롬프트 생성기</h1>
-            <p className="mt-4 max-w-3xl text-sm md:text-base leading-7 text-slate-600">
+            <div className="mb-3 inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+              자라다 브리핑 MVP
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">
+              교사용 브리핑 입력 + 프롬프트 생성기
+            </h1>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600 md:text-base">
               재원기간별, 연령별, 프로젝트별 키워드를 중심으로 교육적 의미와 다음 시간 계획까지 담긴 브리핑 초안을 만들 수 있습니다.
             </p>
           </div>
+
           <div className="rounded-[28px] bg-slate-900 p-7 text-white shadow-sm">
             <div className="text-sm font-semibold text-slate-300">작성 기준</div>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-100">
-              <li>• 어려운 용어는 쉽게 풀어 설명</li>
-              <li>• 평가보다 관찰 중심</li>
-              <li>• 짧은 메모도 자연스럽게 해석</li>
-              <li>• 다음 시간의 계획까지 포함</li>
-              <li>• 작품 사진은 최소 4장 첨부 권장</li>
-            </ul>
+            <div className="mt-4 grid gap-3 text-sm leading-6 text-slate-100">
+              <div className="rounded-2xl bg-white/5 px-4 py-3">어려운 용어는 학부모가 이해하기 쉬운 말로 바꿔 설명합니다.</div>
+              <div className="rounded-2xl bg-white/5 px-4 py-3">평가보다 관찰 중심으로, 짧은 메모도 자연스럽게 해석합니다.</div>
+              <div className="rounded-2xl bg-white/5 px-4 py-3">오늘의 장면과 교육적 의미, 다음 시간 계획까지 함께 담습니다.</div>
+            </div>
           </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[1.1fr_.9fr]">
+        <div className="grid gap-6 xl:grid-cols-[1.08fr_.92fr]">
           <div className="space-y-6">
-            <section className="rounded-[28px] bg-white p-6 md:p-7 shadow-sm ring-1 ring-slate-200">
+            <section className="rounded-[28px] bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-7">
               <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                 <div>
                   <h2 className="text-2xl font-semibold text-slate-950">브리핑 입력</h2>
-                  <p className="mt-1 text-sm text-slate-500">선택과 짧은 메모만 입력하면, 오른쪽에서 바로 결과를 확인할 수 있습니다.</p>
+                  <p className="mt-1 text-sm text-slate-500">
+                    선택과 짧은 메모만 입력하면, 오른쪽에서 바로 결과를 확인할 수 있습니다.
+                  </p>
                 </div>
                 <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">빠른 입력</div>
               </div>
@@ -474,6 +487,7 @@ export default function App() {
                     className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-400"
                   />
                 </Field>
+
                 <Field label="날짜">
                   <input
                     type="date"
@@ -496,23 +510,35 @@ export default function App() {
                       ))}
                     </div>
                   </Field>
+
                   <Field label="발달 영역">
                     <div className="flex flex-wrap gap-2">
                       {Object.keys(ageDomains[form.ageBand] || {}).map((domain) => (
                         <Chip
                           key={domain}
                           active={form.ageDomain === domain}
-                          onClick={() => setForm((prev) => ({ ...prev, ageDomain: domain, ageSubKeyword: ageDomains[form.ageBand][domain][0] }))}
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              ageDomain: domain,
+                              ageSubKeyword: ageDomains[form.ageBand][domain][0],
+                            }))
+                          }
                         >
                           {domain}
                         </Chip>
                       ))}
                     </div>
                   </Field>
+
                   <Field label="세부 발달 키워드">
                     <div className="flex flex-wrap gap-2">
                       {(ageDomains[form.ageBand]?.[form.ageDomain] || []).map((sub) => (
-                        <Chip key={sub} active={form.ageSubKeyword === sub} onClick={() => setForm((prev) => ({ ...prev, ageSubKeyword: sub }))}>
+                        <Chip
+                          key={sub}
+                          active={form.ageSubKeyword === sub}
+                          onClick={() => setForm((prev) => ({ ...prev, ageSubKeyword: sub }))}
+                        >
                           {sub}
                         </Chip>
                       ))}
@@ -531,10 +557,15 @@ export default function App() {
                     ))}
                   </div>
                 </Field>
+
                 <Field label="프로젝트 키워드">
                   <div className="flex flex-wrap gap-2">
                     {(projectKeywords[form.project] || []).map((keyword) => (
-                      <Chip key={keyword} active={form.projectKeyword === keyword} onClick={() => setForm((prev) => ({ ...prev, projectKeyword: keyword }))}>
+                      <Chip
+                        key={keyword}
+                        active={form.projectKeyword === keyword}
+                        onClick={() => setForm((prev) => ({ ...prev, projectKeyword: keyword }))}
+                      >
                         {keyword}
                       </Chip>
                     ))}
@@ -552,6 +583,7 @@ export default function App() {
                     ))}
                   </div>
                 </Field>
+
                 <Field label="재원기간별 키워드">
                   <div className="flex flex-wrap gap-2">
                     {(stageKeywords[form.months] || []).map((stage) => (
@@ -567,12 +599,23 @@ export default function App() {
                 <Field label="사회성훈련">
                   <div className="flex flex-wrap gap-2">
                     {Object.keys(coreKeywords).map((core) => (
-                      <Chip key={core} active={form.core === core} onClick={() => setForm((prev) => ({ ...prev, core, action: coreKeywords[core][0] }))}>
+                      <Chip
+                        key={core}
+                        active={form.core === core}
+                        onClick={() =>
+                          setForm((prev) => ({
+                            ...prev,
+                            core,
+                            action: coreKeywords[core][0],
+                          }))
+                        }
+                      >
                         {core}
                       </Chip>
                     ))}
                   </div>
                 </Field>
+
                 <Field label="행동 키워드">
                   <div className="flex flex-wrap gap-2">
                     {(coreKeywords[form.core] || []).map((action) => (
@@ -586,7 +629,13 @@ export default function App() {
 
               <div className="mt-5">
                 <Field label="작품 사진 첨부" hint="최소 4장 권장">
-                  <input type="file" accept="image/*" multiple onChange={onImageChange} className="w-full rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-4 text-sm text-slate-600" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={onImageChange}
+                    className="w-full rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-4 text-sm text-slate-600"
+                  />
                   {form.images.length > 0 && (
                     <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
                       {form.images.map((img, idx) => (
@@ -610,53 +659,83 @@ export default function App() {
               </div>
 
               <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-200 pt-5">
-                <button onClick={saveRecord} className="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90">기록 저장</button>
-                <button onClick={() => copyText(prompt, "prompt")} className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+                <button
+                  onClick={saveRecord}
+                  className="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+                >
+                  기록 저장
+                </button>
+
+                <button
+                  onClick={() => copyText(prompt, "prompt")}
+                  className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
                   {copied === "prompt" ? "프롬프트 복사됨" : "프롬프트 복사"}
                 </button>
-                <button onClick={() => copyText(preview, "preview")} className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+
+                <button
+                  onClick={() => copyText(preview, "preview")}
+                  className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
                   {copied === "preview" ? "초안 복사됨" : "브리핑 초안 복사"}
                 </button>
               </div>
             </section>
 
-            <section className="rounded-[28px] bg-white p-6 md:p-7 shadow-sm ring-1 ring-slate-200">
+            <section className="rounded-[28px] bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-7">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold text-slate-950">GPT 프롬프트</h2>
                 <div className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">복사해서 사용</div>
               </div>
-              <pre className="mt-4 whitespace-pre-wrap rounded-2xl bg-slate-950 p-4 text-sm leading-6 text-slate-100">{prompt}</pre>
+              <pre className="mt-4 max-h-[420px] overflow-auto whitespace-pre-wrap rounded-2xl bg-slate-950 p-5 text-sm leading-6 text-slate-100">
+                {prompt}
+              </pre>
             </section>
 
-            <section className="rounded-[28px] bg-white p-6 md:p-7 shadow-sm ring-1 ring-slate-200">
+            <section className="rounded-[28px] bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-7">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold text-slate-950">브리핑 초안 미리보기</h2>
                 <div className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">실시간</div>
               </div>
-              <div className="mt-4 whitespace-pre-wrap rounded-2xl bg-slate-50 p-4 text-sm leading-7 text-slate-700">{preview}</div>
+              <div className="mt-4 whitespace-pre-wrap rounded-2xl bg-slate-50 p-5 text-sm leading-7 text-slate-700 ring-1 ring-slate-100">
+                {preview}
+              </div>
             </section>
           </div>
 
-          <div className="rounded-[28px] bg-white p-6 md:p-7 shadow-sm ring-1 ring-slate-200">
+          <div className="rounded-[28px] bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-7">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-slate-950">저장된 기록</h2>
               <div className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">최근순</div>
             </div>
-            <div className="mt-4 space-y-3">
+
+            <div className="mt-4 space-y-4">
               {records.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">저장된 기록이 없습니다.</div>
+                <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+                  저장된 기록이 없습니다.
+                </div>
               ) : (
                 records.map((item) => (
-                  <div key={item.id} className="rounded-2xl border border-slate-200 p-4">
+                  <div key={item.id} className="rounded-[24px] border border-slate-200 p-4 transition hover:shadow-sm">
                     <div className="font-semibold">{item.student || "이름 미입력"}</div>
-                    <div className="mt-1 text-xs text-slate-500">{item.date} · {item.project} · {item.stage}</div>
+                    <div className="mt-1 text-xs text-slate-500">
+                      {item.date} · {item.project} · {item.stage}
+                    </div>
                     <div className="mt-3 rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-700">{item.memo}</div>
                     <div className="mt-2 text-xs text-slate-500">첨부 사진 {item.images?.length || 0}장</div>
+
                     <div className="mt-3 flex gap-2">
-                      <button onClick={() => copyText(item.prompt, `p-${item.id}`)} className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700">
+                      <button
+                        onClick={() => copyText(item.prompt, `p-${item.id}`)}
+                        className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700"
+                      >
                         {copied === `p-${item.id}` ? "복사됨" : "프롬프트 복사"}
                       </button>
-                      <button onClick={() => copyText(item.preview, `v-${item.id}`)} className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700">
+
+                      <button
+                        onClick={() => copyText(item.preview, `v-${item.id}`)}
+                        className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700"
+                      >
                         {copied === `v-${item.id}` ? "복사됨" : "초안 복사"}
                       </button>
                     </div>
