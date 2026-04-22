@@ -425,11 +425,13 @@ function pick(arr) {
 
 function refineMemo(text) {
   if (!text) return "";
+
   return text
     .replace(/만드는 중/g, "만들어가는 모습")
     .replace(/작업 중/g, "작업을 이어가는 모습")
     .replace(/구상/g, "구상하는 모습")
     .replace(/스케치/g, "스케치해보는 모습")
+    .replace(/\s+/g, " ")
     .trim();
 }
 
@@ -461,6 +463,7 @@ function titleFor(form) {
       "몰입과 도전이 함께한 100호캔버스",
     ],
   };
+
   return pick(byProject[form.project] || ["오늘의 성장 브리핑"]);
 }
 
@@ -481,6 +484,7 @@ function nextPlanFor(form) {
     "100호캔버스":
       "다음 시간에는 크게 시도하는 과정 안에서 스스로 계획하고 이어가는 힘이 더 드러날 수 있도록 도울 예정입니다.",
   };
+
   return map[form.project] || "다음 시간에도 오늘의 흐름을 이어가며 성장의 경험을 쌓을 수 있도록 도울 예정입니다.";
 }
 
@@ -489,15 +493,18 @@ function deriveInterpretation(form) {
 
   const ageMeta = agePriorityMeta[form.ageBand];
   const projectInfo = projectMeta[form.project];
+
   if (ageMeta) pieces.push(ageMeta);
   if (projectInfo) pieces.push(projectInfo);
 
   form.ageSubKeywords.forEach((k) => {
     if (subKeywordMeta[k]) pieces.push(subKeywordMeta[k]);
   });
+
   form.projectKeywordsSelected.forEach((k) => {
     if (subKeywordMeta[k]) pieces.push(subKeywordMeta[k]);
   });
+
   form.socialKeywordsSelected.forEach((k) => {
     if (subKeywordMeta[k]) pieces.push(subKeywordMeta[k]);
   });
@@ -546,15 +553,16 @@ function generatePrompt(form) {
 
 [핵심 해석 원칙]
 1. 선택된 키워드를 그대로 나열하지 말고, 그 의미를 학부모가 이해하기 쉬운 말로 자연스럽게 풀어 써라.
-2. 키워드는 반드시 브리핑 안에 반영하되, 키워드가 보이게 쓰기보다 해석이 살아있게 써라.
+2. 키워드는 반드시 브리핑 안에 반영하되, 키워드가 드러나기보다 해석이 자연스럽게 살아있게 써라.
 3. 같은 키워드 조합이어도 문장 구조와 표현을 매번 다르게 구성해 여러 교사가 사용해도 브리핑이 겹치지 않게 하라.
 4. 브리핑의 중심 해석은 1~2개만 선명하게 잡고, 나머지는 배경 흐름으로 자연스럽게 녹여라.
-5. 메모가 짧더라도 그대로 옮기지 말고, 수업 장면 → 교육적 의미 → 성장 해석 → 다음 시간 계획의 흐름으로 재구성하라.
+5. 짧은 관찰 메모라도 그대로 옮기지 말고, 수업 장면 → 교육적 의미 → 성장 해석 → 다음 시간 계획의 흐름으로 재구성하라.
 6. 평가가 아니라 관찰 중심으로 쓰고, 과장하지 말고 신뢰감 있게 작성하라.
 7. 어려운 교육 용어는 학부모가 이해하기 쉬운 일상 언어로 바꿔라.
 8. 문장은 짧고 선명하게 쓰되, 내용은 얕지 않게 하라.
 9. 같은 표현, 같은 문장 구조, 같은 어휘를 반복하지 말고 다양한 표현군을 사용하라.
 10. 첨부된 작품 사진이 있는 경우, 결과만이 아니라 과정의 흐름과 변화도 함께 해석하라.
+11. '메모는 짧지만', '간단히 보면', '요약하면' 같은 메타 표현은 사용하지 말고 바로 관찰과 해석으로 들어가라.
 
 [좋은 관찰메모 예시]
 - 도라에몽 만들다가 친구랑 색 의견 달라서 멈춤 → 다시 맞추면서 이어감
@@ -564,9 +572,9 @@ function generatePrompt(form) {
 - 작업 속도 차이로 기다렸다가 다시 같이 맞춰서 진행
 
 [메모 해석 원칙]
-- 메모는 짧게 쓰되, 실제 수업에서 벌어진 장면과 흐름이 드러나게 작성한다.
+- 메모는 실제 수업에서 벌어진 장면과 흐름이 드러나게 작성한다.
 - 메모를 그대로 옮기지 말고, 그 안에 담긴 선택, 멈춤, 조율, 재시도, 완수의 흐름을 해석해 브리핑으로 확장한다.
-- 짧은 메모 하나도 깊은 성장 이야기로 풀어낼 수 있어야 한다.
+- 짧은 메모 하나도 깊이 있는 성장 이야기로 풀어낼 수 있어야 한다.
 
 [해석 우선순위]
 - 모든 브리핑은 반드시 다음 순서로 해석한다.
@@ -607,43 +615,65 @@ function generatePrompt(form) {
 위 기준을 모두 반영하여, 학부모에게 바로 전달 가능한 자라다식 전문 브리핑을 작성하라.`;
 }
 
+function buildObservationLine(memoParts) {
+  if (memoParts.length >= 3) {
+    return `${memoParts[0]}이 보였고, 이어 ${memoParts[1]} 흐름으로 연결되었으며, 마지막에는 ${memoParts[2]} 장면까지 자연스럽게 이어졌습니다. 이 과정에서 아이가 스스로 흐름을 이어가려는 힘이 분명하게 드러났습니다.`;
+  }
+
+  if (memoParts.length === 2) {
+    return `${memoParts[0]}이 보였고, 이어 ${memoParts[1]} 흐름으로 자연스럽게 연결되었습니다. 이 과정에서 아이가 스스로 다음 단계로 이어가려는 모습이 드러났습니다.`;
+  }
+
+  if (memoParts.length === 1) {
+    return `${memoParts[0]}이 특히 인상적이었습니다. 아이는 그 과정에서 자신의 방식으로 계속 시도해보는 모습을 보였고, 하나의 시도가 다음 흐름으로 이어질 수 있는 가능성도 함께 드러났습니다.`;
+  }
+
+  return "";
+}
+
+function buildKeyLine(keyMeanings) {
+  if (!keyMeanings.length) return "";
+  if (keyMeanings.length === 1) {
+    return `오늘은 특히 ${keyMeanings[0]}과 연결된 흐름이 중심적으로 드러났습니다.`;
+  }
+  return `오늘은 특히 ${keyMeanings.slice(0, 2).join("과 ")}과 연결된 흐름이 중심적으로 드러났습니다.`;
+}
+
 function generatePreview(form) {
-  if (!form.memo.trim()) return "관찰 메모를 입력하면 브리핑 초안이 여기에 표시됩니다.";
+  if (!form.memo.trim()) {
+    return "관찰 메모를 입력하면 브리핑 초안이 여기에 표시됩니다.";
+  }
 
   const interpreted = deriveInterpretation(form);
   const memoParts = splitMemo(form.memo);
   const title = titleFor(form);
   const greeting = "어머님, 안녕하세요. 오늘 수업 내용을 공유드립니다.";
 
-  const ageLine = interpreted.ageMeaning;
+  const observationLine = buildObservationLine(memoParts);
   const projectLine = interpreted.projectMeaning;
-  const keyLine =
-    interpreted.keyMeanings.length > 0
-      ? `오늘은 특히 ${interpreted.keyMeanings.slice(0, 2).join("과 ")}과 연결된 흐름이 중심적으로 드러났습니다.`
-      : "";
-
-  let observationLine = "";
-  if (memoParts.length >= 2) {
-    observationLine = `${memoParts[0]}이 보였고, 이어 ${memoParts[1]} 흐름으로 자연스럽게 연결되었습니다. 짧은 장면 안에서도 아이가 다음 과정으로 스스로 이어가려는 의도가 드러났습니다.`;
-  } else if (memoParts.length === 1) {
-    observationLine = `${memoParts[0]}이 특히 인상적이었고, 그 안에서 아이가 자신의 방식으로 계속 시도해보는 모습이 보였습니다. 메모는 짧지만 오늘 수업의 중심 장면이 분명하게 드러난 순간이었습니다.`;
-  }
+  const ageLine = interpreted.ageMeaning;
+  const keyLine = buildKeyLine(interpreted.keyMeanings);
 
   const interpretationLine = `이번 경험은 ${interpreted.primaryUpper} 안에서 ${interpreted.primaryMain}과 연결되는 장면으로 해석할 수 있으며, 아이가 지금 시기에 필요한 성장 과제를 실제 수업 안에서 경험해본 시간이었다는 점에서 의미가 있었습니다.`;
+
   const imageLine = imagePlanLine(form.images.length);
   const nextLine = nextPlanFor(form);
 
-  return `"${title}"
+  const lines = [
+    `"${title}"`,
+    "",
+    greeting,
+    "",
+    observationLine,
+    projectLine,
+    ageLine,
+    keyLine,
+    interpretationLine,
+    imageLine,
+    nextLine,
+  ].filter(Boolean);
 
-${greeting}
-
-${observationLine}
-${projectLine}
-${ageLine}
-${keyLine}
-${interpretationLine}
-${imageLine}
-${nextLine}`;
+  return lines.join("\n");
 }
 
 function Field({ label, children, hint }) {
@@ -762,6 +792,7 @@ export default function App() {
       preview,
       createdAt: new Date().toISOString(),
     };
+
     setRecords((prev) => [item, ...prev]);
   };
 
@@ -808,7 +839,7 @@ export default function App() {
           <div style={styles.darkCard}>
             <div style={{ fontSize: 14, fontWeight: 700, color: "#cbd5e1", marginBottom: 14 }}>작성 기준</div>
             <div style={{ display: "grid", gap: 10 }}>
-              <div style={styles.darkItem}>짧은 메모를 바탕으로 깊은 성장 이야기를 풀어냅니다.</div>
+              <div style={styles.darkItem}>짧은 메모를 바탕으로 깊이 있는 성장 이야기를 풀어냅니다.</div>
               <div style={styles.darkItem}>평가보다 관찰 중심으로, 자라다 해석 기준이 자연스럽게 반영됩니다.</div>
               <div style={styles.darkItem}>연령 · 재원기간 · 프로젝트 · 사회성 키워드를 함께 해석합니다.</div>
             </div>
