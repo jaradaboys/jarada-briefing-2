@@ -83,6 +83,89 @@ const defaultForm = {
   images: [],
 };
 
+const subKeywordMeta = {
+  기다리기: { upper: "정서적 자기조절", main: "기다림", meaning: "기다리고 멈춰보는 경험" },
+  "충동 멈추기": { upper: "정서적 자기조절", main: "조절", meaning: "하고 싶은 행동을 잠시 멈춰보는 힘" },
+  "감정 표현하기": { upper: "정서적 자기조절", main: "표현", meaning: "감정을 바르게 표현해보는 경험" },
+  "좌절 버티기": { upper: "정서적 자기조절", main: "회복", meaning: "쉽지 않은 순간을 버텨보는 경험" },
+  "도전 유지하기": { upper: "자아효능감", main: "도전", meaning: "어려워도 다시 이어가보는 경험" },
+  "도구 사용 조절": { upper: "인지적 자기조절", main: "수행", meaning: "도구를 상황에 맞게 조절하는 힘" },
+  "힘/속도 조절": { upper: "인지적 자기조절", main: "조절", meaning: "힘과 속도를 조절하며 과제를 다루는 힘" },
+  "반복 연습": { upper: "자아효능감", main: "발전", meaning: "반복 속에서 작은 성공을 쌓는 경험" },
+  "단계 수행": { upper: "인지적 자기조절", main: "계획", meaning: "순서에 맞게 과제를 이어가는 힘" },
+  "끝까지 마무리": { upper: "자아효능감", main: "완수", meaning: "끝까지 마무리하며 완수 경험을 쌓는 것" },
+  "차례 지키기": { upper: "정서적 자기조절", main: "기다림", meaning: "관계 안에서 차례를 받아들이는 경험" },
+  "거리 조절": { upper: "사회적효능감", main: "관계", meaning: "관계 안에서 적절한 거리를 맞춰보는 경험" },
+  "방해 인식": { upper: "사회적효능감", main: "관계", meaning: "다른 사람에게 미치는 영향을 알아차리는 경험" },
+  "상황 살피기": { upper: "사회적효능감", main: "조율", meaning: "주변 상황을 살피며 자신을 맞춰보는 힘" },
+  "기본 배려": { upper: "사회적효능감", main: "배려", meaning: "다른 사람을 배려해보는 경험" },
+  "기다렸다 말하기": { upper: "사회적효능감", main: "조율", meaning: "자기 차례를 기다렸다가 표현하는 경험" },
+  요청하기: { upper: "사회적효능감", main: "표현", meaning: "필요한 것을 관계 안에서 요청해보는 경험" },
+  "도움 요청": { upper: "사회적효능감", main: "인정", meaning: "도움이 필요할 때 요청하며 관계를 활용해보는 경험" },
+  "도움 주기": { upper: "사회적효능감", main: "협력", meaning: "다른 친구를 도와주며 함께 해보는 경험" },
+  "긍정 피드백": { upper: "사회적효능감", main: "인정", meaning: "긍정적으로 반응하며 관계를 따뜻하게 이어가는 경험" },
+  "허락 구하기": { upper: "사회적효능감", main: "조율", meaning: "행동 전에 허락을 구하며 관계를 조율하는 경험" },
+  "양해 구하기": { upper: "사회적효능감", main: "조율", meaning: "상황에 맞게 양해를 구하며 관계를 이어가는 경험" },
+  "의견 표현": { upper: "사회적효능감", main: "표현", meaning: "자기 의견을 관계 안에서 표현해보는 경험" },
+  "의견 수용": { upper: "사회적효능감", main: "조율", meaning: "다른 의견을 받아들이며 관계를 조절하는 경험" },
+  사과하기: { upper: "사회적효능감", main: "갈등", meaning: "관계 안에서 사과를 통해 갈등을 풀어보는 경험" },
+  "갈등 해결": { upper: "사회적효능감", main: "갈등", meaning: "부딪힌 상황을 관계 안에서 풀어보는 경험" },
+  "역할 수행": { upper: "사회적효능감", main: "역할", meaning: "팀 안에서 자신의 역할을 해보는 경험" },
+  "역할 분담": { upper: "사회적효능감", main: "역할", meaning: "역할을 나누며 공동 목표를 경험하는 과정" },
+  "의견 조율": { upper: "사회적효능감", main: "조율", meaning: "서로의 생각을 맞춰가는 경험" },
+  "협력 수행": { upper: "사회적효능감", main: "협력", meaning: "함께 결과를 만들어가는 경험" },
+  "도움 주고받기": { upper: "사회적효능감", main: "협력", meaning: "도움을 주고받으며 관계 속 효능감을 쌓는 경험" },
+  "자발적 시작": { upper: "자아효능감", main: "선택", meaning: "스스로 시작해보는 경험" },
+  "자발적 지속": { upper: "자아효능감", main: "지속", meaning: "스스로 이어가보는 힘" },
+  선택하기: { upper: "자아효능감", main: "선택", meaning: "자신의 과제를 스스로 선택해보는 경험" },
+  책임지기: { upper: "자아효능감", main: "완수", meaning: "선택한 것을 책임지고 이어가는 경험" },
+  "끝까지 완성": { upper: "자아효능감", main: "완수", meaning: "완성까지 이어가며 성취를 느끼는 경험" },
+};
+
+const projectMeta = {
+  연작: { upper: "자아효능감", main: "지속", meaning: "한 가지를 깊이 있게 이어가며 몰입과 발전을 경험하는 프로젝트" },
+  협동작업: { upper: "사회적효능감", main: "협력", meaning: "또래와 함께 맞춰가며 관계 속 성취를 경험하는 프로젝트" },
+  "100호캔버스": { upper: "자아효능감", main: "도전", meaning: "큰 과제를 다루며 도전과 완수 경험을 쌓는 프로젝트" },
+};
+
+const agePriorityMeta = {
+  "6–7세": { upper: "정서적 자기조절", focus: "감정과 규칙의 기초", meaning: "규칙, 기다림, 안정감과 교사 신뢰 형성이 중요한 시기" },
+  "8–10세": { upper: "인지적 자기조절", focus: "과제 완수와 사회적 조율", meaning: "계획하고 끝까지 해보는 경험과 또래 조율 경험이 중요한 시기" },
+  "11–13세": { upper: "메타인지적 조절", focus: "자기이해와 역할 정체성", meaning: "자기 상태를 이해하고 스스로 방향을 잡아보는 경험이 중요한 시기" },
+};
+
+function deriveInterpretation(form) {
+  const pieces = [];
+  const actionMeta = subKeywordMeta[form.action];
+  if (actionMeta) pieces.push(actionMeta);
+
+  const ageMeta = agePriorityMeta[form.ageBand];
+  const projectInfo = projectMeta[form.project];
+
+  if (projectInfo) pieces.push(projectInfo);
+  if (ageMeta) pieces.push(ageMeta);
+
+  const upperCount = {};
+  const mainCount = {};
+
+  pieces.forEach((piece) => {
+    if (piece.upper) upperCount[piece.upper] = (upperCount[piece.upper] || 0) + 1;
+    if (piece.main) mainCount[piece.main] = (mainCount[piece.main] || 0) + 1;
+  });
+
+  const primaryUpper = Object.entries(upperCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "자아효능감";
+  const primaryMain = Object.entries(mainCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "성장";
+
+  return {
+    primaryUpper,
+    primaryMain,
+    ageMeaning: ageMeta?.meaning || "",
+    projectMeaning: projectInfo?.meaning || "",
+    actionMeaning: actionMeta?.meaning || "",
+    summary: `${primaryUpper} 안에서 ${primaryMain}과 연결되는 경험을 중심으로 해석`,
+  };
+}
+
 const styles = {
   page: {
     minHeight: "100vh",
@@ -386,46 +469,42 @@ function imagePlanLine(imageCount) {
 }
 
 function generatePrompt(form) {
+  const interpreted = deriveInterpretation(form);
+
   return `너는 자라다교육의 남아 전문 상담 교사다.
 입력된 정보를 바탕으로 학부모에게 전달할 상담 브리핑을 작성하라.
 
-[브리핑의 핵심 방향]
+[브리핑의 최상위 목표]
 - 브리핑은 아이의 성장에 초점을 맞춘다.
-- 재원기간별, 연령별, 프로젝트별 메인 키워드를 중심으로 현재 아이에게 필요한 경험이 무엇인지 자연스럽게 담아낸다.
-- 오늘 수업의 교육적 의미와 아이의 성장 흐름이 보이도록 작성한다.
-- 다음 시간에 어떤 방향으로 이어갈지 계획이 느껴지도록 작성한다.
-- 메모가 짧더라도 교사의 관찰과 해석을 통해 전문적인 상담 브리핑으로 완성한다.
+- 성장의 방향은 자립이며, 건강한 자립의 기반은 자존감이다.
+- 자존감은 아이가 스스로 해낼 수 있다는 자아효능감과, 관계 속에서 인정받고 소속될 수 있다는 사회적효능감의 경험을 통해 자란다.
+- 오늘 수업의 장면을 단순히 설명하지 말고, 그 경험이 아이의 자립과 자존감 형성에 어떤 의미가 있는지 해석해 전달하라.
 
-[작성 기준]
-1. 어려운 용어는 학부모가 이해하기 쉬운 말로 풀어서 설명한다.
-2. 평가가 아니라 관찰을 중심으로 쓴다.
-3. 아이의 행동을 단순히 적는 데서 끝나지 않고, 왜 그런 모습이 나왔는지 한 번 더 생각하는 교사의 시선이 드러나야 한다.
-4. 문장은 짧아도 의미가 분명해야 한다.
-5. 아이의 가능성을 긍정적으로 전달하되, 과장하지 않고 신뢰감 있게 작성한다.
-6. 메모가 짧더라도 그 안의 의미를 잘 해석해 자연스럽고 전문적인 상담 브리핑으로 이어가야 한다.
-7. 어색한 표현 없이, 실제 교사가 학부모에게 보내는 것처럼 자연스럽게 작성한다.
-8. 사진이 첨부된 경우 결과만 보지 말고 과정의 흐름과 변화도 함께 반영한다.
+[핵심 해석 원칙]
+1. 선택된 키워드를 그대로 나열하지 말고, 그 의미를 학부모가 이해하기 쉬운 말로 자연스럽게 풀어 써라.
+2. 키워드는 반드시 브리핑 안에 반영하되, 키워드가 보이게 쓰기보다 해석이 살아있게 써라.
+3. 같은 키워드 조합이어도 문장 구조와 표현을 매번 다르게 구성해 여러 교사가 사용해도 브리핑이 겹치지 않게 하라.
+4. 브리핑의 중심 해석은 1~2개만 선명하게 잡고, 나머지는 배경 흐름으로 자연스럽게 녹여라.
+5. 메모가 짧더라도 그대로 옮기지 말고, 수업 장면 → 교육적 의미 → 성장 해석 → 다음 시간 계획의 흐름으로 재구성하라.
+6. 평가가 아니라 관찰 중심으로 쓰고, 과장하지 말고 신뢰감 있게 작성하라.
+7. 어려운 교육 용어는 학부모가 이해하기 쉬운 일상 언어로 바꿔라.
+8. 문장은 짧고 선명하게 쓰되, 내용은 얕지 않게 하라.
+9. 같은 표현, 같은 문장 구조, 같은 어휘를 반복하지 말고 다양한 표현군을 사용하라.
+10. 첨부된 작품 사진이 있는 경우, 결과만이 아니라 과정의 흐름과 변화도 함께 해석하라.
 
-[문장 구성 원칙]
-- 오늘 수업에서 보인 구체적인 장면
-- 그 장면의 교육적 의미
-- 현재 재원기간/연령/프로젝트 흐름 안에서의 성장 해석
-- 다음 시간에 어떻게 이어갈지에 대한 계획
-
-[주의사항]
-- 어려운 전문용어를 그대로 쓰지 않는다.
-- 같은 표현을 반복하지 않는다.
-- '효능감', '소속감' 같은 단어는 꼭 필요한 경우에만 자연스럽게 풀어서 사용한다.
-- 아이를 단정하거나 평가하지 않는다.
-- 메모를 그대로 옮기지 말고, 의미를 해석해 문장으로 재구성한다.
-- 제목은 짧고 눈에 띄되, 수업의 핵심 의미가 담기게 작성한다.
+[해석 우선순위]
+- 모든 브리핑은 반드시 다음 순서로 해석한다.
+1. 연령대
+2. 재원기간
+3. 프로젝트
+4. 행동 키워드 및 관찰 메모
 
 [출력 형식]
-- 학부모가 읽기 쉬운 자연스러운 문단
-- 제목 1줄 + 본문 5~7문장
-- 짧지만 의미가 정확한 문장
-- 마지막 문장에는 다음 시간의 방향이 자연스럽게 담기도록 작성
-- 어머니(또는 학부모님)께 인사하는 문장으로 시작
+- 제목 1줄
+- 본문 5~7문장
+- 학부모가 바로 읽어도 이해되는 자연스러운 문단
+- 마지막 문장은 다음 시간 계획으로 마무리
+- '어머님, 안녕하세요.'로 시작
 
 [입력값]
 - 학생명: ${form.student}
@@ -441,15 +520,25 @@ function generatePrompt(form) {
 - 관찰 메모: ${form.memo}
 - 첨부 이미지 수: ${form.images.length}장
 
-위 기준에 따라, 학부모에게 바로 전달할 수 있는 자연스럽고 전문적인 브리핑을 작성하라.`;
+[자동 해석 결과]
+- 중심 상위개념: ${interpreted.primaryUpper}
+- 중심 메인키워드: ${interpreted.primaryMain}
+- 연령 해석: ${interpreted.ageMeaning}
+- 프로젝트 해석: ${interpreted.projectMeaning}
+- 행동 해석: ${interpreted.actionMeaning}
+- 브리핑 중심 요약: ${interpreted.summary}
+
+위 기준을 모두 반영하여, 학부모에게 바로 전달 가능한 자라다식 전문 브리핑을 작성하라.`;
 }
 
 function generatePreview(form) {
   if (!form.memo.trim()) return "관찰 메모를 입력하면 브리핑 초안이 여기에 표시됩니다.";
 
+  const interpreted = deriveInterpretation(form);
   const memoParts = splitMemo(form.memo);
   const title = titleFor(form);
   const greeting = "어머님, 안녕하세요. 오늘 수업 내용을 공유드립니다.";
+
   const projectLine = `${form.project} 활동 안에서 ${form.projectKeyword}와 관련된 흐름이 이어졌고, ${actionSentence(form.action)} 장면이 자연스럽게 드러났습니다.`;
 
   let observationLine = "";
@@ -459,7 +548,8 @@ function generatePreview(form) {
     observationLine = `${memoParts[0]}이 특히 인상적이었고, 그 안에서 아이가 자신의 방식으로 계속 시도해보는 모습이 보였습니다. 메모는 짧지만 오늘 수업의 중심 장면이 분명하게 드러난 순간이었습니다.`;
   }
 
-  const meaningLine = meaningFor(form);
+  const meaningLine = `${interpreted.projectMeaning} ${interpreted.ageMeaning} 오늘 수업에서는 특히 ${interpreted.actionMeaning}과 연결된 흐름이 중심적으로 드러났습니다.`;
+  const interpretationLine = `이번 경험은 ${interpreted.primaryUpper} 안에서 ${interpreted.primaryMain}과 연결되는 장면으로 해석할 수 있으며, 아이가 지금 시기에 필요한 성장 과제를 실제 수업 안에서 경험해본 시간이었다는 점에서 의미가 있었습니다.`;
   const imageLine = imagePlanLine(form.images.length);
   const nextLine = nextPlanFor(form);
 
@@ -470,6 +560,7 @@ ${greeting}
 ${projectLine}
 ${observationLine}
 ${meaningLine}
+${interpretationLine}
 ${imageLine}
 ${nextLine}`;
 }
