@@ -319,10 +319,17 @@ ${imageLine}
 ${nextLine}`;
 }
 
-function Field({ label, children }) {
+function Field({ label, children, hint }) {
   return (
     <div className="space-y-2">
-      <div className="text-sm font-semibold text-slate-700">{label}</div>
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-sm font-semibold text-slate-800">{label}</div>
+        {hint ? <div className="text-xs text-slate-400">{hint}</div> : null}
+      </div>
+      {children}
+    </div>
+  );
+}</div>
       {children}
     </div>
   );
@@ -332,6 +339,16 @@ function Chip({ active, onClick, children }) {
   return (
     <button
       onClick={onClick}
+      className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
+        active
+          ? "border-slate-900 bg-slate-900 text-white shadow-sm"
+          : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
       className={`rounded-xl border px-3 py-2 text-sm transition ${
         active ? "border-slate-900 bg-slate-900 text-white" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
       }`}
@@ -419,17 +436,17 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-white text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
-        <div className="mb-8 grid gap-4 lg:grid-cols-[1.2fr_.8fr]">
-          <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <div className="mb-2 text-sm font-semibold text-slate-500">자라다 브리핑 MVP</div>
-            <h1 className="text-3xl font-bold tracking-tight">교사용 브리핑 입력 + 프롬프트 생성기</h1>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
+        <div className="mb-8 grid gap-4 lg:grid-cols-[1.15fr_.85fr]">
+          <div className="rounded-[28px] bg-white p-7 shadow-sm ring-1 ring-slate-200">
+            <div className="mb-3 inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">자라다 브리핑 MVP</div>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-950">교사용 브리핑 입력 + 프롬프트 생성기</h1>
+            <p className="mt-4 max-w-3xl text-sm md:text-base leading-7 text-slate-600">
               재원기간별, 연령별, 프로젝트별 키워드를 중심으로 교육적 의미와 다음 시간 계획까지 담긴 브리핑 초안을 만들 수 있습니다.
             </p>
           </div>
-          <div className="rounded-3xl bg-slate-900 p-6 text-white shadow-sm">
+          <div className="rounded-[28px] bg-slate-900 p-7 text-white shadow-sm">
             <div className="text-sm font-semibold text-slate-300">작성 기준</div>
             <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-100">
               <li>• 어려운 용어는 쉽게 풀어 설명</li>
@@ -443,9 +460,14 @@ export default function App() {
 
         <div className="grid gap-6 xl:grid-cols-[1.1fr_.9fr]">
           <div className="space-y-6">
-            <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-              <h2 className="text-xl font-semibold">브리핑 입력</h2>
-              <p className="mt-1 text-sm text-slate-500">교사가 선택과 짧은 메모만 입력하면 됩니다.</p>
+            <section className="rounded-[28px] bg-white p-6 md:p-7 shadow-sm ring-1 ring-slate-200">
+              <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <h2 className="text-2xl font-semibold text-slate-950">브리핑 입력</h2>
+                  <p className="mt-1 text-sm text-slate-500">선택과 짧은 메모만 입력하면, 오른쪽에서 바로 결과를 확인할 수 있습니다.</p>
+                </div>
+                <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">빠른 입력</div>
+              </div>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 <Field label="학생명">
@@ -466,7 +488,7 @@ export default function App() {
                 </Field>
               </div>
 
-              <div className="mt-5 rounded-2xl border border-slate-200 p-4">
+              <div className="mt-5 rounded-[24px] border border-slate-200 bg-slate-50/70 p-5">
                 <div className="mb-3 text-sm font-semibold text-slate-800">연령 / 발달 기준</div>
                 <div className="grid gap-4 md:grid-cols-3">
                   <Field label="연령대">
@@ -567,8 +589,8 @@ export default function App() {
               </div>
 
               <div className="mt-5">
-                <Field label="작품 사진 첨부 (최소 4장 권장)">
-                  <input type="file" accept="image/*" multiple onChange={onImageChange} className="w-full rounded-xl border border-slate-200 px-4 py-3" />
+                <Field label="작품 사진 첨부" hint="최소 4장 권장">
+                  <input type="file" accept="image/*" multiple onChange={onImageChange} className="w-full rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-4 text-sm text-slate-600" />
                   {form.images.length > 0 && (
                     <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
                       {form.images.map((img, idx) => (
@@ -591,30 +613,39 @@ export default function App() {
                 </Field>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <button onClick={saveRecord} className="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white">기록 저장</button>
-                <button onClick={() => copyText(prompt, "prompt")} className="rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700">
+              <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-200 pt-5">
+                <button onClick={saveRecord} className="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90">기록 저장</button>
+                <button onClick={() => copyText(prompt, "prompt")} className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
                   {copied === "prompt" ? "프롬프트 복사됨" : "프롬프트 복사"}
                 </button>
-                <button onClick={() => copyText(preview, "preview")} className="rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700">
+                <button onClick={() => copyText(preview, "preview")} className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
                   {copied === "preview" ? "초안 복사됨" : "브리핑 초안 복사"}
                 </button>
               </div>
             </section>
 
-            <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-              <h2 className="text-xl font-semibold">GPT 프롬프트</h2>
+            <section className="rounded-[28px] bg-white p-6 md:p-7 shadow-sm ring-1 ring-slate-200">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-semibold text-slate-950">GPT 프롬프트</h2>
+                <div className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">복사해서 사용</div>
+              </div>
               <pre className="mt-4 whitespace-pre-wrap rounded-2xl bg-slate-950 p-4 text-sm leading-6 text-slate-100">{prompt}</pre>
             </section>
 
-            <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-              <h2 className="text-xl font-semibold">브리핑 초안 미리보기</h2>
+            <section className="rounded-[28px] bg-white p-6 md:p-7 shadow-sm ring-1 ring-slate-200">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-semibold text-slate-950">브리핑 초안 미리보기</h2>
+                <div className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">실시간</div>
+              </div>
               <div className="mt-4 whitespace-pre-wrap rounded-2xl bg-slate-50 p-4 text-sm leading-7 text-slate-700">{preview}</div>
             </section>
           </div>
 
-          <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <h2 className="text-xl font-semibold">저장된 기록</h2>
+          <div className="rounded-[28px] bg-white p-6 md:p-7 shadow-sm ring-1 ring-slate-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-slate-950">저장된 기록</h2>
+              <div className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">최근순</div>
+            </div>
             <div className="mt-4 space-y-3">
               {records.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">저장된 기록이 없습니다.</div>
