@@ -14,23 +14,39 @@ const stageKeywords = {
   "19~24개월": ["관계 인식", "상호작용", "역할 수행", "협동 경험", "갈등 조율", "공동 성취"],
 };
 
-const ageBands = ["6–7세", "8–10세", "11–13세"];
+const ageBands = ["6–7세", "8–11세", "12–13세"];
 
 const ageDomains = {
   "6–7세": {
-    조절: ["자기조절", "감정조절", "충동조절", "지연만족", "주의집중", "전환능력", "회복탄력성"],
-    규칙: ["경계인식", "일관성경험", "예측가능성", "결과인식", "순서지키기", "타인인식"],
-    안정감: ["애착안정", "정서안정", "부모신뢰", "환경예측성"],
+    감정이해: ["감정인식", "감정표현", "감정말하기"],
+    충동조절: ["멈추기", "기다리기", "차례지키기"],
+    규칙: ["규칙이해", "순서지키기", "교실규칙"],
+    안정감: ["분리안정", "교사신뢰", "환경안정"],
   },
-  "8–10세": {
-    생활자립: ["자기관리", "시간관리", "과제습관", "책임감", "루틴형성", "문제해결기초"],
-    기본사회성: ["협력", "규칙준수", "갈등경험", "조율능력", "양보", "공감기초", "관계형성"],
+  "8–11세": {
+    과제설정: ["목표정하기", "시작하기", "선택하기"],
+    계획: ["단계나누기", "순서생각", "방법정리"],
+    수행: ["단계수행", "반복연습", "도구사용"],
+    지속: ["과제지속", "몰입유지", "끝까지하기"],
+    완수: ["마무리하기", "완성경험", "결과만들기"],
+    조율: ["의견조율", "양보하기", "차이조정"],
+    갈등: ["갈등조절", "갈등해결", "사과하기"],
+    역할: ["역할수행", "역할분담", "책임맡기"],
+    인정: ["인정받기", "피드백수용", "칭찬경험"],
   },
-  "11–13세": {
-    자립: ["심리적분리", "자기결정", "자기관리확장", "선택책임"],
-    정체성: ["자기탐색", "가치형성", "강점인식", "약점인식", "비교의식"],
-    심화경험: ["몰입", "성취", "실패경험", "회복경험", "지속성", "자기효능감", "또래관계", "친밀감"],
+  "12–13세": {
+    자기이해: ["강점이해", "약점이해", "상태파악"],
+    자기조정: ["방향설정", "방법선택", "자기조절"],
+    한계돌파: ["어려움버티기", "기준넘기", "재도전"],
+    내적동기: ["의미찾기", "스스로시작", "주도유지"],
+    역할정체성: ["역할찾기", "역할수행", "팀기여"],
   },
+};
+
+const ageCoreSummaries = {
+  "6–7세": "정서적 자기조절 · 규칙 · 안정감",
+  "8–11세": "인지적 자기조절 · 사회성 · 과제완수",
+  "12–13세": "메타인지 · 자기이해 · 정체성",
 };
 
 const projects = ["연작", "100호캔버스", "협동작업"];
@@ -73,8 +89,8 @@ const defaultForm = {
   months: "1~6개월",
   stage: "흥미 탐색",
   ageBand: "6–7세",
-  ageDomain: "조절",
-  ageSubKeyword: "자기조절",
+  ageDomain: "감정이해",
+  ageSubKeyword: "감정인식",
   project: "연작",
   projectKeyword: "주제지속",
   core: "자기조절",
@@ -129,9 +145,9 @@ const projectMeta = {
 };
 
 const agePriorityMeta = {
-  "6–7세": { upper: "정서적 자기조절", focus: "감정과 규칙의 기초", meaning: "규칙, 기다림, 안정감과 교사 신뢰 형성이 중요한 시기" },
-  "8–10세": { upper: "인지적 자기조절", focus: "과제 완수와 사회적 조율", meaning: "계획하고 끝까지 해보는 경험과 또래 조율 경험이 중요한 시기" },
-  "11–13세": { upper: "메타인지적 조절", focus: "자기이해와 역할 정체성", meaning: "자기 상태를 이해하고 스스로 방향을 잡아보는 경험이 중요한 시기" },
+  "6–7세": { upper: "정서적 자기조절", focus: "감정과 규칙의 기초", meaning: "감정을 이해하고 바르게 표현하며, 규칙과 기다림, 교사와의 신뢰를 쌓아가는 시기" },
+  "8–11세": { upper: "인지적 자기조절", focus: "과제 완수와 사회적 조율", meaning: "과제를 설정하고 계획해 끝까지 해보는 경험과 또래와 조율하는 경험이 중요한 시기" },
+  "12–13세": { upper: "메타인지적 조절", focus: "자기이해와 역할 정체성", meaning: "자신의 상태를 이해하고 한계를 넘어보며, 팀 안에서 자신의 역할을 찾아가는 시기" },
 };
 
 function deriveInterpretation(form) {
@@ -735,13 +751,32 @@ export default function App() {
               <div style={styles.softBox}>
                 <div style={{ ...styles.label, marginBottom: 10 }}>연령 / 발달 기준</div>
                 <div style={styles.grid3}>
-                  <Field label="연령대">
-                    <div style={styles.chips}>
-                      {ageBands.map((band) => (
-                        <Chip key={band} active={form.ageBand === band} onClick={() => setForm((prev) => ({ ...prev, ageBand: band }))}>
-                          {band}
-                        </Chip>
-                      ))}
+                  <Field label="연령대" hint="연령별 핵심 과제를 먼저 선택합니다">
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10 }}>
+                      {ageBands.map((band) => {
+                        const active = form.ageBand === band;
+                        return (
+                          <button
+                            key={band}
+                            type="button"
+                            onClick={() => setForm((prev) => ({ ...prev, ageBand: band }))}
+                            style={{
+                              textAlign: "left",
+                              borderRadius: 18,
+                              border: active ? "1px solid #0f172a" : "1px solid #cbd5e1",
+                              background: active ? "#0f172a" : "#ffffff",
+                              color: active ? "#ffffff" : "#0f172a",
+                              padding: "14px 16px",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <div style={{ fontSize: 15, fontWeight: 800 }}>{band}</div>
+                            <div style={{ marginTop: 6, fontSize: 12, lineHeight: 1.6, color: active ? "#cbd5e1" : "#64748b" }}>
+                              {ageCoreSummaries[band]}
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </Field>
                   <Field label="발달 영역">
