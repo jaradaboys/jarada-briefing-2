@@ -250,6 +250,16 @@ const styles = {
     fontWeight: 700,
     padding: "7px 12px",
   },
+  miniButton: {
+    borderRadius: 999,
+    background: "#e2e8f0",
+    color: "#334155",
+    fontSize: 12,
+    fontWeight: 700,
+    padding: "9px 14px",
+    border: "1px solid #cbd5e1",
+    cursor: "pointer",
+  },
   grid2: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 20 },
   grid3: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginTop: 8 },
   block: { marginTop: 20 },
@@ -318,6 +328,16 @@ const styles = {
     fontWeight: 700,
     cursor: "pointer",
   },
+  dangerBtn: {
+    background: "white",
+    color: "#b91c1c",
+    border: "1px solid #fecaca",
+    borderRadius: 18,
+    padding: "12px 16px",
+    fontSize: 13,
+    fontWeight: 700,
+    cursor: "pointer",
+  },
   promptBox: {
     marginTop: 16,
     borderRadius: 24,
@@ -341,6 +361,16 @@ const styles = {
     whiteSpace: "pre-wrap",
     border: "1px solid #e2e8f0",
   },
+  recordSearch: {
+    width: "100%",
+    borderRadius: 16,
+    border: "1px solid #cbd5e1",
+    padding: "12px 14px",
+    fontSize: 14,
+    boxSizing: "border-box",
+    marginTop: 14,
+    marginBottom: 8,
+  },
   recordList: { marginTop: 18, display: "flex", flexDirection: "column", gap: 14 },
   recordCard: {
     borderRadius: 24,
@@ -359,71 +389,6 @@ const styles = {
     lineHeight: 1.7,
   },
 };
-
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function refineMemo(text) {
-  if (!text) return "";
-  return text
-    .replace(/만드는 중/g, "만들어가는 모습")
-    .replace(/작업 중/g, "작업을 이어가는 모습")
-    .replace(/구상/g, "구상하는 모습")
-    .replace(/스케치/g, "스케치해보는 모습")
-    .replace(/이어서/g, "이어")
-    .trim();
-}
-
-function splitMemo(memo) {
-  return memo
-    .replace(/\n/g, ",")
-    .split(/[,.]/)
-    .map((v) => v.trim())
-    .filter(Boolean)
-    .slice(0, 3)
-    .map(refineMemo);
-}
-
-function actionSentence(action) {
-  const map = {
-    기다리기: "기다려보는 모습",
-    "충동 멈추기": "하고 싶은 행동을 잠시 멈춰보는 모습",
-    "감정 표현하기": "감정을 말이나 행동으로 표현해보는 모습",
-    "좌절 버티기": "쉽지 않은 순간에도 버텨보는 모습",
-    "도전 유지하기": "어려워도 계속 시도해보는 모습",
-    "도구 사용 조절": "도구를 상황에 맞게 조절하는 모습",
-    "힘/속도 조절": "힘과 속도를 조절해보는 모습",
-    "반복 연습": "같은 과정을 반복해보는 모습",
-    "단계 수행": "순서에 맞춰 따라가는 모습",
-    "끝까지 마무리": "끝까지 마무리해보는 모습",
-    "차례 지키기": "차례를 지켜보는 모습",
-    "거리 조절": "친구와의 거리를 조절하는 모습",
-    "방해 인식": "다른 사람에게 방해가 될 수 있는 상황을 알아차리는 모습",
-    "상황 살피기": "주변 상황을 살펴보는 모습",
-    "기본 배려": "기본적인 배려를 보여주는 모습",
-    "기다렸다 말하기": "기다렸다가 말해보는 모습",
-    요청하기: "필요한 것을 요청해보는 모습",
-    "도움 요청": "도움이 필요할 때 요청해보는 모습",
-    "도움 주기": "다른 친구를 도와주는 모습",
-    "긍정 피드백": "긍정적으로 반응해주는 모습",
-    "허락 구하기": "먼저 허락을 구해보는 모습",
-    "양해 구하기": "상황에 맞게 양해를 구해보는 모습",
-    "의견 표현": "자기 생각을 말해보는 모습",
-    "의견 수용": "다른 의견을 받아들이는 모습",
-    사과하기: "사과가 필요한 상황에서 표현해보는 모습",
-    "갈등 해결": "부딪힌 상황을 풀어보는 경험",
-    "역할 수행": "맡은 역할을 해보는 모습",
-    "역할 분담": "역할을 나누어 맡아보는 경험",
-    "의견 조율": "의견을 맞춰보는 모습",
-    "협력 수행": "함께 결과를 만들어가는 모습",
-    "도움 주고받기": "서로 도움을 주고받는 모습",
-    "자발적 시작": "스스로 시작해보는 모습",
-    "자발적 지속": "스스로 이어가려는 모습",
-    선택하기: "스스로 선택해보는 모습",
-    책임지기: "선택한 것을 책임지려는 모습",
-    "끝까지 완성": "끝까지 완성해보는 모습",
-  };
   return map[action] || action;
 }
 
@@ -630,6 +595,7 @@ export default function App() {
   const [form, setForm] = useState(defaultForm);
   const [records, setRecords] = useState([]);
   const [copied, setCopied] = useState("");
+  const [recordSearch, setRecordSearch] = useState("");
 
   useEffect(() => {
     const saved = localStorage.getItem("jarada-briefing-records-inline-v1");
@@ -677,6 +643,11 @@ export default function App() {
 
   const prompt = useMemo(() => generatePrompt(form), [form]);
   const preview = useMemo(() => generatePreview(form), [form]);
+  const filteredRecords = useMemo(() => {
+    const q = recordSearch.trim().toLowerCase();
+    if (!q) return records;
+    return records.filter((item) => (item.student || "").toLowerCase().includes(q));
+  }, [records, recordSearch]);
 
   const copyText = async (text, key) => {
     await navigator.clipboard.writeText(text);
@@ -694,8 +665,19 @@ export default function App() {
       ...form,
       prompt,
       preview,
+      createdAt: new Date().toISOString(),
     };
     setRecords((prev) => [item, ...prev]);
+  };
+
+  const deleteRecord = (id) => {
+    setRecords((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const clearAllRecords = () => {
+    const ok = window.confirm("저장된 기록을 모두 삭제할까요?");
+    if (!ok) return;
+    setRecords([]);
   };
 
   const onImageChange = (e) => {
@@ -909,13 +891,7 @@ export default function App() {
                   <textarea
                     value={form.memo}
                     onChange={(e) => setForm((prev) => ({ ...prev, memo: e.target.value }))}
-                    placeholder={`수업 중 관찰된 장면을 짧게 적어주세요
-(해석하지 말고, 실제 행동만 기록)
-
-예:
-- 친구와 색 의견이 달라 멈췄다가 다시 맞추며 진행함
-- 혼자 하다가 친구와 역할을 나눠 작업으로 전환함
-- 어려워서 멈췄다가 도움 받아 다시 이어감`}
+                    placeholder="예: 도라에몽 다리 만드는 중, 다음 시간 아이디어 스케치 구상"
                     style={styles.textarea}
                   />
                 </Field>
@@ -938,7 +914,6 @@ export default function App() {
                   <h2 style={styles.sectionTitle}>GPT 프롬프트</h2>
                   <div style={styles.sectionHint}>그대로 복사해 GPT에 붙여넣을 수 있는 버전입니다.</div>
                 </div>
-                <div style={styles.miniTag}>복사해서 사용</div>
               </div>
               <div style={styles.promptBox}>{prompt}</div>
             </section>
@@ -949,7 +924,9 @@ export default function App() {
                   <h2 style={styles.sectionTitle}>브리핑 초안 미리보기</h2>
                   <div style={styles.sectionHint}>학부모에게 전달하기 전 문장 흐름을 바로 확인할 수 있습니다.</div>
                 </div>
-                <div style={styles.miniTag}>실시간</div>
+                <button onClick={() => copyText(preview, "preview-top")} style={styles.miniButton}>
+                  {copied === "preview-top" ? "복사됨" : "초안 복사"}
+                </button>
               </div>
               <div style={styles.previewBox}>{preview}</div>
             </section>
@@ -964,11 +941,22 @@ export default function App() {
               <div style={styles.miniTag}>최근순</div>
             </div>
 
+            <input
+              value={recordSearch}
+              onChange={(e) => setRecordSearch(e.target.value)}
+              placeholder="아이 이름으로 검색"
+              style={styles.recordSearch}
+            />
+
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+              <button onClick={clearAllRecords} style={styles.dangerBtn}>전체 삭제</button>
+            </div>
+
             <div style={styles.recordList}>
-              {records.length === 0 ? (
+              {filteredRecords.length === 0 ? (
                 <div style={{ ...styles.recordCard, textAlign: "center", color: "#64748b" }}>저장된 기록이 없습니다.</div>
               ) : (
-                records.map((item) => (
+                filteredRecords.map((item) => (
                   <div key={item.id} style={styles.recordCard}>
                     <div style={{ fontWeight: 700 }}>{item.student || "이름 미입력"}</div>
                     <div style={{ marginTop: 4, fontSize: 12, color: "#64748b" }}>{item.date} · {item.project} · {item.stage}</div>
@@ -980,6 +968,9 @@ export default function App() {
                       </button>
                       <button onClick={() => copyText(item.preview, `v-${item.id}`)} style={styles.secondaryBtn}>
                         {copied === `v-${item.id}` ? "복사됨" : "초안 복사"}
+                      </button>
+                      <button onClick={() => deleteRecord(item.id)} style={styles.dangerBtn}>
+                        삭제
                       </button>
                     </div>
                   </div>
