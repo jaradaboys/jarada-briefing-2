@@ -59,35 +59,12 @@ const easyWords = {
   주의집중: "집중해서 이어가는 힘",
   전환능력: "상황에 맞게 바꿔보는 힘",
   회복탄력성: "어려운 뒤에도 다시 해보는 힘",
-  경계인식: "상황과 공간을 살펴보는 힘",
-  일관성경험: "같은 방식으로 반복해보는 경험",
-  예측가능성: "다음을 예상해보는 경험",
-  결과인식: "행동의 결과를 이해해보는 경험",
-  순서지키기: "차례를 기다리고 지키는 모습",
-  타인인식: "다른 사람을 의식하는 모습",
   생활자립: "스스로 해보는 생활 습관",
   기본사회성: "친구와 함께 지내는 기본 태도",
   자립: "스스로 결정하고 책임지는 모습",
   정체성: "자신을 알아가는 과정",
   심화경험: "한 가지를 깊이 있게 해보는 경험",
-  협력: "함께 해보는 경험",
-  규칙준수: "약속을 지켜보는 모습",
-  갈등경험: "부딪히는 상황을 겪어보는 경험",
-  조율능력: "생각을 맞춰보는 힘",
-  양보: "한 번 물러나보는 경험",
-  공감기초: "다른 마음을 헤아려보는 시작",
-  관계형성: "친구와 관계를 만들어가는 과정",
-  심리적분리: "부모와 생각이 조금씩 분리되는 과정",
-  자기결정: "스스로 선택해보는 경험",
-  선택책임: "선택한 것을 책임져보는 태도",
-  몰입: "깊이 빠져드는 경험",
-  성취: "해냈다는 느낌",
-  실패경험: "뜻대로 되지 않는 경험",
-  회복경험: "다시 일어나 해보는 경험",
-  지속성: "계속 이어가는 힘",
   자기효능감: "할 수 있다고 느끼는 자신감",
-  또래관계: "친구 관계 속 여러 경험",
-  친밀감: "가까운 친구와 느끼는 편안함",
 };
 
 const defaultForm = {
@@ -104,6 +81,184 @@ const defaultForm = {
   action: "기다리기",
   memo: "",
   images: [],
+};
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    background: "linear-gradient(180deg, #eef2ff 0%, #f8fafc 45%, #ffffff 100%)",
+    color: "#0f172a",
+    fontFamily: "Arial, sans-serif",
+  },
+  container: {
+    maxWidth: 1400,
+    margin: "0 auto",
+    padding: "28px 20px 40px",
+  },
+  topGrid: {
+    display: "grid",
+    gridTemplateColumns: "1.15fr 0.85fr",
+    gap: 16,
+    marginBottom: 24,
+  },
+  card: {
+    background: "#ffffff",
+    borderRadius: 28,
+    padding: 28,
+    boxShadow: "0 8px 24px rgba(15,23,42,0.06)",
+    border: "1px solid #e2e8f0",
+  },
+  darkCard: {
+    background: "#0f172a",
+    color: "white",
+    borderRadius: 28,
+    padding: 28,
+    boxShadow: "0 8px 24px rgba(15,23,42,0.14)",
+  },
+  badge: {
+    display: "inline-block",
+    padding: "6px 12px",
+    borderRadius: 999,
+    background: "#e2e8f0",
+    color: "#475569",
+    fontSize: 12,
+    fontWeight: 700,
+    marginBottom: 12,
+  },
+  title: { fontSize: 42, fontWeight: 800, lineHeight: 1.2, margin: 0 },
+  subtitle: { marginTop: 14, fontSize: 16, lineHeight: 1.8, color: "#475569" },
+  darkItem: {
+    background: "rgba(255,255,255,0.08)",
+    borderRadius: 18,
+    padding: "14px 16px",
+    fontSize: 14,
+    lineHeight: 1.7,
+  },
+  mainGrid: {
+    display: "grid",
+    gridTemplateColumns: "1.08fr 0.92fr",
+    gap: 24,
+    alignItems: "start",
+  },
+  sectionTitle: { fontSize: 30, fontWeight: 800, margin: 0, color: "#0f172a" },
+  sectionHint: { marginTop: 6, fontSize: 14, color: "#64748b" },
+  cardTopRow: { display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-end", flexWrap: "wrap" },
+  miniTag: {
+    borderRadius: 999,
+    background: "#f1f5f9",
+    color: "#475569",
+    fontSize: 12,
+    fontWeight: 700,
+    padding: "7px 12px",
+  },
+  grid2: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 20 },
+  grid3: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginTop: 8 },
+  block: { marginTop: 20 },
+  softBox: {
+    marginTop: 20,
+    padding: 20,
+    borderRadius: 24,
+    border: "1px solid #e2e8f0",
+    background: "#f8fafc",
+  },
+  labelRow: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 8 },
+  label: { fontSize: 14, fontWeight: 700, color: "#1e293b" },
+  hint: { fontSize: 12, color: "#94a3b8" },
+  input: {
+    width: "100%",
+    borderRadius: 16,
+    border: "1px solid #cbd5e1",
+    padding: "14px 16px",
+    fontSize: 14,
+    outline: "none",
+    boxSizing: "border-box",
+    background: "white",
+  },
+  textarea: {
+    width: "100%",
+    borderRadius: 16,
+    border: "1px solid #cbd5e1",
+    padding: "14px 16px",
+    fontSize: 14,
+    minHeight: 130,
+    outline: "none",
+    boxSizing: "border-box",
+    resize: "vertical",
+    background: "white",
+    lineHeight: 1.6,
+  },
+  chips: { display: "flex", flexWrap: "wrap", gap: 8 },
+  upload: {
+    width: "100%",
+    borderRadius: 18,
+    border: "1.5px dashed #cbd5e1",
+    padding: "16px",
+    background: "white",
+    boxSizing: "border-box",
+  },
+  imageGrid: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, marginTop: 12 },
+  image: { width: "100%", height: 120, objectFit: "cover", borderRadius: 16, border: "1px solid #e2e8f0" },
+  buttonRow: { display: "flex", flexWrap: "wrap", gap: 10, marginTop: 22, paddingTop: 18, borderTop: "1px solid #e2e8f0" },
+  primaryBtn: {
+    background: "#0f172a",
+    color: "white",
+    border: "none",
+    borderRadius: 18,
+    padding: "14px 18px",
+    fontSize: 14,
+    fontWeight: 700,
+    cursor: "pointer",
+  },
+  secondaryBtn: {
+    background: "white",
+    color: "#334155",
+    border: "1px solid #cbd5e1",
+    borderRadius: 18,
+    padding: "14px 18px",
+    fontSize: 14,
+    fontWeight: 700,
+    cursor: "pointer",
+  },
+  promptBox: {
+    marginTop: 16,
+    borderRadius: 24,
+    background: "#020617",
+    color: "#e2e8f0",
+    padding: 20,
+    fontSize: 13,
+    lineHeight: 1.75,
+    whiteSpace: "pre-wrap",
+    maxHeight: 460,
+    overflow: "auto",
+  },
+  previewBox: {
+    marginTop: 16,
+    borderRadius: 24,
+    background: "#f8fafc",
+    color: "#334155",
+    padding: 20,
+    fontSize: 14,
+    lineHeight: 1.95,
+    whiteSpace: "pre-wrap",
+    border: "1px solid #e2e8f0",
+  },
+  recordList: { marginTop: 18, display: "flex", flexDirection: "column", gap: 14 },
+  recordCard: {
+    borderRadius: 24,
+    border: "1px solid #e2e8f0",
+    padding: 16,
+    background: "white",
+    boxShadow: "0 4px 12px rgba(15,23,42,0.04)",
+  },
+  recordMemo: {
+    marginTop: 12,
+    borderRadius: 16,
+    padding: 14,
+    background: "#f8fafc",
+    fontSize: 14,
+    color: "#475569",
+    lineHeight: 1.7,
+  },
 };
 
 function pick(arr) {
@@ -215,8 +370,7 @@ function nextPlanFor(form) {
   const projectPlan = {
     연작: "다음 시간에는 오늘 이어간 흐름을 바탕으로 주제를 더 깊이 발전시켜볼 수 있도록 도울 예정입니다.",
     협동작업: "다음 시간에는 함께 맞춰가는 경험이 자연스럽게 이어질 수 있도록 역할과 관계 흐름을 더 살펴볼 예정입니다.",
-    "100호캔버스":
-      "다음 시간에는 크게 시도하는 과정 안에서 스스로 계획하고 이어가는 힘이 더 드러날 수 있도록 도울 예정입니다.",
+    "100호캔버스": "다음 시간에는 크게 시도하는 과정 안에서 스스로 계획하고 이어가는 힘이 더 드러날 수 있도록 도울 예정입니다.",
   };
   return projectPlan[form.project] || "다음 시간에도 오늘의 흐름을 이어가며 성장의 경험을 쌓을 수 있도록 도울 예정입니다.";
 }
@@ -322,10 +476,10 @@ ${nextLine}`;
 
 function Field({ label, children, hint }) {
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-3">
-        <div className="text-sm font-semibold text-slate-800">{label}</div>
-        {hint ? <div className="text-xs text-slate-400">{hint}</div> : null}
+    <div style={{ marginBottom: 4 }}>
+      <div style={styles.labelRow}>
+        <div style={styles.label}>{label}</div>
+        {hint ? <div style={styles.hint}>{hint}</div> : null}
       </div>
       {children}
     </div>
@@ -337,11 +491,16 @@ function Chip({ active, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
-        active
-          ? "border-slate-900 bg-slate-900 text-white shadow-sm"
-          : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-      }`}
+      style={{
+        borderRadius: 999,
+        border: active ? "1px solid #0f172a" : "1px solid #cbd5e1",
+        background: active ? "#0f172a" : "#ffffff",
+        color: active ? "#ffffff" : "#334155",
+        padding: "10px 14px",
+        fontSize: 13,
+        fontWeight: 700,
+        cursor: "pointer",
+      }}
     >
       {children}
     </button>
@@ -354,12 +513,12 @@ export default function App() {
   const [copied, setCopied] = useState("");
 
   useEffect(() => {
-    const saved = localStorage.getItem("jarada-briefing-records-v3");
+    const saved = localStorage.getItem("jarada-briefing-records-inline-v1");
     if (saved) setRecords(JSON.parse(saved));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("jarada-briefing-records-v3", JSON.stringify(records));
+    localStorage.setItem("jarada-briefing-records-inline-v1", JSON.stringify(records));
   }, [records]);
 
   useEffect(() => {
@@ -411,7 +570,6 @@ export default function App() {
       alert("관찰 메모를 입력해 주세요.");
       return;
     }
-
     const item = {
       id: crypto.randomUUID(),
       ...form,
@@ -440,69 +598,54 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-white text-slate-900">
-      <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
-        <div className="mb-8 grid gap-4 lg:grid-cols-[1.15fr_.85fr]">
-          <div className="rounded-[28px] bg-white p-7 shadow-sm ring-1 ring-slate-200">
-            <div className="mb-3 inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-              자라다 브리핑 MVP
-            </div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">
-              교사용 브리핑 입력 + 프롬프트 생성기
-            </h1>
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600 md:text-base">
-              재원기간별, 연령별, 프로젝트별 키워드를 중심으로 교육적 의미와 다음 시간 계획까지 담긴 브리핑 초안을 만들 수 있습니다.
-            </p>
+    <div style={styles.page}>
+      <div style={styles.container}>
+        <div style={styles.topGrid}>
+          <div style={styles.card}>
+            <div style={styles.badge}>자라다 브리핑 MVP</div>
+            <h1 style={styles.title}>교사용 브리핑 입력 + 프롬프트 생성기</h1>
+            <p style={styles.subtitle}>재원기간별, 연령별, 프로젝트별 키워드를 중심으로 교육적 의미와 다음 시간 계획까지 담긴 브리핑 초안을 만들 수 있습니다.</p>
           </div>
-
-          <div className="rounded-[28px] bg-slate-900 p-7 text-white shadow-sm">
-            <div className="text-sm font-semibold text-slate-300">작성 기준</div>
-            <div className="mt-4 grid gap-3 text-sm leading-6 text-slate-100">
-              <div className="rounded-2xl bg-white/5 px-4 py-3">어려운 용어는 학부모가 이해하기 쉬운 말로 바꿔 설명합니다.</div>
-              <div className="rounded-2xl bg-white/5 px-4 py-3">평가보다 관찰 중심으로, 짧은 메모도 자연스럽게 해석합니다.</div>
-              <div className="rounded-2xl bg-white/5 px-4 py-3">오늘의 장면과 교육적 의미, 다음 시간 계획까지 함께 담습니다.</div>
+          <div style={styles.darkCard}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: "#cbd5e1", marginBottom: 14 }}>작성 기준</div>
+            <div style={{ display: "grid", gap: 10 }}>
+              <div style={styles.darkItem}>어려운 용어는 학부모가 이해하기 쉬운 말로 바꿔 설명합니다.</div>
+              <div style={styles.darkItem}>평가보다 관찰 중심으로, 짧은 메모도 자연스럽게 해석합니다.</div>
+              <div style={styles.darkItem}>오늘의 장면과 교육적 의미, 다음 시간 계획까지 함께 담습니다.</div>
             </div>
           </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[1.08fr_.92fr]">
-          <div className="space-y-6">
-            <section className="rounded-[28px] bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-7">
-              <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+        <div style={styles.mainGrid}>
+          <div>
+            <section style={styles.card}>
+              <div style={styles.cardTopRow}>
                 <div>
-                  <h2 className="text-2xl font-semibold text-slate-950">브리핑 입력</h2>
-                  <p className="mt-1 text-sm text-slate-500">
-                    선택과 짧은 메모만 입력하면, 오른쪽에서 바로 결과를 확인할 수 있습니다.
-                  </p>
+                  <h2 style={styles.sectionTitle}>브리핑 입력</h2>
+                  <div style={styles.sectionHint}>선택과 짧은 메모만 입력하면, 오른쪽에서 바로 결과를 확인할 수 있습니다.</div>
                 </div>
-                <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">빠른 입력</div>
+                <div style={styles.miniTag}>빠른 입력</div>
               </div>
 
-              <div className="mt-5 grid gap-4 md:grid-cols-2">
+              <div style={styles.grid2}>
                 <Field label="학생명">
                   <input
                     value={form.student}
                     onChange={(e) => setForm((prev) => ({ ...prev, student: e.target.value }))}
                     placeholder="예: 최민준"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-400"
+                    style={styles.input}
                   />
                 </Field>
-
                 <Field label="날짜">
-                  <input
-                    type="date"
-                    value={form.date}
-                    onChange={(e) => setForm((prev) => ({ ...prev, date: e.target.value }))}
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-400"
-                  />
+                  <input type="date" value={form.date} onChange={(e) => setForm((prev) => ({ ...prev, date: e.target.value }))} style={styles.input} />
                 </Field>
               </div>
 
-              <div className="mt-5 rounded-[24px] border border-slate-200 bg-slate-50/70 p-5">
-                <div className="mb-3 text-sm font-semibold text-slate-800">연령 / 발달 기준</div>
-                <div className="grid gap-4 md:grid-cols-3">
+              <div style={styles.softBox}>
+                <div style={{ ...styles.label, marginBottom: 10 }}>연령 / 발달 기준</div>
+                <div style={styles.grid3}>
                   <Field label="연령대">
-                    <div className="flex flex-wrap gap-2">
+                    <div style={styles.chips}>
                       {ageBands.map((band) => (
                         <Chip key={band} active={form.ageBand === band} onClick={() => setForm((prev) => ({ ...prev, ageBand: band }))}>
                           {band}
@@ -510,35 +653,23 @@ export default function App() {
                       ))}
                     </div>
                   </Field>
-
                   <Field label="발달 영역">
-                    <div className="flex flex-wrap gap-2">
+                    <div style={styles.chips}>
                       {Object.keys(ageDomains[form.ageBand] || {}).map((domain) => (
                         <Chip
                           key={domain}
                           active={form.ageDomain === domain}
-                          onClick={() =>
-                            setForm((prev) => ({
-                              ...prev,
-                              ageDomain: domain,
-                              ageSubKeyword: ageDomains[form.ageBand][domain][0],
-                            }))
-                          }
+                          onClick={() => setForm((prev) => ({ ...prev, ageDomain: domain, ageSubKeyword: ageDomains[form.ageBand][domain][0] }))}
                         >
                           {domain}
                         </Chip>
                       ))}
                     </div>
                   </Field>
-
                   <Field label="세부 발달 키워드">
-                    <div className="flex flex-wrap gap-2">
+                    <div style={styles.chips}>
                       {(ageDomains[form.ageBand]?.[form.ageDomain] || []).map((sub) => (
-                        <Chip
-                          key={sub}
-                          active={form.ageSubKeyword === sub}
-                          onClick={() => setForm((prev) => ({ ...prev, ageSubKeyword: sub }))}
-                        >
+                        <Chip key={sub} active={form.ageSubKeyword === sub} onClick={() => setForm((prev) => ({ ...prev, ageSubKeyword: sub }))}>
                           {sub}
                         </Chip>
                       ))}
@@ -547,195 +678,163 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-4 md:grid-cols-2">
-                <Field label="프로젝트">
-                  <div className="flex flex-wrap gap-2">
-                    {projects.map((project) => (
-                      <Chip key={project} active={form.project === project} onClick={() => setForm((prev) => ({ ...prev, project }))}>
-                        {project}
-                      </Chip>
-                    ))}
-                  </div>
-                </Field>
-
-                <Field label="프로젝트 키워드">
-                  <div className="flex flex-wrap gap-2">
-                    {(projectKeywords[form.project] || []).map((keyword) => (
-                      <Chip
-                        key={keyword}
-                        active={form.projectKeyword === keyword}
-                        onClick={() => setForm((prev) => ({ ...prev, projectKeyword: keyword }))}
-                      >
-                        {keyword}
-                      </Chip>
-                    ))}
-                  </div>
-                </Field>
+              <div style={styles.grid2}>
+                <div style={styles.block}>
+                  <Field label="프로젝트">
+                    <div style={styles.chips}>
+                      {projects.map((project) => (
+                        <Chip key={project} active={form.project === project} onClick={() => setForm((prev) => ({ ...prev, project }))}>
+                          {project}
+                        </Chip>
+                      ))}
+                    </div>
+                  </Field>
+                </div>
+                <div style={styles.block}>
+                  <Field label="프로젝트 키워드">
+                    <div style={styles.chips}>
+                      {(projectKeywords[form.project] || []).map((keyword) => (
+                        <Chip key={keyword} active={form.projectKeyword === keyword} onClick={() => setForm((prev) => ({ ...prev, projectKeyword: keyword }))}>
+                          {keyword}
+                        </Chip>
+                      ))}
+                    </div>
+                  </Field>
+                </div>
               </div>
 
-              <div className="mt-5 grid gap-4 md:grid-cols-2">
-                <Field label="재원기간">
-                  <div className="flex flex-wrap gap-2">
-                    {monthBands.map((band) => (
-                      <Chip key={band.value} active={form.months === band.value} onClick={() => setForm((prev) => ({ ...prev, months: band.value }))}>
-                        {band.label}
-                      </Chip>
-                    ))}
-                  </div>
-                </Field>
-
-                <Field label="재원기간별 키워드">
-                  <div className="flex flex-wrap gap-2">
-                    {(stageKeywords[form.months] || []).map((stage) => (
-                      <Chip key={stage} active={form.stage === stage} onClick={() => setForm((prev) => ({ ...prev, stage }))}>
-                        {stage}
-                      </Chip>
-                    ))}
-                  </div>
-                </Field>
+              <div style={styles.grid2}>
+                <div style={styles.block}>
+                  <Field label="재원기간">
+                    <div style={styles.chips}>
+                      {monthBands.map((band) => (
+                        <Chip key={band.value} active={form.months === band.value} onClick={() => setForm((prev) => ({ ...prev, months: band.value }))}>
+                          {band.label}
+                        </Chip>
+                      ))}
+                    </div>
+                  </Field>
+                </div>
+                <div style={styles.block}>
+                  <Field label="재원기간별 키워드">
+                    <div style={styles.chips}>
+                      {(stageKeywords[form.months] || []).map((stage) => (
+                        <Chip key={stage} active={form.stage === stage} onClick={() => setForm((prev) => ({ ...prev, stage }))}>
+                          {stage}
+                        </Chip>
+                      ))}
+                    </div>
+                  </Field>
+                </div>
               </div>
 
-              <div className="mt-5 grid gap-4 md:grid-cols-2">
-                <Field label="사회성훈련">
-                  <div className="flex flex-wrap gap-2">
-                    {Object.keys(coreKeywords).map((core) => (
-                      <Chip
-                        key={core}
-                        active={form.core === core}
-                        onClick={() =>
-                          setForm((prev) => ({
-                            ...prev,
-                            core,
-                            action: coreKeywords[core][0],
-                          }))
-                        }
-                      >
-                        {core}
-                      </Chip>
-                    ))}
-                  </div>
-                </Field>
-
-                <Field label="행동 키워드">
-                  <div className="flex flex-wrap gap-2">
-                    {(coreKeywords[form.core] || []).map((action) => (
-                      <Chip key={action} active={form.action === action} onClick={() => setForm((prev) => ({ ...prev, action }))}>
-                        {action}
-                      </Chip>
-                    ))}
-                  </div>
-                </Field>
+              <div style={styles.grid2}>
+                <div style={styles.block}>
+                  <Field label="사회성훈련">
+                    <div style={styles.chips}>
+                      {Object.keys(coreKeywords).map((core) => (
+                        <Chip key={core} active={form.core === core} onClick={() => setForm((prev) => ({ ...prev, core, action: coreKeywords[core][0] }))}>
+                          {core}
+                        </Chip>
+                      ))}
+                    </div>
+                  </Field>
+                </div>
+                <div style={styles.block}>
+                  <Field label="행동 키워드">
+                    <div style={styles.chips}>
+                      {(coreKeywords[form.core] || []).map((action) => (
+                        <Chip key={action} active={form.action === action} onClick={() => setForm((prev) => ({ ...prev, action }))}>
+                          {action}
+                        </Chip>
+                      ))}
+                    </div>
+                  </Field>
+                </div>
               </div>
 
-              <div className="mt-5">
+              <div style={styles.block}>
                 <Field label="작품 사진 첨부" hint="최소 4장 권장">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={onImageChange}
-                    className="w-full rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-4 text-sm text-slate-600"
-                  />
+                  <input type="file" accept="image/*" multiple onChange={onImageChange} style={styles.upload} />
                   {form.images.length > 0 && (
-                    <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+                    <div style={styles.imageGrid}>
                       {form.images.map((img, idx) => (
-                        <img key={idx} src={img} alt={`preview-${idx}`} className="h-32 w-full rounded-xl object-cover ring-1 ring-slate-200" />
+                        <img key={idx} src={img} alt={`preview-${idx}`} style={styles.image} />
                       ))}
                     </div>
                   )}
                 </Field>
               </div>
 
-              <div className="mt-5">
+              <div style={styles.block}>
                 <Field label="관찰 메모">
                   <textarea
                     value={form.memo}
                     onChange={(e) => setForm((prev) => ({ ...prev, memo: e.target.value }))}
-                    rows={5}
                     placeholder="예: 도라에몽 다리 만드는 중, 다음 시간 아이디어 스케치 구상"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-400"
+                    style={styles.textarea}
                   />
                 </Field>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-200 pt-5">
-                <button
-                  onClick={saveRecord}
-                  className="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
-                >
-                  기록 저장
-                </button>
-
-                <button
-                  onClick={() => copyText(prompt, "prompt")}
-                  className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                >
+              <div style={styles.buttonRow}>
+                <button onClick={saveRecord} style={styles.primaryBtn}>기록 저장</button>
+                <button onClick={() => copyText(prompt, "prompt")} style={styles.secondaryBtn}>
                   {copied === "prompt" ? "프롬프트 복사됨" : "프롬프트 복사"}
                 </button>
-
-                <button
-                  onClick={() => copyText(preview, "preview")}
-                  className="rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                >
+                <button onClick={() => copyText(preview, "preview")} style={styles.secondaryBtn}>
                   {copied === "preview" ? "초안 복사됨" : "브리핑 초안 복사"}
                 </button>
               </div>
             </section>
 
-            <section className="rounded-[28px] bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-7">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-semibold text-slate-950">GPT 프롬프트</h2>
-                <div className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">복사해서 사용</div>
+            <section style={{ ...styles.card, marginTop: 24 }}>
+              <div style={styles.cardTopRow}>
+                <div>
+                  <h2 style={styles.sectionTitle}>GPT 프롬프트</h2>
+                  <div style={styles.sectionHint}>그대로 복사해 GPT에 붙여넣을 수 있는 버전입니다.</div>
+                </div>
+                <div style={styles.miniTag}>복사해서 사용</div>
               </div>
-              <pre className="mt-4 max-h-[420px] overflow-auto whitespace-pre-wrap rounded-2xl bg-slate-950 p-5 text-sm leading-6 text-slate-100">
-                {prompt}
-              </pre>
+              <div style={styles.promptBox}>{prompt}</div>
             </section>
 
-            <section className="rounded-[28px] bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-7">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-semibold text-slate-950">브리핑 초안 미리보기</h2>
-                <div className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">실시간</div>
+            <section style={{ ...styles.card, marginTop: 24 }}>
+              <div style={styles.cardTopRow}>
+                <div>
+                  <h2 style={styles.sectionTitle}>브리핑 초안 미리보기</h2>
+                  <div style={styles.sectionHint}>학부모에게 전달하기 전 문장 흐름을 바로 확인할 수 있습니다.</div>
+                </div>
+                <div style={styles.miniTag}>실시간</div>
               </div>
-              <div className="mt-4 whitespace-pre-wrap rounded-2xl bg-slate-50 p-5 text-sm leading-7 text-slate-700 ring-1 ring-slate-100">
-                {preview}
-              </div>
+              <div style={styles.previewBox}>{preview}</div>
             </section>
           </div>
 
-          <div className="rounded-[28px] bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-7">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-slate-950">저장된 기록</h2>
-              <div className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">최근순</div>
+          <div style={styles.card}>
+            <div style={styles.cardTopRow}>
+              <div>
+                <h2 style={styles.sectionTitle}>저장된 기록</h2>
+                <div style={styles.sectionHint}>최근 저장된 브리핑을 바로 다시 복사할 수 있습니다.</div>
+              </div>
+              <div style={styles.miniTag}>최근순</div>
             </div>
 
-            <div className="mt-4 space-y-4">
+            <div style={styles.recordList}>
               {records.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
-                  저장된 기록이 없습니다.
-                </div>
+                <div style={{ ...styles.recordCard, textAlign: "center", color: "#64748b" }}>저장된 기록이 없습니다.</div>
               ) : (
                 records.map((item) => (
-                  <div key={item.id} className="rounded-[24px] border border-slate-200 p-4 transition hover:shadow-sm">
-                    <div className="font-semibold">{item.student || "이름 미입력"}</div>
-                    <div className="mt-1 text-xs text-slate-500">
-                      {item.date} · {item.project} · {item.stage}
-                    </div>
-                    <div className="mt-3 rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-700">{item.memo}</div>
-                    <div className="mt-2 text-xs text-slate-500">첨부 사진 {item.images?.length || 0}장</div>
-
-                    <div className="mt-3 flex gap-2">
-                      <button
-                        onClick={() => copyText(item.prompt, `p-${item.id}`)}
-                        className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700"
-                      >
+                  <div key={item.id} style={styles.recordCard}>
+                    <div style={{ fontWeight: 700 }}>{item.student || "이름 미입력"}</div>
+                    <div style={{ marginTop: 4, fontSize: 12, color: "#64748b" }}>{item.date} · {item.project} · {item.stage}</div>
+                    <div style={styles.recordMemo}>{item.memo}</div>
+                    <div style={{ marginTop: 10, fontSize: 12, color: "#64748b" }}>첨부 사진 {item.images?.length || 0}장</div>
+                    <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
+                      <button onClick={() => copyText(item.prompt, `p-${item.id}`)} style={styles.secondaryBtn}>
                         {copied === `p-${item.id}` ? "복사됨" : "프롬프트 복사"}
                       </button>
-
-                      <button
-                        onClick={() => copyText(item.preview, `v-${item.id}`)}
-                        className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700"
-                      >
+                      <button onClick={() => copyText(item.preview, `v-${item.id}`)} style={styles.secondaryBtn}>
                         {copied === `v-${item.id}` ? "복사됨" : "초안 복사"}
                       </button>
                     </div>
