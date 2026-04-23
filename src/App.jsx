@@ -829,10 +829,10 @@ export default function App() {
       <div style={styles.container}>
         <div style={styles.topGrid}>
           <div style={styles.card}>
-            <div style={styles.badge}>자라다 브리핑 MVP</div>
-            <h1 style={styles.title}>교사용 브리핑 입력 + 프롬프트 생성기</h1>
-            <p style={styles.subtitle}>
-              재원기간, 연령, 프로젝트, 사회성훈련 키워드를 바탕으로 교육적 의미와 다음 시간 계획까지 담긴 브리핑 초안을 만들 수 있습니다.
+          <h1 style={styles.title}>JARADA MVP 심화브리핑</h1>
+<p style={styles.subtitle}>
+  관찰 메모와 작품 흐름을 바탕으로 아이의 성장 과정을 해석하고,
+  학부모에게 전달할 브리핑을 생성합니다.
             </p>
           </div>
 
