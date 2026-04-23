@@ -52,35 +52,17 @@ const ageCoreSummaries = {
 const projects = ["연작", "100호캔버스", "협동작업"];
 
 const projectKeywords = {
-  연작: ["주제지속", "반복탐구", "관찰심화", "표현확장", "몰입", "발전경험"],
-  협동작업: ["협력", "역할분담", "의사소통", "조율", "갈등해결", "공동책임"],
-  "100호캔버스": ["스케일확장", "공간이해", "계획력", "몰입지속", "도전극복", "자기효능감"],
+  연작: ["주제지속", "반복탐구", "관찰심화", "표현확장", "몰입경험", "발전흐름"],
+  협동작업: ["협력경험", "역할분담", "의사소통", "관계조율", "갈등해결", "공동성취"],
+  "100호캔버스": ["스케일확장", "공간이해", "계획구성", "몰입지속", "도전극복", "완수경험"],
 };
 
-const coreKeywords = {
-  자기조절: ["기다리기", "충동 멈추기", "감정 표현하기", "좌절 버티기", "도전 유지하기"],
-  활동조절: ["도구 사용 조절", "힘/속도 조절", "반복 연습", "단계 수행", "끝까지 마무리"],
-  관계인식: ["차례 지키기", "거리 조절", "방해 인식", "상황 살피기", "기본 배려"],
-  상호작용: ["기다렸다 말하기", "요청하기", "도움 요청", "도움 주기", "긍정 피드백"],
-  관계조율: ["허락 구하기", "양해 구하기", "의견 표현", "의견 수용", "사과하기", "갈등 해결"],
-  협동: ["역할 수행", "역할 분담", "의견 조율", "협력 수행", "도움 주고받기"],
-  자아실현: ["자발적 시작", "자발적 지속", "선택하기", "책임지기", "끝까지 완성"],
-};
-
-const easyWords = {
-  자기조절: "스스로 행동을 조절해보는 힘",
-  감정조절: "감정을 다뤄보는 힘",
-  충동조절: "하고 싶은 마음을 잠시 멈춰보는 힘",
-  지연만족: "기다려보는 경험",
-  주의집중: "집중해서 이어가는 힘",
-  전환능력: "상황에 맞게 바꿔보는 힘",
-  회복탄력성: "어려운 뒤에도 다시 해보는 힘",
-  생활자립: "스스로 해보는 생활 습관",
-  기본사회성: "친구와 함께 지내는 기본 태도",
-  자립: "스스로 결정하고 책임지는 모습",
-  정체성: "자신을 알아가는 과정",
-  심화경험: "한 가지를 깊이 있게 해보는 경험",
-  자기효능감: "할 수 있다고 느끼는 자신감",
+const socialMainKeywords = {
+  관계인식: ["차례지키기", "거리조절", "방해인식", "상황살피기", "기본배려"],
+  상호작용: ["요청하기", "도움요청", "도움주기", "의견표현", "기다렸다말하기"],
+  관계조율: ["의견조율", "양해구하기", "의견수용", "갈등해결", "사과하기"],
+  협동: ["역할수행", "역할분담", "협력수행", "도움주고받기", "공동성취"],
+  자아실현: ["자발적시작", "자발적지속", "선택하기", "책임지기", "끝까지완성"],
 };
 
 const defaultForm = {
@@ -90,52 +72,131 @@ const defaultForm = {
   stage: "흥미 탐색",
   ageBand: "6–7세",
   ageDomain: "감정이해",
-  ageSubKeyword: "감정인식",
+  ageSubKeywords: [],
   project: "연작",
-  projectKeyword: "주제지속",
-  core: "자기조절",
-  action: "기다리기",
+  projectKeywordsSelected: [],
+  socialDomain: "관계인식",
+  socialKeywordsSelected: [],
   memo: "",
   images: [],
 };
 
 const subKeywordMeta = {
-  기다리기: { upper: "정서적 자기조절", main: "기다림", meaning: "기다리고 멈춰보는 경험" },
-  "충동 멈추기": { upper: "정서적 자기조절", main: "조절", meaning: "하고 싶은 행동을 잠시 멈춰보는 힘" },
-  "감정 표현하기": { upper: "정서적 자기조절", main: "표현", meaning: "감정을 바르게 표현해보는 경험" },
-  "좌절 버티기": { upper: "정서적 자기조절", main: "회복", meaning: "쉽지 않은 순간을 버텨보는 경험" },
-  "도전 유지하기": { upper: "자아효능감", main: "도전", meaning: "어려워도 다시 이어가보는 경험" },
-  "도구 사용 조절": { upper: "인지적 자기조절", main: "수행", meaning: "도구를 상황에 맞게 조절하는 힘" },
-  "힘/속도 조절": { upper: "인지적 자기조절", main: "조절", meaning: "힘과 속도를 조절하며 과제를 다루는 힘" },
-  "반복 연습": { upper: "자아효능감", main: "발전", meaning: "반복 속에서 작은 성공을 쌓는 경험" },
-  "단계 수행": { upper: "인지적 자기조절", main: "계획", meaning: "순서에 맞게 과제를 이어가는 힘" },
-  "끝까지 마무리": { upper: "자아효능감", main: "완수", meaning: "끝까지 마무리하며 완수 경험을 쌓는 것" },
-  "차례 지키기": { upper: "정서적 자기조절", main: "기다림", meaning: "관계 안에서 차례를 받아들이는 경험" },
-  "거리 조절": { upper: "사회적효능감", main: "관계", meaning: "관계 안에서 적절한 거리를 맞춰보는 경험" },
-  "방해 인식": { upper: "사회적효능감", main: "관계", meaning: "다른 사람에게 미치는 영향을 알아차리는 경험" },
-  "상황 살피기": { upper: "사회적효능감", main: "조율", meaning: "주변 상황을 살피며 자신을 맞춰보는 힘" },
-  "기본 배려": { upper: "사회적효능감", main: "배려", meaning: "다른 사람을 배려해보는 경험" },
-  "기다렸다 말하기": { upper: "사회적효능감", main: "조율", meaning: "자기 차례를 기다렸다가 표현하는 경험" },
-  요청하기: { upper: "사회적효능감", main: "표현", meaning: "필요한 것을 관계 안에서 요청해보는 경험" },
-  "도움 요청": { upper: "사회적효능감", main: "인정", meaning: "도움이 필요할 때 요청하며 관계를 활용해보는 경험" },
-  "도움 주기": { upper: "사회적효능감", main: "협력", meaning: "다른 친구를 도와주며 함께 해보는 경험" },
-  "긍정 피드백": { upper: "사회적효능감", main: "인정", meaning: "긍정적으로 반응하며 관계를 따뜻하게 이어가는 경험" },
-  "허락 구하기": { upper: "사회적효능감", main: "조율", meaning: "행동 전에 허락을 구하며 관계를 조율하는 경험" },
-  "양해 구하기": { upper: "사회적효능감", main: "조율", meaning: "상황에 맞게 양해를 구하며 관계를 이어가는 경험" },
-  "의견 표현": { upper: "사회적효능감", main: "표현", meaning: "자기 의견을 관계 안에서 표현해보는 경험" },
-  "의견 수용": { upper: "사회적효능감", main: "조율", meaning: "다른 의견을 받아들이며 관계를 조절하는 경험" },
-  사과하기: { upper: "사회적효능감", main: "갈등", meaning: "관계 안에서 사과를 통해 갈등을 풀어보는 경험" },
-  "갈등 해결": { upper: "사회적효능감", main: "갈등", meaning: "부딪힌 상황을 관계 안에서 풀어보는 경험" },
-  "역할 수행": { upper: "사회적효능감", main: "역할", meaning: "팀 안에서 자신의 역할을 해보는 경험" },
-  "역할 분담": { upper: "사회적효능감", main: "역할", meaning: "역할을 나누며 공동 목표를 경험하는 과정" },
-  "의견 조율": { upper: "사회적효능감", main: "조율", meaning: "서로의 생각을 맞춰가는 경험" },
-  "협력 수행": { upper: "사회적효능감", main: "협력", meaning: "함께 결과를 만들어가는 경험" },
-  "도움 주고받기": { upper: "사회적효능감", main: "협력", meaning: "도움을 주고받으며 관계 속 효능감을 쌓는 경험" },
-  "자발적 시작": { upper: "자아효능감", main: "선택", meaning: "스스로 시작해보는 경험" },
-  "자발적 지속": { upper: "자아효능감", main: "지속", meaning: "스스로 이어가보는 힘" },
+  감정인식: { upper: "정서적 자기조절", main: "감정이해", meaning: "자신의 감정을 알아차려보는 경험" },
+  감정표현: { upper: "정서적 자기조절", main: "감정이해", meaning: "감정을 바르게 표현해보는 경험" },
+  감정말하기: { upper: "정서적 자기조절", main: "감정이해", meaning: "감정을 말로 꺼내보는 경험" },
+  멈추기: { upper: "정서적 자기조절", main: "충동조절", meaning: "하고 싶은 행동을 잠시 멈춰보는 힘" },
+  기다리기: { upper: "정서적 자기조절", main: "충동조절", meaning: "기다리고 순서를 받아들이는 경험" },
+  차례지키기: { upper: "정서적 자기조절", main: "관계인식", meaning: "관계 안에서 자신의 차례를 지켜보는 경험" },
+  규칙이해: { upper: "정서적 자기조절", main: "규칙", meaning: "교실 안의 약속을 이해해보는 과정" },
+  순서지키기: { upper: "정서적 자기조절", main: "규칙", meaning: "순서와 흐름을 따라가보는 경험" },
+  교실규칙: { upper: "정서적 자기조절", main: "규칙", meaning: "교실 안의 규칙을 지켜보는 경험" },
+  분리안정: { upper: "정서적 자기조절", main: "안정감", meaning: "부모와 떨어진 상황에서도 안정감을 유지하는 경험" },
+  교사신뢰: { upper: "정서적 자기조절", main: "안정감", meaning: "교사와의 관계 안에서 신뢰를 쌓아가는 경험" },
+  환경안정: { upper: "정서적 자기조절", main: "안정감", meaning: "낯선 환경 안에서도 편안함을 느껴보는 경험" },
+
+  목표정하기: { upper: "인지적 자기조절", main: "과제설정", meaning: "스스로 과제의 목표를 잡아보는 경험" },
+  시작하기: { upper: "자아효능감", main: "과제설정", meaning: "망설임보다 먼저 시작해보는 경험" },
   선택하기: { upper: "자아효능감", main: "선택", meaning: "자신의 과제를 스스로 선택해보는 경험" },
+  단계나누기: { upper: "인지적 자기조절", main: "계획", meaning: "과정을 단계로 나눠 생각해보는 힘" },
+  순서생각: { upper: "인지적 자기조절", main: "계획", meaning: "작업 순서를 먼저 떠올려보는 힘" },
+  방법정리: { upper: "인지적 자기조절", main: "계획", meaning: "어떻게 할지 방법을 정리해보는 힘" },
+  단계수행: { upper: "인지적 자기조절", main: "수행", meaning: "단계에 맞춰 과제를 이어가는 힘" },
+  반복연습: { upper: "자아효능감", main: "발전", meaning: "반복 속에서 작은 성공을 쌓는 경험" },
+  도구사용: { upper: "인지적 자기조절", main: "수행", meaning: "도구를 조절하며 과제를 다뤄보는 경험" },
+  과제지속: { upper: "인지적 자기조절", main: "지속", meaning: "쉽지 않은 과제를 포기하지 않고 이어가는 힘" },
+  몰입유지: { upper: "자아효능감", main: "지속", meaning: "한 가지 흐름을 오래 붙잡아보는 경험" },
+  끝까지하기: { upper: "자아효능감", main: "완수", meaning: "끝까지 해보며 완수 감각을 쌓는 경험" },
+  마무리하기: { upper: "자아효능감", main: "완수", meaning: "마무리까지 책임져보는 경험" },
+  완성경험: { upper: "자아효능감", main: "완수", meaning: "결과를 완성해보며 성취를 느끼는 경험" },
+  결과만들기: { upper: "자아효능감", main: "완수", meaning: "결과물로 이어지게 만들어보는 경험" },
+
+  의견조율: { upper: "사회적효능감", main: "조율", meaning: "서로의 생각을 맞춰가는 경험" },
+  양보하기: { upper: "사회적효능감", main: "조율", meaning: "자신의 입장만 고집하지 않고 물러나보는 경험" },
+  차이조정: { upper: "사회적효능감", main: "조율", meaning: "차이를 관계 안에서 조정해보는 경험" },
+  갈등조절: { upper: "사회적효능감", main: "갈등", meaning: "부딪히는 상황에서 감정을 다뤄보는 경험" },
+  갈등해결: { upper: "사회적효능감", main: "갈등", meaning: "갈등 상황을 관계 안에서 풀어보는 경험" },
+  사과하기: { upper: "사회적효능감", main: "갈등", meaning: "사과를 통해 관계를 다시 이어보는 경험" },
+  역할수행: { upper: "사회적효능감", main: "역할", meaning: "관계 안에서 자신의 역할을 맡아보는 경험" },
+  역할분담: { upper: "사회적효능감", main: "역할", meaning: "역할을 나누며 공동 목표를 경험하는 과정" },
+  책임맡기: { upper: "사회적효능감", main: "역할", meaning: "맡은 책임을 감당해보는 경험" },
+  인정받기: { upper: "사회적효능감", main: "인정", meaning: "타인에게 인정받는 경험" },
+  피드백수용: { upper: "사회적효능감", main: "인정", meaning: "피드백을 받아들이며 발전하는 경험" },
+  칭찬경험: { upper: "사회적효능감", main: "인정", meaning: "칭찬을 통해 자신감을 쌓는 경험" },
+
+  거리조절: { upper: "사회적효능감", main: "관계인식", meaning: "관계 안에서 거리를 조절해보는 경험" },
+  방해인식: { upper: "사회적효능감", main: "관계인식", meaning: "다른 사람에게 미치는 영향을 알아차리는 경험" },
+  상황살피기: { upper: "사회적효능감", main: "관계인식", meaning: "주변 흐름을 살펴보며 자신을 맞춰보는 힘" },
+  기본배려: { upper: "사회적효능감", main: "관계인식", meaning: "기본적인 배려를 실천해보는 경험" },
+
+  요청하기: { upper: "사회적효능감", main: "상호작용", meaning: "필요한 것을 관계 안에서 요청해보는 경험" },
+  도움요청: { upper: "사회적효능감", main: "상호작용", meaning: "도움이 필요할 때 관계를 활용해보는 경험" },
+  도움주기: { upper: "사회적효능감", main: "상호작용", meaning: "다른 친구를 도우며 함께 해보는 경험" },
+  의견표현: { upper: "사회적효능감", main: "상호작용", meaning: "자기 생각을 관계 안에서 표현해보는 경험" },
+  기다렸다말하기: { upper: "사회적효능감", main: "상호작용", meaning: "기다렸다가 말하며 흐름을 지켜보는 경험" },
+
+  양해구하기: { upper: "사회적효능감", main: "관계조율", meaning: "상황에 맞게 양해를 구하며 관계를 이어가는 경험" },
+  의견수용: { upper: "사회적효능감", main: "관계조율", meaning: "다른 의견을 받아들이며 관계를 조절하는 경험" },
+
+  협력수행: { upper: "사회적효능감", main: "협동", meaning: "함께 결과를 만들어가는 경험" },
+  도움주고받기: { upper: "사회적효능감", main: "협동", meaning: "서로 도움을 주고받으며 관계 속 효능감을 쌓는 경험" },
+  공동성취: { upper: "사회적효능감", main: "협동", meaning: "함께 해내며 공동 성취를 느끼는 경험" },
+
+  자발적시작: { upper: "자아효능감", main: "자기주도", meaning: "스스로 시작해보는 경험" },
+  자발적지속: { upper: "자아효능감", main: "자기주도", meaning: "스스로 이어가보는 힘" },
   책임지기: { upper: "자아효능감", main: "완수", meaning: "선택한 것을 책임지고 이어가는 경험" },
-  "끝까지 완성": { upper: "자아효능감", main: "완수", meaning: "완성까지 이어가며 성취를 느끼는 경험" },
+  끝까지완성: { upper: "자아효능감", main: "완수", meaning: "완성까지 이어가며 성취를 느끼는 경험" },
+
+  강점이해: { upper: "메타인지적 조절", main: "자기이해", meaning: "자신의 강점을 이해해보는 경험" },
+  약점이해: { upper: "메타인지적 조절", main: "자기이해", meaning: "자신의 약점을 객관적으로 바라보는 경험" },
+  상태파악: { upper: "메타인지적 조절", main: "자기이해", meaning: "자신의 상태를 스스로 알아차리는 경험" },
+  방향설정: { upper: "메타인지적 조절", main: "자기조정", meaning: "자신에게 맞는 방향을 잡아보는 경험" },
+  방법선택: { upper: "메타인지적 조절", main: "자기조정", meaning: "자신에게 맞는 방법을 골라보는 경험" },
+  자기조절: { upper: "메타인지적 조절", main: "자기조정", meaning: "자신의 상태에 맞게 스스로 조절해보는 경험" },
+  어려움버티기: { upper: "메타인지적 조절", main: "한계돌파", meaning: "불편함과 어려움을 견디며 가보는 경험" },
+  기준넘기: { upper: "메타인지적 조절", main: "한계돌파", meaning: "이전 기준을 넘어보는 경험" },
+  재도전: { upper: "자아효능감", main: "도전", meaning: "실패 뒤에도 다시 시도해보는 경험" },
+  의미찾기: { upper: "메타인지적 조절", main: "내적동기", meaning: "스스로 의미를 찾아보는 경험" },
+  스스로시작: { upper: "메타인지적 조절", main: "내적동기", meaning: "시켜서가 아니라 스스로 시작해보는 경험" },
+  주도유지: { upper: "메타인지적 조절", main: "내적동기", meaning: "자기 흐름을 계속 유지해보는 경험" },
+  역할찾기: { upper: "메타인지적 조절", main: "역할정체성", meaning: "팀 안에서 자신의 역할을 찾아가는 경험" },
+  팀기여: { upper: "메타인지적 조절", main: "역할정체성", meaning: "자신의 역할로 팀에 기여해보는 경험" },
+
+  주제지속: { upper: "자아효능감", main: "지속", meaning: "한 가지 주제를 이어가며 깊이를 쌓는 경험" },
+  반복탐구: { upper: "자아효능감", main: "발전", meaning: "반복하며 스스로 탐구 범위를 넓혀가는 경험" },
+  관찰심화: { upper: "자아효능감", main: "몰입", meaning: "관찰을 깊게 이어가며 작업에 몰입하는 경험" },
+  표현확장: { upper: "자아효능감", main: "발전", meaning: "표현 방식을 넓혀보는 경험" },
+  몰입경험: { upper: "자아효능감", main: "몰입", meaning: "작업 흐름에 깊게 빠져보는 경험" },
+  발전흐름: { upper: "자아효능감", main: "발전", meaning: "반복 속에서 발전을 확인하는 경험" },
+
+  스케일확장: { upper: "자아효능감", main: "도전", meaning: "큰 규모의 작업에 도전해보는 경험" },
+  공간이해: { upper: "인지적 자기조절", main: "계획", meaning: "작업 공간을 넓게 이해하며 구성해보는 경험" },
+  계획구성: { upper: "인지적 자기조절", main: "계획", meaning: "큰 작업을 계획적으로 구성하는 경험" },
+  몰입지속: { upper: "자아효능감", main: "지속", meaning: "큰 작업 안에서도 몰입을 이어가는 경험" },
+  도전극복: { upper: "자아효능감", main: "도전", meaning: "어려운 과정을 버티며 넘어서는 경험" },
+  완수경험: { upper: "자아효능감", main: "완수", meaning: "완수까지 이어가며 해냈다는 감각을 쌓는 경험" },
+
+  협력경험: { upper: "사회적효능감", main: "협력", meaning: "또래와 함께 맞춰가며 작업하는 경험" },
+  의사소통: { upper: "사회적효능감", main: "상호작용", meaning: "작업 과정에서 말과 반응을 주고받는 경험" },
+  관계조율: { upper: "사회적효능감", main: "조율", meaning: "관계 안에서 흐름을 맞춰가는 경험" },
+};
+
+const agePriorityMeta = {
+  "6–7세": {
+    upper: "정서적 자기조절",
+    focus: "감정과 규칙의 기초",
+    meaning: "감정을 이해하고 바르게 표현하며, 규칙과 기다림, 교사와의 신뢰를 쌓아가는 시기",
+  },
+  "8–11세": {
+    upper: "인지적 자기조절",
+    focus: "과제 완수와 사회적 조율",
+    meaning: "과제를 설정하고 계획해 끝까지 해보는 경험과 또래와 조율하는 경험이 중요한 시기",
+  },
+  "12–13세": {
+    upper: "메타인지적 조절",
+    focus: "자기이해와 역할 정체성",
+    meaning: "자신의 상태를 이해하고 한계를 넘어보며, 팀 안에서 자신의 역할을 찾아가는 시기",
+  },
 };
 
 const projectMeta = {
@@ -143,44 +204,6 @@ const projectMeta = {
   협동작업: { upper: "사회적효능감", main: "협력", meaning: "또래와 함께 맞춰가며 관계 속 성취를 경험하는 프로젝트" },
   "100호캔버스": { upper: "자아효능감", main: "도전", meaning: "큰 과제를 다루며 도전과 완수 경험을 쌓는 프로젝트" },
 };
-
-const agePriorityMeta = {
-  "6–7세": { upper: "정서적 자기조절", focus: "감정과 규칙의 기초", meaning: "감정을 이해하고 바르게 표현하며, 규칙과 기다림, 교사와의 신뢰를 쌓아가는 시기" },
-  "8–11세": { upper: "인지적 자기조절", focus: "과제 완수와 사회적 조율", meaning: "과제를 설정하고 계획해 끝까지 해보는 경험과 또래와 조율하는 경험이 중요한 시기" },
-  "12–13세": { upper: "메타인지적 조절", focus: "자기이해와 역할 정체성", meaning: "자신의 상태를 이해하고 한계를 넘어보며, 팀 안에서 자신의 역할을 찾아가는 시기" },
-};
-
-function deriveInterpretation(form) {
-  const pieces = [];
-  const actionMeta = subKeywordMeta[form.action];
-  if (actionMeta) pieces.push(actionMeta);
-
-  const ageMeta = agePriorityMeta[form.ageBand];
-  const projectInfo = projectMeta[form.project];
-
-  if (projectInfo) pieces.push(projectInfo);
-  if (ageMeta) pieces.push(ageMeta);
-
-  const upperCount = {};
-  const mainCount = {};
-
-  pieces.forEach((piece) => {
-    if (piece.upper) upperCount[piece.upper] = (upperCount[piece.upper] || 0) + 1;
-    if (piece.main) mainCount[piece.main] = (mainCount[piece.main] || 0) + 1;
-  });
-
-  const primaryUpper = Object.entries(upperCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "자아효능감";
-  const primaryMain = Object.entries(mainCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "성장";
-
-  return {
-    primaryUpper,
-    primaryMain,
-    ageMeaning: ageMeta?.meaning || "",
-    projectMeaning: projectInfo?.meaning || "",
-    actionMeaning: actionMeta?.meaning || "",
-    summary: `${primaryUpper} 안에서 ${primaryMain}과 연결되는 경험을 중심으로 해석`,
-  };
-}
 
 const styles = {
   page: {
@@ -241,7 +264,13 @@ const styles = {
   },
   sectionTitle: { fontSize: 30, fontWeight: 800, margin: 0, color: "#0f172a" },
   sectionHint: { marginTop: 6, fontSize: 14, color: "#64748b" },
-  cardTopRow: { display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-end", flexWrap: "wrap" },
+  cardTopRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 12,
+    alignItems: "flex-end",
+    flexWrap: "wrap",
+  },
   miniTag: {
     borderRadius: 999,
     background: "#f1f5f9",
@@ -389,7 +418,29 @@ const styles = {
     lineHeight: 1.7,
   },
 };
-  return map[action] || action;
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function refineMemo(text) {
+  if (!text) return "";
+  return text
+    .replace(/만드는 중/g, "만들어가는 모습")
+    .replace(/작업 중/g, "작업을 이어가는 모습")
+    .replace(/구상/g, "구상하는 모습")
+    .replace(/스케치/g, "스케치해보는 모습")
+    .trim();
+}
+
+function splitMemo(memo) {
+  return memo
+    .replace(/\n/g, ",")
+    .split(/[,.]/)
+    .map((v) => v.trim())
+    .filter(Boolean)
+    .slice(0, 3)
+    .map(refineMemo);
 }
 
 function titleFor(form) {
@@ -413,32 +464,6 @@ function titleFor(form) {
   return pick(byProject[form.project] || ["오늘의 성장 브리핑"]);
 }
 
-function meaningFor(form) {
-  const stageEasy = easyWords[form.ageSubKeyword] || form.ageSubKeyword;
-  const ageLine = {
-    "6–7세": "이 시기에는 규칙과 기다림을 자연스럽게 연습해가는 과정이 중요합니다.",
-    "8–10세": "이 시기에는 스스로 해보는 과정에서 시행착오를 겪으며 배우는 경험이 중요합니다.",
-    "11–13세": "이 시기에는 자기 생각이 분명해지는 만큼 선택과 관계를 함께 배워가는 경험이 중요합니다.",
-  }[form.ageBand];
-
-  const projectLine = {
-    연작: "연작은 한 가지를 이어가며 몰입과 발전 경험을 쌓는 데 의미가 있습니다.",
-    협동작업: "협동작업은 또래와 함께 맞춰가며 관계 속 경험을 배우는 데 의미가 있습니다.",
-    "100호캔버스": "100호캔버스는 크게 시도하고 끝까지 이어가며 도전 경험을 쌓는 데 의미가 있습니다.",
-  }[form.project];
-
-  return `${form.stage} 단계 안에서 ${stageEasy}과 연결되는 모습이 조금씩 쌓이고 있다는 점이 의미 있었습니다. ${projectLine} ${ageLine}`;
-}
-
-function nextPlanFor(form) {
-  const projectPlan = {
-    연작: "다음 시간에는 오늘 이어간 흐름을 바탕으로 주제를 더 깊이 발전시켜볼 수 있도록 도울 예정입니다.",
-    협동작업: "다음 시간에는 함께 맞춰가는 경험이 자연스럽게 이어질 수 있도록 역할과 관계 흐름을 더 살펴볼 예정입니다.",
-    "100호캔버스": "다음 시간에는 크게 시도하는 과정 안에서 스스로 계획하고 이어가는 힘이 더 드러날 수 있도록 도울 예정입니다.",
-  };
-  return projectPlan[form.project] || "다음 시간에도 오늘의 흐름을 이어가며 성장의 경험을 쌓을 수 있도록 도울 예정입니다.";
-}
-
 function imagePlanLine(imageCount) {
   if (imageCount >= 4) {
     return "첨부된 작품 흐름을 함께 보면, 아이가 시도하고 수정하며 조금씩 발전시켜가는 과정까지 더 분명하게 살펴볼 수 있었습니다.";
@@ -447,6 +472,64 @@ function imagePlanLine(imageCount) {
     return "첨부된 작품 사진을 바탕으로 오늘의 시도와 결과를 함께 살펴볼 수 있었습니다.";
   }
   return "";
+}
+
+function nextPlanFor(form) {
+  const map = {
+    연작: "다음 시간에는 오늘 이어간 흐름을 바탕으로 주제를 더 깊이 발전시켜볼 수 있도록 도울 예정입니다.",
+    협동작업: "다음 시간에는 함께 맞춰가는 경험이 자연스럽게 이어질 수 있도록 역할과 관계 흐름을 더 살펴볼 예정입니다.",
+    "100호캔버스":
+      "다음 시간에는 크게 시도하는 과정 안에서 스스로 계획하고 이어가는 힘이 더 드러날 수 있도록 도울 예정입니다.",
+  };
+  return map[form.project] || "다음 시간에도 오늘의 흐름을 이어가며 성장의 경험을 쌓을 수 있도록 도울 예정입니다.";
+}
+
+function deriveInterpretation(form) {
+  const pieces = [];
+
+  const ageMeta = agePriorityMeta[form.ageBand];
+  const projectInfo = projectMeta[form.project];
+  if (ageMeta) pieces.push(ageMeta);
+  if (projectInfo) pieces.push(projectInfo);
+
+  form.ageSubKeywords.forEach((k) => {
+    if (subKeywordMeta[k]) pieces.push(subKeywordMeta[k]);
+  });
+  form.projectKeywordsSelected.forEach((k) => {
+    if (subKeywordMeta[k]) pieces.push(subKeywordMeta[k]);
+  });
+  form.socialKeywordsSelected.forEach((k) => {
+    if (subKeywordMeta[k]) pieces.push(subKeywordMeta[k]);
+  });
+
+  const upperCount = {};
+  const mainCount = {};
+
+  pieces.forEach((piece) => {
+    if (piece.upper) upperCount[piece.upper] = (upperCount[piece.upper] || 0) + 1;
+    if (piece.main) mainCount[piece.main] = (mainCount[piece.main] || 0) + 1;
+  });
+
+  const primaryUpper = Object.entries(upperCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "자아효능감";
+  const primaryMain = Object.entries(mainCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "성장";
+
+  const uniqueMeanings = Array.from(
+    new Set(
+      pieces
+        .map((p) => p.meaning)
+        .filter(Boolean)
+        .slice(0, 5)
+    )
+  );
+
+  return {
+    primaryUpper,
+    primaryMain,
+    ageMeaning: ageMeta?.meaning || "",
+    projectMeaning: projectInfo?.meaning || "",
+    keyMeanings: uniqueMeanings,
+    summary: `${primaryUpper} 안에서 ${primaryMain}과 연결되는 경험을 중심으로 해석`,
+  };
 }
 
 function generatePrompt(form) {
@@ -473,20 +556,6 @@ function generatePrompt(form) {
 9. 같은 표현, 같은 문장 구조, 같은 어휘를 반복하지 말고 다양한 표현군을 사용하라.
 10. 첨부된 작품 사진이 있는 경우, 결과만이 아니라 과정의 흐름과 변화도 함께 해석하라.
 
-[해석 우선순위]
-- 모든 브리핑은 반드시 다음 순서로 해석한다.
-1. 연령대
-2. 재원기간
-3. 프로젝트
-4. 행동 키워드 및 관찰 메모
-
-[출력 형식]
-- 제목 1줄
-- 본문 5~7문장
-- 학부모가 바로 읽어도 이해되는 자연스러운 문단
-- 마지막 문장은 다음 시간 계획으로 마무리
-- '어머님, 안녕하세요.'로 시작
-
 [좋은 관찰메모 예시]
 - 도라에몽 만들다가 친구랑 색 의견 달라서 멈춤 → 다시 맞추면서 이어감
 - 혼자 그리다가 친구랑 같이 하기로 하고 역할 나눠서 진행
@@ -495,21 +564,35 @@ function generatePrompt(form) {
 - 작업 속도 차이로 기다렸다가 다시 같이 맞춰서 진행
 
 [메모 해석 원칙]
-- 위 예시처럼 메모는 짧게 쓰되, 실제 수업에서 벌어진 장면과 흐름이 드러나게 작성한다.
+- 메모는 짧게 쓰되, 실제 수업에서 벌어진 장면과 흐름이 드러나게 작성한다.
 - 메모를 그대로 옮기지 말고, 그 안에 담긴 선택, 멈춤, 조율, 재시도, 완수의 흐름을 해석해 브리핑으로 확장한다.
 - 짧은 메모 하나도 깊은 성장 이야기로 풀어낼 수 있어야 한다.
+
+[해석 우선순위]
+- 모든 브리핑은 반드시 다음 순서로 해석한다.
+1. 연령대
+2. 재원기간
+3. 프로젝트
+4. 선택된 키워드와 관찰 메모
+
+[출력 형식]
+- 제목 1줄
+- 본문 5~7문장
+- 학부모가 바로 읽어도 이해되는 자연스러운 문단
+- 마지막 문장은 다음 시간 계획으로 마무리
+- '어머님, 안녕하세요.'로 시작
 
 [입력값]
 - 학생명: ${form.student}
 - 재원기간: ${form.months}
 - 재원기간별 키워드: ${form.stage}
 - 연령대: ${form.ageBand}
-- 발달 영역: ${form.ageDomain}
-- 세부 발달 키워드: ${form.ageSubKeyword}
+- 연령 메인키워드: ${form.ageDomain}
+- 연령 파생키워드: ${form.ageSubKeywords.join(", ")}
 - 프로젝트: ${form.project}
-- 프로젝트 키워드: ${form.projectKeyword}
-- 사회성훈련: ${form.core}
-- 행동 키워드: ${form.action}
+- 프로젝트 키워드: ${form.projectKeywordsSelected.join(", ")}
+- 사회성훈련 메인키워드: ${form.socialDomain}
+- 사회성훈련 파생키워드: ${form.socialKeywordsSelected.join(", ")}
 - 관찰 메모: ${form.memo}
 - 첨부 이미지 수: ${form.images.length}장
 
@@ -518,7 +601,7 @@ function generatePrompt(form) {
 - 중심 메인키워드: ${interpreted.primaryMain}
 - 연령 해석: ${interpreted.ageMeaning}
 - 프로젝트 해석: ${interpreted.projectMeaning}
-- 행동 해석: ${interpreted.actionMeaning}
+- 핵심 의미들: ${interpreted.keyMeanings.join(", ")}
 - 브리핑 중심 요약: ${interpreted.summary}
 
 위 기준을 모두 반영하여, 학부모에게 바로 전달 가능한 자라다식 전문 브리핑을 작성하라.`;
@@ -532,7 +615,12 @@ function generatePreview(form) {
   const title = titleFor(form);
   const greeting = "어머님, 안녕하세요. 오늘 수업 내용을 공유드립니다.";
 
-  const projectLine = `${form.project} 활동 안에서 ${form.projectKeyword}와 관련된 흐름이 이어졌고, ${actionSentence(form.action)} 장면이 자연스럽게 드러났습니다.`;
+  const ageLine = interpreted.ageMeaning;
+  const projectLine = interpreted.projectMeaning;
+  const keyLine =
+    interpreted.keyMeanings.length > 0
+      ? `오늘은 특히 ${interpreted.keyMeanings.slice(0, 2).join("과 ")}과 연결된 흐름이 중심적으로 드러났습니다.`
+      : "";
 
   let observationLine = "";
   if (memoParts.length >= 2) {
@@ -541,7 +629,6 @@ function generatePreview(form) {
     observationLine = `${memoParts[0]}이 특히 인상적이었고, 그 안에서 아이가 자신의 방식으로 계속 시도해보는 모습이 보였습니다. 메모는 짧지만 오늘 수업의 중심 장면이 분명하게 드러난 순간이었습니다.`;
   }
 
-  const meaningLine = `${interpreted.projectMeaning} ${interpreted.ageMeaning} 오늘 수업에서는 특히 ${interpreted.actionMeaning}과 연결된 흐름이 중심적으로 드러났습니다.`;
   const interpretationLine = `이번 경험은 ${interpreted.primaryUpper} 안에서 ${interpreted.primaryMain}과 연결되는 장면으로 해석할 수 있으며, 아이가 지금 시기에 필요한 성장 과제를 실제 수업 안에서 경험해본 시간이었다는 점에서 의미가 있었습니다.`;
   const imageLine = imagePlanLine(form.images.length);
   const nextLine = nextPlanFor(form);
@@ -550,9 +637,10 @@ function generatePreview(form) {
 
 ${greeting}
 
-${projectLine}
 ${observationLine}
-${meaningLine}
+${projectLine}
+${ageLine}
+${keyLine}
 ${interpretationLine}
 ${imageLine}
 ${nextLine}`;
@@ -598,56 +686,62 @@ export default function App() {
   const [recordSearch, setRecordSearch] = useState("");
 
   useEffect(() => {
-    const saved = localStorage.getItem("jarada-briefing-records-inline-v1");
+    const saved = localStorage.getItem("jarada-briefing-records-v2");
     if (saved) setRecords(JSON.parse(saved));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("jarada-briefing-records-inline-v1", JSON.stringify(records));
+    localStorage.setItem("jarada-briefing-records-v2", JSON.stringify(records));
   }, [records]);
+
+  useEffect(() => {
+    const ageDomainList = Object.keys(ageDomains[form.ageBand] || {});
+    if (!ageDomainList.includes(form.ageDomain)) {
+      const nextDomain = ageDomainList[0] || "";
+      const nextSubs = ageDomains[form.ageBand]?.[nextDomain] || [];
+      setForm((prev) => ({
+        ...prev,
+        ageDomain: nextDomain,
+        ageSubKeywords: nextSubs.length ? [nextSubs[0]] : [],
+      }));
+    }
+  }, [form.ageBand, form.ageDomain]);
 
   useEffect(() => {
     const list = stageKeywords[form.months] || [];
     if (!list.includes(form.stage)) {
       setForm((prev) => ({ ...prev, stage: list[0] || "" }));
     }
-  }, [form.months]);
+  }, [form.months, form.stage]);
 
   useEffect(() => {
-    const domains = Object.keys(ageDomains[form.ageBand] || {});
-    if (!domains.includes(form.ageDomain)) {
-      const nextDomain = domains[0] || "";
-      const nextSub = ageDomains[form.ageBand]?.[nextDomain]?.[0] || "";
-      setForm((prev) => ({ ...prev, ageDomain: nextDomain, ageSubKeyword: nextSub }));
-      return;
-    }
-    const subs = ageDomains[form.ageBand]?.[form.ageDomain] || [];
-    if (!subs.includes(form.ageSubKeyword)) {
-      setForm((prev) => ({ ...prev, ageSubKeyword: subs[0] || "" }));
-    }
-  }, [form.ageBand, form.ageDomain]);
-
-  useEffect(() => {
-    const list = projectKeywords[form.project] || [];
-    if (!list.includes(form.projectKeyword)) {
-      setForm((prev) => ({ ...prev, projectKeyword: list[0] || "" }));
-    }
+    const projectList = projectKeywords[form.project] || [];
+    setForm((prev) => ({
+      ...prev,
+      projectKeywordsSelected: prev.projectKeywordsSelected.filter((k) => projectList.includes(k)),
+    }));
   }, [form.project]);
 
   useEffect(() => {
-    const list = coreKeywords[form.core] || [];
-    if (!list.includes(form.action)) {
-      setForm((prev) => ({ ...prev, action: list[0] || "" }));
-    }
-  }, [form.core]);
+    const socialList = socialMainKeywords[form.socialDomain] || [];
+    setForm((prev) => ({
+      ...prev,
+      socialKeywordsSelected: prev.socialKeywordsSelected.filter((k) => socialList.includes(k)),
+    }));
+  }, [form.socialDomain]);
 
   const prompt = useMemo(() => generatePrompt(form), [form]);
   const preview = useMemo(() => generatePreview(form), [form]);
+
   const filteredRecords = useMemo(() => {
     const q = recordSearch.trim().toLowerCase();
     if (!q) return records;
     return records.filter((item) => (item.student || "").toLowerCase().includes(q));
   }, [records, recordSearch]);
+
+  const toggleInList = (list, value) => {
+    return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
+  };
 
   const copyText = async (text, key) => {
     await navigator.clipboard.writeText(text);
@@ -660,6 +754,7 @@ export default function App() {
       alert("관찰 메모를 입력해 주세요.");
       return;
     }
+
     const item = {
       id: crypto.randomUUID(),
       ...form,
@@ -705,14 +800,17 @@ export default function App() {
           <div style={styles.card}>
             <div style={styles.badge}>자라다 브리핑 MVP</div>
             <h1 style={styles.title}>교사용 브리핑 입력 + 프롬프트 생성기</h1>
-            <p style={styles.subtitle}>재원기간별, 연령별, 프로젝트별 키워드를 중심으로 교육적 의미와 다음 시간 계획까지 담긴 브리핑 초안을 만들 수 있습니다.</p>
+            <p style={styles.subtitle}>
+              재원기간, 연령, 프로젝트, 사회성훈련 키워드를 바탕으로 교육적 의미와 다음 시간 계획까지 담긴 브리핑 초안을 만들 수 있습니다.
+            </p>
           </div>
+
           <div style={styles.darkCard}>
             <div style={{ fontSize: 14, fontWeight: 700, color: "#cbd5e1", marginBottom: 14 }}>작성 기준</div>
             <div style={{ display: "grid", gap: 10 }}>
-              <div style={styles.darkItem}>어려운 용어는 학부모가 이해하기 쉬운 말로 바꿔 설명합니다.</div>
-              <div style={styles.darkItem}>평가보다 관찰 중심으로, 짧은 메모도 자연스럽게 해석합니다.</div>
-              <div style={styles.darkItem}>오늘의 장면과 교육적 의미, 다음 시간 계획까지 함께 담습니다.</div>
+              <div style={styles.darkItem}>짧은 메모를 바탕으로 깊은 성장 이야기를 풀어냅니다.</div>
+              <div style={styles.darkItem}>평가보다 관찰 중심으로, 자라다 해석 기준이 자연스럽게 반영됩니다.</div>
+              <div style={styles.darkItem}>연령 · 재원기간 · 프로젝트 · 사회성 키워드를 함께 해석합니다.</div>
             </div>
           </div>
         </div>
@@ -737,8 +835,14 @@ export default function App() {
                     style={styles.input}
                   />
                 </Field>
+
                 <Field label="날짜">
-                  <input type="date" value={form.date} onChange={(e) => setForm((prev) => ({ ...prev, date: e.target.value }))} style={styles.input} />
+                  <input
+                    type="date"
+                    value={form.date}
+                    onChange={(e) => setForm((prev) => ({ ...prev, date: e.target.value }))}
+                    style={styles.input}
+                  />
                 </Field>
               </div>
 
@@ -746,7 +850,7 @@ export default function App() {
                 <div style={{ ...styles.label, marginBottom: 10 }}>연령 / 발달 기준</div>
                 <div style={styles.grid3}>
                   <Field label="연령대" hint="연령별 핵심 과제를 먼저 선택합니다">
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10 }}>
+                    <div style={{ display: "grid", gap: 10 }}>
                       {ageBands.map((band) => {
                         const active = form.ageBand === band;
                         return (
@@ -773,23 +877,30 @@ export default function App() {
                       })}
                     </div>
                   </Field>
-                  <Field label="발달 영역">
+
+                  <Field label="메인키워드">
                     <div style={styles.chips}>
                       {Object.keys(ageDomains[form.ageBand] || {}).map((domain) => (
-                        <Chip
-                          key={domain}
-                          active={form.ageDomain === domain}
-                          onClick={() => setForm((prev) => ({ ...prev, ageDomain: domain, ageSubKeyword: ageDomains[form.ageBand][domain][0] }))}
-                        >
+                        <Chip key={domain} active={form.ageDomain === domain} onClick={() => setForm((prev) => ({ ...prev, ageDomain: domain }))}>
                           {domain}
                         </Chip>
                       ))}
                     </div>
                   </Field>
-                  <Field label="세부 발달 키워드">
+
+                  <Field label="파생키워드" hint="복수 선택 가능">
                     <div style={styles.chips}>
                       {(ageDomains[form.ageBand]?.[form.ageDomain] || []).map((sub) => (
-                        <Chip key={sub} active={form.ageSubKeyword === sub} onClick={() => setForm((prev) => ({ ...prev, ageSubKeyword: sub }))}>
+                        <Chip
+                          key={sub}
+                          active={form.ageSubKeywords.includes(sub)}
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              ageSubKeywords: toggleInList(prev.ageSubKeywords, sub),
+                            }))
+                          }
+                        >
                           {sub}
                         </Chip>
                       ))}
@@ -810,11 +921,21 @@ export default function App() {
                     </div>
                   </Field>
                 </div>
+
                 <div style={styles.block}>
-                  <Field label="프로젝트 키워드">
+                  <Field label="프로젝트 키워드" hint="복수 선택 가능">
                     <div style={styles.chips}>
                       {(projectKeywords[form.project] || []).map((keyword) => (
-                        <Chip key={keyword} active={form.projectKeyword === keyword} onClick={() => setForm((prev) => ({ ...prev, projectKeyword: keyword }))}>
+                        <Chip
+                          key={keyword}
+                          active={form.projectKeywordsSelected.includes(keyword)}
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              projectKeywordsSelected: toggleInList(prev.projectKeywordsSelected, keyword),
+                            }))
+                          }
+                        >
                           {keyword}
                         </Chip>
                       ))}
@@ -835,6 +956,7 @@ export default function App() {
                     </div>
                   </Field>
                 </div>
+
                 <div style={styles.block}>
                   <Field label="재원기간별 키워드">
                     <div style={styles.chips}>
@@ -848,24 +970,33 @@ export default function App() {
                 </div>
               </div>
 
-              <div style={styles.grid2}>
-                <div style={styles.block}>
-                  <Field label="사회성훈련">
+              <div style={styles.softBox}>
+                <div style={{ ...styles.label, marginBottom: 10 }}>사회성훈련</div>
+                <div style={styles.grid2}>
+                  <Field label="메인키워드">
                     <div style={styles.chips}>
-                      {Object.keys(coreKeywords).map((core) => (
-                        <Chip key={core} active={form.core === core} onClick={() => setForm((prev) => ({ ...prev, core, action: coreKeywords[core][0] }))}>
-                          {core}
+                      {Object.keys(socialMainKeywords).map((domain) => (
+                        <Chip key={domain} active={form.socialDomain === domain} onClick={() => setForm((prev) => ({ ...prev, socialDomain: domain }))}>
+                          {domain}
                         </Chip>
                       ))}
                     </div>
                   </Field>
-                </div>
-                <div style={styles.block}>
-                  <Field label="행동 키워드">
+
+                  <Field label="파생키워드" hint="복수 선택 가능">
                     <div style={styles.chips}>
-                      {(coreKeywords[form.core] || []).map((action) => (
-                        <Chip key={action} active={form.action === action} onClick={() => setForm((prev) => ({ ...prev, action }))}>
-                          {action}
+                      {(socialMainKeywords[form.socialDomain] || []).map((keyword) => (
+                        <Chip
+                          key={keyword}
+                          active={form.socialKeywordsSelected.includes(keyword)}
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              socialKeywordsSelected: toggleInList(prev.socialKeywordsSelected, keyword),
+                            }))
+                          }
+                        >
+                          {keyword}
                         </Chip>
                       ))}
                     </div>
@@ -891,14 +1022,22 @@ export default function App() {
                   <textarea
                     value={form.memo}
                     onChange={(e) => setForm((prev) => ({ ...prev, memo: e.target.value }))}
-                    placeholder="예: 도라에몽 다리 만드는 중, 다음 시간 아이디어 스케치 구상"
+                    placeholder={`수업 중 관찰된 장면을 짧게 적어주세요
+(해석하지 말고, 실제 행동만 기록)
+
+예:
+- 친구와 색 의견이 달라 멈췄다가 다시 맞추며 진행함
+- 혼자 하다가 친구와 역할을 나눠 작업으로 전환함
+- 어려워서 멈췄다가 도움 받아 다시 이어감`}
                     style={styles.textarea}
                   />
                 </Field>
               </div>
 
               <div style={styles.buttonRow}>
-                <button onClick={saveRecord} style={styles.primaryBtn}>기록 저장</button>
+                <button onClick={saveRecord} style={styles.primaryBtn}>
+                  기록 저장
+                </button>
                 <button onClick={() => copyText(prompt, "prompt")} style={styles.secondaryBtn}>
                   {copied === "prompt" ? "프롬프트 복사됨" : "프롬프트 복사"}
                 </button>
@@ -949,7 +1088,9 @@ export default function App() {
             />
 
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
-              <button onClick={clearAllRecords} style={styles.dangerBtn}>전체 삭제</button>
+              <button onClick={clearAllRecords} style={styles.dangerBtn}>
+                전체 삭제
+              </button>
             </div>
 
             <div style={styles.recordList}>
@@ -959,7 +1100,9 @@ export default function App() {
                 filteredRecords.map((item) => (
                   <div key={item.id} style={styles.recordCard}>
                     <div style={{ fontWeight: 700 }}>{item.student || "이름 미입력"}</div>
-                    <div style={{ marginTop: 4, fontSize: 12, color: "#64748b" }}>{item.date} · {item.project} · {item.stage}</div>
+                    <div style={{ marginTop: 4, fontSize: 12, color: "#64748b" }}>
+                      {item.date} · {item.project} · {item.stage}
+                    </div>
                     <div style={styles.recordMemo}>{item.memo}</div>
                     <div style={{ marginTop: 10, fontSize: 12, color: "#64748b" }}>첨부 사진 {item.images?.length || 0}장</div>
                     <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
