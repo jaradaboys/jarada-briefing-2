@@ -4,13 +4,6 @@ const monthBands = [
   { label: "1~6개월", value: "1~6개월" },
   { label: "7~12개월", value: "7~12개월" },
   { label: "13~18개월", value: "13~18개월" },
-  { label: "19~24개월", value: "19~24개월" },
-];
-
-const monthBands = [
-  { label: "1~6개월", value: "1~6개월" },
-  { label: "7~12개월", value: "7~12개월" },
-  { label: "13~18개월", value: "13~18개월" },
   { label: "19~24개월 이상", value: "19~24개월 이상" },
 ];
 const ageBands = ["6–7세", "8–11세", "12–13세"];
