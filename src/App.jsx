@@ -828,7 +828,17 @@ export default function App() {
     <div style={styles.page}>
       <div style={styles.container}>
         <div style={styles.topGrid}>
-        <div style={{ ...styles.card, textAlign: "center" }}>
+        <div
+  style={{
+    ...styles.card,
+    textAlign: "center",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: 220,
+  }}
+          >
   <h1 style={{ ...styles.title, marginBottom: 12 }}>
     JARADA MVP 심화브리핑
   </h1>
