@@ -828,11 +828,14 @@ export default function App() {
     <div style={styles.page}>
       <div style={styles.container}>
         <div style={styles.topGrid}>
-         <div style={styles.card}>
-  <h1 style={styles.title}>JARADA MVP 심화브리핑</h1>
-  <p style={styles.subtitle}>
-    관찰 메모와 작품 흐름을 바탕으로 아이의 성장 과정을 해석하고,
-    학부모에게 전달할 브리핑을 생성합니다.
+        <div style={{ ...styles.card, textAlign: "center" }}>
+  <h1 style={{ ...styles.title, marginBottom: 12 }}>
+    JARADA MVP 심화브리핑
+  </h1>
+
+  <p style={{ ...styles.subtitle, maxWidth: 520, margin: "0 auto" }}>
+    수업 안에서 드러난 아이의 행동과 작품의 변화 흐름을 연결해,
+    성장의 과정을 해석하고 학부모가 이해할 수 있는 언어로 브리핑을 구성합니다.
             </p>
           </div>
 
