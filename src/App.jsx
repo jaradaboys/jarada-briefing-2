@@ -836,7 +836,9 @@ export default function App() {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    minHeight: 220,
+    minHeight: 240,
+    paddingTop: 10,
+    paddingBottom: 10,
   }}
           >
   <h1 style={{ ...styles.title, marginBottom: 12 }}>
