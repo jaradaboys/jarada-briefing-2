@@ -1100,6 +1100,10 @@ export default function App() {
                   </button>
               <button
   style={styles.secondaryBtn}
+                  onClick={() => setCsvStudents([])}
+>
+  CSV 분석 결과 초기화
+</button>
   onClick={() =>
     setForm((prev) => ({
       ...prev,
