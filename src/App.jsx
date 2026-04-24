@@ -1,5 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 
+/* =========================
+   기본 데이터
+========================= */
+
 const monthBands = ["1~6개월", "7~12개월", "13~18개월", "19~24개월 이상"];
 
 const stageKeywords = {
@@ -50,6 +54,10 @@ const socialMainKeywords = {
   협동: ["역할수행", "역할분담", "협력수행", "도움주고받기", "공동성취"],
   자아실현: ["자발적시작", "자발적지속", "선택하기", "책임지기", "끝까지완성"],
 };
+
+/* =========================
+   학부모 니즈 3축
+========================= */
 
 const needOptions = {
   homeDirection: [
@@ -137,6 +145,10 @@ const needMeaningMap = {
   책임지기: "자신이 선택한 일을 끝까지 감당해보는 행동",
 };
 
+/* =========================
+   설문 분석 매핑
+========================= */
+
 const surveyMapping = [
   {
     patterns: ["의견을 잘 표현하지 못", "싫다는 표현", "자신의 생각을 잘 표현"],
@@ -171,7 +183,7 @@ const surveyMapping = [
     reason: "또래 관계 안에서 차이를 조율하는 경험이 필요함",
   },
   {
-    patterns: ["먼저 다가가기 어려", "낯을 가리", "혼자", "또래를 좋아하지만"],
+    patterns: ["먼저 다가가기 어려", "낯을 가리", "혼자"],
     homeDirection: "자기표현",
     classFlow: "도전경험",
     peerBehavior: "관계진입",
@@ -235,15 +247,15 @@ const surveyMapping = [
   },
 ];
 
-const defaultNeeds = {
+const emptyNeeds = () => ({
   homeDirection: "",
   classFlow: "",
   peerBehavior: "",
   longTermGoal: "",
   evidence: [],
-};
+});
 
-const defaultForm = {
+const getDefaultForm = () => ({
   student: "",
   date: new Date().toISOString().slice(0, 10),
   months: "1~6개월",
@@ -258,8 +270,12 @@ const defaultForm = {
   memo: "",
   artworkFlow: "",
   images: [],
-  parentNeeds: defaultNeeds,
-};
+  parentNeeds: emptyNeeds(),
+});
+
+/* =========================
+   스타일
+========================= */
 
 const styles = {
   page: {
@@ -382,6 +398,10 @@ const styles = {
   },
 };
 
+/* =========================
+   공통 컴포넌트
+========================= */
+
 function Chip({ active, onClick, children }) {
   return (
     <button
@@ -412,6 +432,10 @@ function Field({ label, children, hint }) {
     </div>
   );
 }
+
+/* =========================
+   CSV 파싱
+========================= */
 
 function parseCSVLine(line) {
   const result = [];
@@ -448,7 +472,7 @@ function parseCSV(text) {
 
   if (rows.length < 2) return [];
 
-  const headers = rows[0].map((h) => h.trim());
+  const headers = rows[0].map((header) => header.trim());
 
   return rows.slice(1).map((row) => {
     const obj = {};
@@ -469,6 +493,10 @@ function findStudentName(row) {
   return nameKey ? row[nameKey] : "이름없음";
 }
 
+/* =========================
+   설문 분석
+========================= */
+
 function analyzeSurvey(rawText) {
   const text = String(rawText || "");
   const scores = {
@@ -485,9 +513,11 @@ function analyzeSurvey(rawText) {
     if (rule.homeDirection) {
       scores.homeDirection[rule.homeDirection] = (scores.homeDirection[rule.homeDirection] || 0) + 1;
     }
+
     if (rule.classFlow) {
       scores.classFlow[rule.classFlow] = (scores.classFlow[rule.classFlow] || 0) + 1;
     }
+
     if (rule.peerBehavior) {
       scores.peerBehavior[rule.peerBehavior] = (scores.peerBehavior[rule.peerBehavior] || 0) + 1;
     }
@@ -519,7 +549,11 @@ function analyzeSurvey(rawText) {
   };
 }
 
-function interpretMemo(memo, form) {
+/* =========================
+   브리핑 생성
+========================= */
+
+function interpretMemo(memo) {
   const text = String(memo || "").trim();
   if (!text) return "";
 
@@ -693,7 +727,7 @@ function generatePreview(form, visionResult) {
     buildStageLine(form),
     buildProjectLine(form),
     buildSocialLine(form),
-    interpretMemo(form.memo, form),
+    interpretMemo(form.memo),
     buildArtworkLine(form, visionResult),
     buildIntegratedLine(form),
     buildNextMonthPlan(form),
@@ -708,8 +742,6 @@ function generatePrompt(form, visionResult) {
 입력된 정보를 바탕으로 학부모에게 전달할 월간 심화 브리핑을 작성하라.
 
 [브리핑 우선순위]
-브리핑은 반드시 아래 순서로 구성한다.
-
 1. 학부모님 니즈
 2. 연령
 3. 재원기간
@@ -726,10 +758,6 @@ function generatePrompt(form, visionResult) {
 - “오늘 수업”보다 “이번 달 수업 흐름”을 사용한다.
 - “다음 시간”보다 “다음달 수업계획은”을 사용한다.
 - 마지막에는 반드시 “3개월 뒤 기대 모습”을 포함한다.
-
-[최상위 구조]
-설문은 정보를 수집하는 도구가 아니라, 아이의 성장 방향을 결정하는 기준이다.
-부모의 니즈를 방향으로 설정하고, 수업에서 경험으로 만들고, 또래 관계에서 행동으로 완성한다.
 
 [3축 성장 구조]
 - 가정에서 함께 세워가는 성장 방향: ${form.parentNeeds.homeDirection}
@@ -752,24 +780,27 @@ function generatePrompt(form, visionResult) {
 - Vision 분석: ${visionResult?.flow_summary || ""}
 
 [설문 기반 근거]
-${(form.parentNeeds.evidence || []).map((e) => `- ${e}`).join("\n")}
+${(form.parentNeeds.evidence || []).map((item) => `- ${item}`).join("\n")}
 
 [작성 원칙]
 - 학부모님 니즈가 가장 먼저 읽히게 작성한다.
-- 그 다음 사회성코칭, 미술활동/작품 흐름 순서로 자연스럽게 연결한다.
 - 교사 메모를 그대로 붙여넣지 말고 반드시 학부모용 해석 문장으로 바꾼다.
 - 결과보다 과정과 변화 흐름을 중심으로 작성한다.
 - '설문', '니즈', '발달단계', '재원기간'이라는 표현은 직접 쓰지 않는다.
 - 키워드는 직접 나열하지 말고 의미만 자연스럽게 녹인다.
-- '메모는 짧지만', '요약하면', '간단히 보면' 같은 메타 표현은 쓰지 않는다.
+- '메모는 짧지만', '요약하면', '간단히 보면' 같은 표현은 쓰지 않는다.
 - 학부모가 이해하기 쉬운 언어로 작성한다.
 - 제목 1줄, 본문 7~9문장으로 작성한다.
 
 위 기준을 반영해 학부모에게 바로 전달 가능한 자라다식 월간 심화 브리핑을 작성하라.`;
 }
 
+/* =========================
+   App
+========================= */
+
 export default function App() {
-  const [form, setForm] = useState(defaultForm);
+  const [form, setForm] = useState(getDefaultForm);
   const [studentProfiles, setStudentProfiles] = useState({});
   const [records, setRecords] = useState([]);
   const [csvStudents, setCsvStudents] = useState([]);
@@ -780,19 +811,19 @@ export default function App() {
   const [copied, setCopied] = useState("");
 
   useEffect(() => {
-    const profiles = localStorage.getItem("jarada-student-profiles-v3");
-    const savedRecords = localStorage.getItem("jarada-briefing-records-v9");
+    const profiles = localStorage.getItem("jarada-student-profiles-v4");
+    const savedRecords = localStorage.getItem("jarada-briefing-records-v10");
 
     if (profiles) setStudentProfiles(JSON.parse(profiles));
     if (savedRecords) setRecords(JSON.parse(savedRecords));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("jarada-student-profiles-v3", JSON.stringify(studentProfiles));
+    localStorage.setItem("jarada-student-profiles-v4", JSON.stringify(studentProfiles));
   }, [studentProfiles]);
 
   useEffect(() => {
-    localStorage.setItem("jarada-briefing-records-v9", JSON.stringify(records));
+    localStorage.setItem("jarada-briefing-records-v10", JSON.stringify(records));
   }, [records]);
 
   useEffect(() => {
@@ -839,6 +870,28 @@ export default function App() {
     return list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
   };
 
+  const resetCurrentInput = () => {
+    setForm((prev) => ({
+      ...prev,
+      student: "",
+      parentNeeds: emptyNeeds(),
+    }));
+    setVisionResult(null);
+    setVisionError("");
+  };
+
+  const clearCsvResults = () => {
+    setCsvStudents([]);
+  };
+
+  const clearStudentProfiles = () => {
+    const ok = window.confirm("저장된 학생 기본값을 모두 삭제할까요?");
+    if (!ok) return;
+
+    setStudentProfiles({});
+    localStorage.removeItem("jarada-student-profiles-v4");
+  };
+
   const handleCSVUpload = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -871,7 +924,7 @@ export default function App() {
     setForm((prev) => ({
       ...prev,
       student: student.name,
-      parentNeeds: student.parentNeeds,
+      parentNeeds: { ...student.parentNeeds },
     }));
   };
 
@@ -887,7 +940,7 @@ export default function App() {
       if (!student.name || student.name === "이름없음") return;
 
       nextProfiles[student.name] = {
-        parentNeeds: student.parentNeeds,
+        parentNeeds: { ...student.parentNeeds },
         updatedAt: new Date().toISOString(),
       };
     });
@@ -907,7 +960,7 @@ export default function App() {
     setStudentProfiles((prev) => ({
       ...prev,
       [name]: {
-        parentNeeds: form.parentNeeds,
+        parentNeeds: { ...form.parentNeeds },
         updatedAt: new Date().toISOString(),
       },
     }));
@@ -923,7 +976,7 @@ export default function App() {
     setForm((prev) => ({
       ...prev,
       student: name,
-      parentNeeds: profile?.parentNeeds || defaultNeeds,
+      parentNeeds: profile?.parentNeeds ? { ...profile.parentNeeds } : emptyNeeds(),
     }));
   };
 
@@ -1094,31 +1147,16 @@ export default function App() {
                   />
                 </Field>
 
-                <div style={{ display: "flex", gap: 10, alignItems: "end" }}>
+                <div style={{ display: "flex", gap: 10, alignItems: "end", flexWrap: "wrap" }}>
                   <button style={styles.primaryBtn} onClick={saveStudentProfile}>
                     학생 기본값 저장
                   </button>
-              <button
-  style={styles.secondaryBtn}
-                  onClick={() => setCsvStudents([])}
->
-  CSV 분석 결과 초기화
-</button>
-  onClick={() =>
-    setForm((prev) => ({
-      ...prev,
-      parentNeeds: {
-        homeDirection: "",
-        classFlow: "",
-        peerBehavior: "",
-        longTermGoal: "",
-        evidence: [],
-      },
-    }))
-  }
->
-  기본값 초기화
-</button>
+                  <button style={styles.secondaryBtn} onClick={resetCurrentInput}>
+                    현재 입력값 초기화
+                  </button>
+                  <button style={styles.dangerBtn} onClick={clearStudentProfiles}>
+                    저장된 학생 기본값 전체 삭제
+                  </button>
                 </div>
               </div>
 
@@ -1130,11 +1168,16 @@ export default function App() {
 
                 {csvStudents.length > 0 && (
                   <div style={{ marginTop: 16 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
                       <strong>분석된 학생 {csvStudents.length}명</strong>
-                      <button style={styles.primaryBtn} onClick={saveAllCSVProfiles}>
-                        전체 학생 기본값 저장
-                      </button>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <button style={styles.primaryBtn} onClick={saveAllCSVProfiles}>
+                          전체 학생 기본값 저장
+                        </button>
+                        <button style={styles.secondaryBtn} onClick={clearCsvResults}>
+                          CSV 분석 결과 초기화
+                        </button>
+                      </div>
                     </div>
 
                     {csvStudents.map((student, index) => (
@@ -1424,7 +1467,7 @@ export default function App() {
 
             <div style={{ marginTop: 12 }}>
               <button style={styles.dangerBtn} onClick={() => setRecords([])}>
-                전체 삭제
+                저장된 기록 전체 삭제
               </button>
             </div>
 
