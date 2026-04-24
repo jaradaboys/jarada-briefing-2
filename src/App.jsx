@@ -1097,7 +1097,7 @@ export default function App() {
                 <div style={{ display: "flex", gap: 10, alignItems: "end" }}>
                   <button style={styles.primaryBtn} onClick={saveStudentProfile}>
                     학생 기본값 저장
-               <button
+              <button
   style={styles.secondaryBtn}
   onClick={() =>
     setForm((prev) => ({
