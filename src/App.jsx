@@ -550,194 +550,103 @@ function analyzeSurvey(rawText) {
 }
 
 /* =========================
-   브리핑 생성
+   브리핑 생성 로직 (전체 교체)
 ========================= */
 
-function interpretMemo(memo) {
-  const text = String(memo || "").trim();
-  if (!text) return "";
+function buildNeedIntro(form) {
+  const name = form.student?.trim() || "아이";
+  const key = form.parentNeeds.homeDirection;
 
-  const hasFriend = /친구|같이|함께|갈등|양보|의견|다툼|싸우/.test(text);
-  const hasEmotion = /화|감정|울|짜증|멈춤|충동|기다/.test(text);
-  const hasChallenge = /어려|포기|다시|재도전|실패|힘들/.test(text);
-  const hasFocus = /집중|몰입|계속|끝까지|반복/.test(text);
-  const hasExpression = /말|표현|설명|선택|생각/.test(text);
-
-  if (hasFriend) {
-    return `수업 중 ${text} 장면이 있었습니다. 이 장면은 단순히 친구와 함께 있었다는 기록이라기보다, 또래 관계 안에서 자신의 생각과 상대의 흐름을 맞춰보는 경험으로 볼 수 있습니다.`;
-  }
-
-  if (hasEmotion) {
-    return `수업 중 ${text} 장면이 있었습니다. 이 과정은 아이가 감정이나 행동을 바로 드러내기보다, 잠시 멈추고 다시 이어가보는 조절 경험으로 해석할 수 있습니다.`;
-  }
-
-  if (hasChallenge) {
-    return `수업 중 ${text} 장면이 있었습니다. 이 장면은 어려운 지점에서 멈추지 않고 다시 시도해보는 흐름으로, 스스로 해낼 수 있다는 감각을 쌓아가는 과정으로 볼 수 있습니다.`;
-  }
-
-  if (hasFocus) {
-    return `수업 중 ${text} 모습이 관찰되었습니다. 이는 한 가지 작업 흐름을 일정 시간 붙잡고 이어가려는 시도로, 몰입과 지속 경험이 함께 나타난 장면으로 볼 수 있습니다.`;
-  }
-
-  if (hasExpression) {
-    return `수업 중 ${text} 모습이 관찰되었습니다. 이 장면은 아이가 자신의 생각을 표현하고 선택해보는 과정으로, 수업 안에서 자기 방식이 조금씩 드러나는 흐름으로 볼 수 있습니다.`;
-  }
-
-  return `수업 중 ${text} 모습이 관찰되었습니다. 이 장면은 아이가 자신의 방식으로 수업 흐름에 참여하고, 경험을 통해 다음 단계로 이어가려는 시도로 해석할 수 있습니다.`;
-}
-
-function buildNeedLine(form) {
-  const home = form.parentNeeds.homeDirection;
-  const meaning = needMeaningMap[home] || home;
-
-  if (!home) {
-    return "이번 달은 아이가 수업 안에서 보인 변화와 관계 경험을 중심으로 브리핑드립니다.";
-  }
-
-  return `이번 달은 아이가 ${meaning}을 수업과 관계 안에서 어떻게 경험해가고 있는지 중심으로 브리핑드립니다.`;
-}
-
-function buildAgeLine(form) {
   const map = {
-    "6–7세": "현재 아이에게는 감정을 알아차리고, 기다림과 규칙을 경험하며 안정적으로 수업에 참여하는 흐름이 중요합니다.",
-    "8–11세": "현재 아이에게는 스스로 과제를 정하고, 계획한 흐름을 끝까지 이어가며 관계 안에서 조율해보는 경험이 중요합니다.",
-    "12–13세": "현재 아이에게는 자신의 상태와 강점을 이해하고, 스스로 방향을 조정하며 역할을 찾아가는 경험이 중요합니다.",
+    자기표현: `${name}이는 이번 달에는 자신의 생각을 조금씩 표현해보려는 모습이 보였습니다. 특히 이전보다 말이나 행동으로 자신의 의사를 드러내려는 시도가 인상적이었습니다.`,
+    감정표현: `${name}이는 이번 달에는 감정을 말과 행동으로 표현해보려는 모습이 나타났습니다. 특히 자신의 마음을 숨기기보다 조금씩 꺼내보려는 변화가 인상적이었습니다.`,
+    감정이해: `${name}이는 이번 달에는 자신의 마음 상태를 알아차리려는 모습이 보였습니다. 특히 감정이 올라오는 순간에도 스스로를 느껴보려는 과정이 인상적이었습니다.`,
+    정서안정: `${name}이는 이번 달에는 감정이 흔들리는 상황에서도 다시 수업 흐름으로 돌아오려는 모습이 나타났습니다. 특히 감정이 올라온 뒤에도 멈추고 다시 이어가려는 시도가 인상적이었습니다.`,
+    자기효능감: `${name}이는 이번 달에는 스스로 해낼 수 있다는 감각을 조금씩 쌓아가는 모습이 보였습니다. 특히 어려운 지점에서도 다시 이어가려는 태도가 인상적이었습니다.`,
+    자신감: `${name}이는 이번 달에는 자신의 시도를 긍정적으로 이어가려는 모습이 나타났습니다. 특히 결과보다 과정 안에서 자신감을 쌓아가는 흐름이 인상적이었습니다.`,
+    도전정신: `${name}이는 이번 달에는 익숙하지 않은 상황에서도 다시 시도해보려는 모습이 이어졌습니다. 특히 어려운 지점에서도 멈추지 않고 이어가려는 태도가 인상적이었습니다.`,
+    표현흥미: `${name}이는 이번 달에는 표현 활동에 대한 흥미와 몰입이 점차 늘어나는 모습이 보였습니다. 특히 스스로 표현을 이어가려는 흐름이 인상적이었습니다.`,
+    미술자신감: `${name}이는 이번 달에는 미술 활동 안에서 자신 있게 시도하려는 모습이 나타났습니다. 특히 과정 안에서 표현을 확장해가는 모습이 인상적이었습니다.`,
+    공동체이해: `${name}이는 이번 달에는 또래 관계 안에서 규칙과 흐름을 이해하려는 모습이 보였습니다. 특히 함께하는 상황 안에서 자신의 행동을 맞춰가려는 시도가 인상적이었습니다.`,
   };
 
-  return map[form.ageBand] || "";
+  return map[key] || `${name}이는 이번 달에는 수업 안에서 자신의 방식으로 시도하고 이어가려는 모습이 보였습니다. 특히 경험을 통해 조금씩 다음 단계로 나아가려는 흐름이 인상적이었습니다.`;
 }
 
-function buildStageLine(form) {
+
+function buildClassSummary(form, visionResult) {
+  const memo = form.memo?.trim();
+  const artwork = form.artworkFlow?.trim();
+
+  let text = "";
+
+  if (memo) {
+    text += `수업 안에서는 ${memo} 모습이 있었습니다. `;
+  }
+
+  if (artwork) {
+    text += `작품 흐름에서는 ${artwork}`;
+  }
+
+  if (!text) {
+    return "수업 안에서는 아이가 자신의 방식으로 시도하고 이어가려는 흐름이 보였습니다.";
+  }
+
+  return text;
+}
+
+
+function buildHomeGuide(form) {
+  const key = form.parentNeeds.homeDirection;
+
   const map = {
-    "1~6개월": "재원 흐름에서는 새로운 환경과 재료에 익숙해지며 자신의 표현을 하나씩 시도해보는 과정이 자연스럽게 나타나고 있습니다.",
-    "7~12개월": "재원 흐름에서는 익숙해진 방식 안에서 반복하고 보완하며, 자신의 작업을 조금 더 안정적으로 이어가는 힘이 쌓이고 있습니다.",
-    "13~18개월": "재원 흐름에서는 조금 더 어려운 과제 앞에서도 멈추지 않고 다시 시도해보려는 태도가 점차 중요해지고 있습니다.",
-    "19~24개월 이상": "재원 흐름에서는 자신의 작업을 이어가는 것에 더해, 친구와 함께 맞추고 조율하며 넓게 바라보는 경험이 중요해지고 있습니다.",
+    자기표현: "가정에서는 아이가 자신의 생각을 말로 표현해볼 수 있도록 “너는 어떻게 생각해?”처럼 질문을 자주 해주시면 좋습니다.",
+    감정표현: "가정에서는 아이의 감정을 판단하기보다 “속상했어?”, “어떤 마음이었어?”처럼 감정을 말로 표현하도록 도와주시면 좋습니다.",
+    감정이해: "가정에서는 하루 중 있었던 일을 함께 이야기하며 감정을 돌아보는 시간을 만들어주시면 좋습니다.",
+    정서안정: "가정에서는 감정이 올라왔을 때 바로 해결하기보다 잠시 기다린 뒤 대화를 이어가는 방식이 도움이 됩니다.",
+    자기효능감: "가정에서는 결과보다 과정 중심으로 “끝까지 해봤네”, “다시 해봤네”와 같은 피드백을 해주시면 좋습니다.",
+    자신감: "가정에서는 결과 평가보다 시도 자체를 인정해주는 반응이 아이의 자신감 형성에 도움이 됩니다.",
+    도전정신: "가정에서는 성공 여부보다 시도 자체를 인정해주시는 피드백이 중요합니다.",
+    표현흥미: "가정에서는 결과보다 표현 과정에 관심을 보여주시면 표현 흥미가 이어질 수 있습니다.",
+    미술자신감: "가정에서는 잘했는지보다 스스로 시도한 부분을 구체적으로 인정해주시면 좋습니다.",
+    공동체이해: "가정에서는 규칙을 지시하기보다 왜 필요한지 함께 이야기해보는 것이 도움이 됩니다.",
   };
 
-  return map[form.months] || "";
+  return map[key] || "가정에서는 아이가 스스로 선택하고 표현할 수 있는 기회를 만들어주시면 좋습니다.";
 }
 
-function buildProjectLine(form) {
-  const map = {
-    연작: "이번 프로젝트는 한 가지 주제를 반복해서 바라보고 발전시키며, 아이가 스스로 작업의 흐름을 이어가보는 데 의미가 있습니다.",
-    협동작업: "이번 프로젝트는 친구와 함께 역할을 나누고 조율하며, 관계 안에서 공동의 결과를 만들어보는 데 의미가 있습니다.",
-    "100호캔버스": "이번 프로젝트는 큰 규모의 작업을 계획하고 끝까지 이어가며, 도전과 완수 경험을 쌓는 데 의미가 있습니다.",
-  };
 
-  return map[form.project] || "";
+function buildNextMonthPlan() {
+  return "다음달 수업계획은 이번 달 흐름을 이어 아이가 관계와 수업 안에서 조금 더 자연스럽게 표현하고 조절해볼 수 있도록 구성할 예정입니다.";
 }
 
-function buildSocialLine(form) {
-  const peer = form.parentNeeds.peerBehavior;
-  const socialKeywords = form.socialKeywordsSelected.join(", ");
-  const peerMeaning = needMeaningMap[peer] || peer;
 
-  if (peer && socialKeywords) {
-    return `사회성코칭에서는 ${peerMeaning}이 중요한 흐름으로 보였고, 선택된 코칭 요소인 ${socialKeywords}와도 자연스럽게 연결됩니다.`;
-  }
-
-  if (peer) {
-    return `사회성코칭에서는 ${peerMeaning}이 실제 관계 안에서 조금씩 나타날 수 있도록 살펴보는 것이 중요합니다.`;
-  }
-
-  if (socialKeywords) {
-    return `사회성코칭에서는 ${socialKeywords} 흐름을 중심으로 아이의 관계 경험을 살펴볼 수 있었습니다.`;
-  }
-
-  return "";
+function buildThreeMonthExpectation() {
+  return "3개월 뒤에는 수업과 또래 관계 속에서 자신의 생각과 감정을 조금 더 안정적으로 표현하는 모습을 기대할 수 있습니다.";
 }
 
-function buildArtworkLine(form, visionResult) {
-  if (visionResult?.flow_summary) return visionResult.flow_summary;
-
-  if (form.artworkFlow.trim()) {
-    return `미술활동과 작품 흐름을 보면, ${form.artworkFlow.trim()}`;
-  }
-
-  if (form.images.length >= 4) {
-    return "미술활동과 작품 흐름을 보면, 한 번에 결과를 내기보다 주차가 지나며 시도와 수정, 보완이 조금씩 쌓여가는 과정이 드러났습니다.";
-  }
-
-  return "";
-}
-
-function buildIntegratedLine(form) {
-  const home = form.parentNeeds.homeDirection;
-  const classFlow = form.parentNeeds.classFlow;
-  const peer = form.parentNeeds.peerBehavior;
-
-  const homeMeaning = needMeaningMap[home] || home;
-  const classMeaning = needMeaningMap[classFlow] || classFlow;
-  const peerMeaning = needMeaningMap[peer] || peer;
-
-  const parts = [homeMeaning, classMeaning, peerMeaning].filter(Boolean);
-
-  if (parts.length === 0) {
-    return "전체적으로 이번 달 수업은 아이가 자신의 방식으로 시도하고, 경험을 통해 다음 단계로 이어가려는 흐름을 확인할 수 있었던 시간입니다.";
-  }
-
-  return `통합적으로 보면 이번 달 수업은 ${parts.join(", ")}이 하나의 흐름으로 연결된 시간이었습니다. 결과보다 중요한 것은 아이가 경험 안에서 스스로 조절하고, 관계와 작업 속에서 조금씩 다음 단계로 나아가고 있다는 점입니다.`;
-}
-
-function buildNextMonthPlan(form) {
-  const classFlow = form.parentNeeds.classFlow;
-  const peer = form.parentNeeds.peerBehavior;
-  const classMeaning = needMeaningMap[classFlow] || classFlow;
-  const peerMeaning = needMeaningMap[peer] || peer;
-
-  if (classMeaning && peerMeaning) {
-    return `다음달 수업계획은 ${classMeaning}을 수업 안에서 반복 경험하고, ${peerMeaning}이 또래 관계 속에서도 자연스럽게 이어질 수 있도록 구성할 예정입니다.`;
-  }
-
-  return "다음달 수업계획은 이번 달에 관찰된 흐름을 바탕으로 아이가 스스로 시도하고 관계 안에서 경험을 확장할 수 있도록 구성할 예정입니다.";
-}
-
-function buildThreeMonthExpectation(form) {
-  const home = form.parentNeeds.homeDirection;
-  const peer = form.parentNeeds.peerBehavior;
-  const homeMeaning = needMeaningMap[home] || home;
-  const peerMeaning = needMeaningMap[peer] || peer;
-
-  if (homeMeaning && peerMeaning) {
-    return `3개월 뒤에는 ${homeMeaning}이 조금 더 안정적으로 자리 잡고, ${peerMeaning}이 수업과 또래 관계 속에서 보다 자연스럽게 드러나는 모습을 기대해볼 수 있습니다.`;
-  }
-
-  return "3개월 뒤에는 아이가 수업 안에서 더 안정적으로 시도하고, 관계 속에서도 자신의 생각과 행동을 조금 더 자연스럽게 조절해가는 모습을 기대해볼 수 있습니다.";
-}
 
 function generatePreview(form, visionResult) {
-  if (!form.memo.trim() && !form.artworkFlow.trim() && !visionResult?.flow_summary) {
-    return "관찰 메모 또는 작품 흐름 분석 결과가 있으면 브리핑 초안이 여기에 표시됩니다.";
+  if (!form.memo.trim() && !form.artworkFlow.trim()) {
+    return "관찰 메모를 입력하면 브리핑이 생성됩니다.";
   }
 
-  const title =
-    form.project === "협동작업"
-      ? "관계 안에서 함께 맞춰간 이번 달 성장 흐름"
-      : form.project === "100호캔버스"
-      ? "도전과 완수를 경험한 이번 달 성장 흐름"
-      : "반복과 보완으로 이어간 이번 달 성장 흐름";
-
   return [
-    `"${title}"`,
+    "안녕하세요.",
     "",
-    `안녕하세요. ${buildNeedLine(form)}`,
+    buildNeedIntro(form),
     "",
-    buildAgeLine(form),
-    buildStageLine(form),
-    buildProjectLine(form),
-    buildSocialLine(form),
-    interpretMemo(form.memo),
-    buildArtworkLine(form, visionResult),
-    buildIntegratedLine(form),
-    buildNextMonthPlan(form),
-    buildThreeMonthExpectation(form),
+    buildClassSummary(form, visionResult),
+    "",
+    buildHomeGuide(form),
+    "",
+    buildNextMonthPlan(),
+    "",
+    buildThreeMonthExpectation(),
   ]
     .filter(Boolean)
-    .join("\n\n");
+    .join("\n");
 }
-
-function generatePrompt(form, visionResult) {
   return `너는 자라다교육의 남아 전문 상담 교사다.
 입력된 정보를 바탕으로 학부모에게 전달할 월간 심화 브리핑을 작성하라.
 
