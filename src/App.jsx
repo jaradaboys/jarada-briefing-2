@@ -550,8 +550,41 @@ function analyzeSurvey(rawText) {
 }
 
 /* =========================
-   브리핑 생성 로직 (전체 교체)
+   브리핑 생성
 ========================= */
+
+function interpretMemo(memo) {
+  const text = String(memo || "").trim();
+  if (!text) return "";
+
+  const hasFriend = /친구|같이|함께|갈등|양보|의견|다툼|싸우/.test(text);
+  const hasEmotion = /화|감정|울|짜증|멈춤|충동|기다/.test(text);
+  const hasChallenge = /어려|포기|다시|재도전|실패|힘들/.test(text);
+  const hasFocus = /집중|몰입|계속|끝까지|반복/.test(text);
+  const hasExpression = /말|표현|설명|선택|생각/.test(text);
+
+  if (hasFriend) {
+    return `수업 안에서는 ${text} 장면이 있었습니다. 이 장면은 단순히 친구와 함께 있었다는 기록이라기보다, 또래 관계 안에서 자신의 생각과 상대의 흐름을 맞춰보는 경험으로 볼 수 있습니다.`;
+  }
+
+  if (hasEmotion) {
+    return `수업 안에서는 ${text} 장면이 있었습니다. 이 과정은 감정이나 행동을 바로 드러내기보다, 잠시 멈추고 다시 이어가보는 조절 경험으로 해석할 수 있습니다.`;
+  }
+
+  if (hasChallenge) {
+    return `수업 안에서는 ${text} 장면이 있었습니다. 이 장면은 어려운 지점에서 멈추지 않고 다시 시도해보는 흐름으로, 스스로 해낼 수 있다는 감각을 쌓아가는 과정으로 볼 수 있습니다.`;
+  }
+
+  if (hasFocus) {
+    return `수업 안에서는 ${text} 모습이 관찰되었습니다. 이는 한 가지 작업 흐름을 일정 시간 붙잡고 이어가려는 시도로, 몰입과 지속 경험이 함께 나타난 장면으로 볼 수 있습니다.`;
+  }
+
+  if (hasExpression) {
+    return `수업 안에서는 ${text} 모습이 관찰되었습니다. 이 장면은 자신의 생각을 표현하고 선택해보는 과정으로, 수업 안에서 자기 방식이 조금씩 드러나는 흐름으로 볼 수 있습니다.`;
+  }
+
+  return `수업 안에서는 ${text} 모습이 관찰되었습니다. 이 장면은 자신의 방식으로 수업 흐름에 참여하고, 경험을 통해 다음 단계로 이어가려는 시도로 해석할 수 있습니다.`;
+}
 
 function buildNeedIntro(form) {
   const name = form.student?.trim() || "아이";
@@ -573,62 +606,92 @@ function buildNeedIntro(form) {
   return map[key] || `${name}이는 이번 달에는 수업 안에서 자신의 방식으로 시도하고 이어가려는 모습이 보였습니다. 특히 경험을 통해 조금씩 다음 단계로 나아가려는 흐름이 인상적이었습니다.`;
 }
 
+function buildArtworkLine(form, visionResult) {
+  if (visionResult?.flow_summary) return visionResult.flow_summary;
 
-function buildClassSummary(form, visionResult) {
-  const memo = form.memo?.trim();
-  const artwork = form.artworkFlow?.trim();
-
-  let text = "";
-
-  if (memo) {
-    text += `수업 안에서는 ${memo} 모습이 있었습니다. `;
+  if (form.artworkFlow.trim()) {
+    return `작품 흐름에서는 ${form.artworkFlow.trim()}`;
   }
 
-  if (artwork) {
-    text += `작품 흐름에서는 ${artwork}`;
+  if (form.images.length >= 4) {
+    return "작품 흐름에서는 한 번에 결과를 내기보다 주차가 지나며 시도와 수정, 보완이 조금씩 쌓여가는 과정이 드러났습니다.";
   }
 
-  if (!text) {
-    return "수업 안에서는 아이가 자신의 방식으로 시도하고 이어가려는 흐름이 보였습니다.";
-  }
-
-  return text;
+  return "";
 }
 
+function buildClassSummary(form, visionResult) {
+  const memoLine = interpretMemo(form.memo);
+  const artworkLine = buildArtworkLine(form, visionResult);
+
+  if (memoLine && artworkLine) {
+    return `${memoLine}\n\n${artworkLine}`;
+  }
+
+  if (memoLine) return memoLine;
+  if (artworkLine) return artworkLine;
+
+  return "수업 안에서는 자신의 방식으로 시도하고 이어가려는 흐름이 보였습니다.";
+}
 
 function buildHomeGuide(form) {
   const key = form.parentNeeds.homeDirection;
 
   const map = {
-    자기표현: "가정에서는 아이가 자신의 생각을 말로 표현해볼 수 있도록 “너는 어떻게 생각해?”처럼 질문을 자주 해주시면 좋습니다.",
-    감정표현: "가정에서는 아이의 감정을 판단하기보다 “속상했어?”, “어떤 마음이었어?”처럼 감정을 말로 표현하도록 도와주시면 좋습니다.",
-    감정이해: "가정에서는 하루 중 있었던 일을 함께 이야기하며 감정을 돌아보는 시간을 만들어주시면 좋습니다.",
-    정서안정: "가정에서는 감정이 올라왔을 때 바로 해결하기보다 잠시 기다린 뒤 대화를 이어가는 방식이 도움이 됩니다.",
-    자기효능감: "가정에서는 결과보다 과정 중심으로 “끝까지 해봤네”, “다시 해봤네”와 같은 피드백을 해주시면 좋습니다.",
-    자신감: "가정에서는 결과 평가보다 시도 자체를 인정해주는 반응이 아이의 자신감 형성에 도움이 됩니다.",
-    도전정신: "가정에서는 성공 여부보다 시도 자체를 인정해주시는 피드백이 중요합니다.",
-    표현흥미: "가정에서는 결과보다 표현 과정에 관심을 보여주시면 표현 흥미가 이어질 수 있습니다.",
-    미술자신감: "가정에서는 잘했는지보다 스스로 시도한 부분을 구체적으로 인정해주시면 좋습니다.",
-    공동체이해: "가정에서는 규칙을 지시하기보다 왜 필요한지 함께 이야기해보는 것이 도움이 됩니다.",
+    자기표현:
+      "가정에서는 아이가 자신의 생각을 짧게라도 말로 표현해볼 수 있도록 “너는 어떻게 생각해?”처럼 선택과 표현의 기회를 자주 만들어주시면 좋습니다.",
+    감정표현:
+      "가정에서는 아이의 감정을 대신 판단하기보다 “속상했어?”, “아쉬웠어?”처럼 감정 단어를 함께 제안해주시면 표현이 더 쉬워질 수 있습니다.",
+    감정이해:
+      "가정에서는 하루 중 있었던 일을 함께 돌아보며 “그때 어떤 마음이었어?”처럼 감정을 떠올려보는 시간이 도움이 됩니다.",
+    정서안정:
+      "가정에서는 감정이 올라왔을 때 바로 해결하려 하기보다, 잠시 기다린 뒤 “지금 어떤 마음이었어?”처럼 감정을 말로 정리해보는 시간이 도움이 됩니다.",
+    자기효능감:
+      "가정에서는 결과보다 “다시 해본 점”, “끝까지 해본 점”을 구체적으로 인정해주시면 아이가 스스로 해냈다는 감각을 쌓는 데 도움이 됩니다.",
+    자신감:
+      "가정에서는 결과를 평가하기보다 시도한 과정을 먼저 인정해주시면 좋습니다. 작은 시도도 구체적으로 알아봐주는 말이 자신감으로 이어질 수 있습니다.",
+    도전정신:
+      "가정에서는 성공 여부보다 시도 자체를 먼저 인정해주시면 좋습니다. “처음인데 해보려고 했네” 같은 피드백이 도움이 됩니다.",
+    표현흥미:
+      "가정에서는 결과물을 평가하기보다 표현 과정에 관심을 보여주시면 좋습니다. “이 부분은 어떻게 생각해서 한 거야?”처럼 질문해주면 표현 흥미가 이어질 수 있습니다.",
+    미술자신감:
+      "가정에서는 잘 그렸는지보다 스스로 시도한 부분을 구체적으로 인정해주시면 좋습니다. 과정 중심의 반응이 미술 자신감으로 연결됩니다.",
+    공동체이해:
+      "가정에서는 규칙을 지시하기보다 “우리 같이 하려면 어떤 약속이 필요할까?”처럼 아이가 약속의 이유를 생각해보게 하는 대화가 도움이 됩니다.",
   };
 
   return map[key] || "가정에서는 아이가 스스로 선택하고 표현할 수 있는 기회를 만들어주시면 좋습니다.";
 }
 
+function buildNextMonthPlan(form) {
+  const classFlow = form.parentNeeds.classFlow;
+  const peer = form.parentNeeds.peerBehavior;
+  const classMeaning = needMeaningMap[classFlow] || classFlow;
+  const peerMeaning = needMeaningMap[peer] || peer;
 
-function buildNextMonthPlan() {
+  if (classMeaning && peerMeaning) {
+    return `다음달 수업계획은 ${classMeaning}을 수업 안에서 반복 경험하고, ${peerMeaning}이 또래 관계 속에서도 자연스럽게 이어질 수 있도록 구성할 예정입니다.`;
+  }
+
   return "다음달 수업계획은 이번 달 흐름을 이어 아이가 관계와 수업 안에서 조금 더 자연스럽게 표현하고 조절해볼 수 있도록 구성할 예정입니다.";
 }
 
+function buildThreeMonthExpectation(form) {
+  const home = form.parentNeeds.homeDirection;
+  const peer = form.parentNeeds.peerBehavior;
+  const homeMeaning = needMeaningMap[home] || home;
+  const peerMeaning = needMeaningMap[peer] || peer;
 
-function buildThreeMonthExpectation() {
+  if (homeMeaning && peerMeaning) {
+    return `3개월 뒤에는 ${homeMeaning}이 조금 더 안정적으로 자리 잡고, ${peerMeaning}이 수업과 또래 관계 속에서 보다 자연스럽게 드러나는 모습을 기대해볼 수 있습니다.`;
+  }
+
   return "3개월 뒤에는 수업과 또래 관계 속에서 자신의 생각과 감정을 조금 더 안정적으로 표현하는 모습을 기대할 수 있습니다.";
 }
 
-
 function generatePreview(form, visionResult) {
-  if (!form.memo.trim() && !form.artworkFlow.trim()) {
-    return "관찰 메모를 입력하면 브리핑이 생성됩니다.";
+  if (!form.memo.trim() && !form.artworkFlow.trim() && !visionResult?.flow_summary) {
+    return "관찰 메모 또는 작품 흐름 분석 결과가 있으면 브리핑 초안이 여기에 표시됩니다.";
   }
 
   return [
@@ -640,68 +703,81 @@ function generatePreview(form, visionResult) {
     "",
     buildHomeGuide(form),
     "",
-    buildNextMonthPlan(),
+    buildNextMonthPlan(form),
     "",
-    buildThreeMonthExpectation(),
+    buildThreeMonthExpectation(form),
   ]
     .filter(Boolean)
     .join("\n");
 }
+
+function generatePrompt(form, visionResult) {
   return `너는 자라다교육의 남아 전문 상담 교사다.
 입력된 정보를 바탕으로 학부모에게 전달할 월간 심화 브리핑을 작성하라.
 
-[브리핑 우선순위]
-1. 학부모님 니즈
-2. 연령
-3. 재원기간
-4. 프로젝트
-5. 사회성코칭
-6. 미술활동 / 작품 흐름
-7. 통합성장 해석
-8. 다음달 수업계획
-9. 3개월 뒤 기대 모습
+[브리핑 작성 구조 - 반드시 지킬 것]
 
-[문장 시작 규칙]
-- “어머님, 안녕하세요.” 금지
-- 반드시 “안녕하세요. 이번 달은...”으로 시작한다.
-- “오늘 수업”보다 “이번 달 수업 흐름”을 사용한다.
-- “다음 시간”보다 “다음달 수업계획은”을 사용한다.
-- 마지막에는 반드시 “3개월 뒤 기대 모습”을 포함한다.
+1. 첫 문장은 반드시 아래 형식으로 시작한다.
+"안녕하세요.
 
-[3축 성장 구조]
-- 가정에서 함께 세워가는 성장 방향: ${form.parentNeeds.homeDirection}
-- 수업 안에서 이어가는 성장 흐름: ${form.parentNeeds.classFlow}
-- 또래 관계 속에서 보완해가는 행동 변화: ${form.parentNeeds.peerBehavior}
-- 장기 목표: ${form.parentNeeds.longTermGoal}
+[학생이름]이는 이번 달에는 ..."
+
+2. 첫 문단은 반드시 아래 3가지를 포함한다.
+- 학부모가 기대하는 변화
+- 이번 달에 보인 변화
+- "인상적이었습니다"라는 자연스러운 마무리
+
+3. 브리핑은 아래 5단계 구조로 작성한다.
+
+(1) 핵심 변화
+- 학부모 니즈 기반 변화
+- 반드시 학생 이름 사용
+
+(2) 수업 안에서의 모습
+- 사회성코칭과 미술활동을 통합해서 짧게 해석
+- 교사 메모를 그대로 붙여넣지 말고 학부모용 문장으로 바꿀 것
+
+(3) 가정 연계 방법
+- 부모가 집에서 할 수 있는 행동을 반드시 제시
+- 1~2문장으로 구체적으로 작성
+
+(4) 다음달 수업계획
+- 반드시 "다음달 수업계획은"으로 시작
+
+(5) 3개월 뒤 기대 모습
+- 미래 변화 예측 포함
 
 [입력 정보]
 - 학생명: ${form.student}
 - 날짜: ${form.date}
-- 재원기간: ${form.months}
-- 재원기간 키워드: ${form.stage}
+- 가정에서 함께 세워가는 성장 방향: ${form.parentNeeds.homeDirection}
+- 수업 안에서 이어가는 성장 흐름: ${form.parentNeeds.classFlow}
+- 또래 관계 속에서 보완해가는 행동 변화: ${form.parentNeeds.peerBehavior}
+- 장기 목표: ${form.parentNeeds.longTermGoal}
 - 연령대: ${form.ageBand}
-- 연령 키워드: ${form.ageSubKeywords.join(", ")}
+- 재원기간: ${form.months}
 - 프로젝트: ${form.project}
-- 프로젝트 키워드: ${form.projectKeywordsSelected.join(", ")}
 - 사회성 키워드: ${form.socialKeywordsSelected.join(", ")}
+- 프로젝트 키워드: ${form.projectKeywordsSelected.join(", ")}
 - 관찰 메모: ${form.memo}
 - 작품 흐름 메모: ${form.artworkFlow}
 - Vision 분석: ${visionResult?.flow_summary || ""}
 
-[설문 기반 근거]
-${(form.parentNeeds.evidence || []).map((item) => `- ${item}`).join("\n")}
+[금지사항]
+- "어머님, 안녕하세요." 금지
+- "메모는 짧지만", "요약하면", "간단히 보면" 금지
+- 키워드 나열 금지
+- 교사 메모 그대로 붙여넣기 금지
+- 보고서처럼 딱딱한 설명 금지
+- "아이"라는 단어 남발 금지. 가능하면 학생 이름을 사용한다.
 
-[작성 원칙]
-- 학부모님 니즈가 가장 먼저 읽히게 작성한다.
-- 교사 메모를 그대로 붙여넣지 말고 반드시 학부모용 해석 문장으로 바꾼다.
-- 결과보다 과정과 변화 흐름을 중심으로 작성한다.
-- '설문', '니즈', '발달단계', '재원기간'이라는 표현은 직접 쓰지 않는다.
-- 키워드는 직접 나열하지 말고 의미만 자연스럽게 녹인다.
-- '메모는 짧지만', '요약하면', '간단히 보면' 같은 표현은 쓰지 않는다.
-- 학부모가 이해하기 쉬운 언어로 작성한다.
-- 제목 1줄, 본문 7~9문장으로 작성한다.
+[목표]
+학부모가 읽고
+"우리 아이가 좋아지고 있네"
+"집에서 이렇게 도와주면 되겠네"
+라고 느끼게 만드는 브리핑을 작성한다.
 
-위 기준을 반영해 학부모에게 바로 전달 가능한 자라다식 월간 심화 브리핑을 작성하라.`;
+전체 문장은 5~7문장으로 작성하라.`;
 }
 
 /* =========================
@@ -720,19 +796,19 @@ export default function App() {
   const [copied, setCopied] = useState("");
 
   useEffect(() => {
-    const profiles = localStorage.getItem("jarada-student-profiles-v4");
-    const savedRecords = localStorage.getItem("jarada-briefing-records-v10");
+    const profiles = localStorage.getItem("jarada-student-profiles-v5");
+    const savedRecords = localStorage.getItem("jarada-briefing-records-v11");
 
     if (profiles) setStudentProfiles(JSON.parse(profiles));
     if (savedRecords) setRecords(JSON.parse(savedRecords));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("jarada-student-profiles-v4", JSON.stringify(studentProfiles));
+    localStorage.setItem("jarada-student-profiles-v5", JSON.stringify(studentProfiles));
   }, [studentProfiles]);
 
   useEffect(() => {
-    localStorage.setItem("jarada-briefing-records-v10", JSON.stringify(records));
+    localStorage.setItem("jarada-briefing-records-v11", JSON.stringify(records));
   }, [records]);
 
   useEffect(() => {
@@ -798,7 +874,7 @@ export default function App() {
     if (!ok) return;
 
     setStudentProfiles({});
-    localStorage.removeItem("jarada-student-profiles-v4");
+    localStorage.removeItem("jarada-student-profiles-v5");
   };
 
   const handleCSVUpload = (event) => {
@@ -1006,10 +1082,10 @@ export default function App() {
             <div style={{ fontWeight: 800, marginBottom: 14 }}>브리핑 흐름</div>
             <div style={{ display: "grid", gap: 10, lineHeight: 1.7 }}>
               <div>1. 학부모님 니즈</div>
-              <div>2. 연령 · 재원기간 · 프로젝트</div>
-              <div>3. 사회성코칭</div>
-              <div>4. 미술활동 / 작품 흐름</div>
-              <div>5. 통합성장 해석 · 다음달 계획 · 3개월 뒤 기대 모습</div>
+              <div>2. 수업 안에서의 변화</div>
+              <div>3. 가정 연계 방법</div>
+              <div>4. 다음달 수업계획</div>
+              <div>5. 3개월 뒤 기대 모습</div>
             </div>
           </div>
         </div>
