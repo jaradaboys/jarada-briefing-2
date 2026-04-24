@@ -1098,9 +1098,23 @@ export default function App() {
                   <button style={styles.primaryBtn} onClick={saveStudentProfile}>
                     학생 기본값 저장
                   </button>
-                  <button style={styles.secondaryBtn} onClick={() => update("parentNeeds", defaultNeeds)}>
-                    기본값 초기화
-                  </button>
+              <button
+  style={styles.secondaryBtn}
+  onClick={() =>
+    setForm((prev) => ({
+      ...prev,
+      parentNeeds: {
+        homeDirection: "",
+        classFlow: "",
+        peerBehavior: "",
+        longTermGoal: "",
+        evidence: [],
+      },
+    }))
+  }
+>
+  기본값 초기화
+</button>
                 </div>
               </div>
 
