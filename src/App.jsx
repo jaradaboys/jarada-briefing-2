@@ -474,10 +474,10 @@ function parseCSV(text) {
 
   const headers = rows[0].map((header) => header.trim());
 
-  return rows.slice(1).map((row) => {
-    const obj = {};
-    headers.forEach((header, index) => {
-      obj[header] = row[index]?.trim() || "";
+  return rows.slice(1).map((row, index) => {
+    const obj = { __rowIndex: index };
+    headers.forEach((header, headerIndex) => {
+      obj[header] = row[headerIndex]?.trim() || "";
     });
     return obj;
   });
@@ -491,6 +491,30 @@ function findStudentName(row) {
     keys.find((key) => key.includes("이름"));
 
   return nameKey ? row[nameKey] : "이름없음";
+}
+
+function findSubmittedAt(row) {
+  const keys = Object.keys(row);
+  const timeKey =
+    keys.find((key) => key.includes("타임스탬프")) ||
+    keys.find((key) => key.includes("제출")) ||
+    keys.find((key) => key.includes("시간")) ||
+    keys.find((key) => key.includes("날짜"));
+
+  return timeKey ? row[timeKey] : "";
+}
+
+function parseSubmittedTime(value) {
+  if (!value) return 0;
+
+  const normalized = String(value)
+    .replace(/\./g, "-")
+    .replace(/\//g, "-")
+    .replace("오전", "AM")
+    .replace("오후", "PM");
+
+  const parsed = Date.parse(normalized);
+  return Number.isNaN(parsed) ? 0 : parsed;
 }
 
 /* =========================
@@ -624,10 +648,7 @@ function buildClassSummary(form, visionResult) {
   const memoLine = interpretMemo(form.memo);
   const artworkLine = buildArtworkLine(form, visionResult);
 
-  if (memoLine && artworkLine) {
-    return `${memoLine}\n\n${artworkLine}`;
-  }
-
+  if (memoLine && artworkLine) return `${memoLine}\n\n${artworkLine}`;
   if (memoLine) return memoLine;
   if (artworkLine) return artworkLine;
 
@@ -796,19 +817,19 @@ export default function App() {
   const [copied, setCopied] = useState("");
 
   useEffect(() => {
-    const profiles = localStorage.getItem("jarada-student-profiles-v5");
-    const savedRecords = localStorage.getItem("jarada-briefing-records-v11");
+    const profiles = localStorage.getItem("jarada-student-profiles-v6");
+    const savedRecords = localStorage.getItem("jarada-briefing-records-v12");
 
     if (profiles) setStudentProfiles(JSON.parse(profiles));
     if (savedRecords) setRecords(JSON.parse(savedRecords));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("jarada-student-profiles-v5", JSON.stringify(studentProfiles));
+    localStorage.setItem("jarada-student-profiles-v6", JSON.stringify(studentProfiles));
   }, [studentProfiles]);
 
   useEffect(() => {
-    localStorage.setItem("jarada-briefing-records-v11", JSON.stringify(records));
+    localStorage.setItem("jarada-briefing-records-v12", JSON.stringify(records));
   }, [records]);
 
   useEffect(() => {
@@ -874,7 +895,7 @@ export default function App() {
     if (!ok) return;
 
     setStudentProfiles({});
-    localStorage.removeItem("jarada-student-profiles-v5");
+    localStorage.removeItem("jarada-student-profiles-v6");
   };
 
   const handleCSVUpload = (event) => {
@@ -887,18 +908,41 @@ export default function App() {
       const text = String(readerEvent.target?.result || "");
       const rows = parseCSV(text);
 
-      const analyzed = rows.map((row) => {
-        const name = findStudentName(row);
-        const raw = Object.values(row).join(" ");
-        const result = analyzeSurvey(raw);
+      const groupedLatest = {};
 
-        return {
+      rows.forEach((row) => {
+        const name = findStudentName(row);
+        if (!name || name === "이름없음") return;
+
+        const submittedAt = findSubmittedAt(row);
+        const submittedTime = parseSubmittedTime(submittedAt);
+        const raw = Object.values(row).join(" ");
+
+        const candidate = {
           name,
+          submittedAt,
+          submittedTime,
+          rowIndex: row.__rowIndex,
           raw,
-          parentNeeds: result,
+          parentNeeds: analyzeSurvey(raw),
         };
+
+        const existing = groupedLatest[name];
+
+        if (!existing) {
+          groupedLatest[name] = candidate;
+          return;
+        }
+
+        const candidateScore = submittedTime || row.__rowIndex;
+        const existingScore = existing.submittedTime || existing.rowIndex;
+
+        if (candidateScore >= existingScore) {
+          groupedLatest[name] = candidate;
+        }
       });
 
+      const analyzed = Object.values(groupedLatest).sort((a, b) => a.name.localeCompare(b.name));
       setCsvStudents(analyzed);
     };
 
@@ -926,12 +970,13 @@ export default function App() {
 
       nextProfiles[student.name] = {
         parentNeeds: { ...student.parentNeeds },
+        submittedAt: student.submittedAt,
         updatedAt: new Date().toISOString(),
       };
     });
 
     setStudentProfiles(nextProfiles);
-    alert("CSV 분석 결과를 학생 기본값으로 저장했습니다.");
+    alert("최신 설문 기준으로 학생 기본값을 저장했습니다.");
   };
 
   const saveStudentProfile = () => {
@@ -1094,7 +1139,9 @@ export default function App() {
           <div>
             <section style={styles.card}>
               <h2 style={styles.sectionTitle}>브리핑 입력</h2>
-              <div style={styles.sectionHint}>CSV 설문 결과를 업로드해 아이별 기본값을 만들고, 매월 브리핑에 반영합니다.</div>
+              <div style={styles.sectionHint}>
+                CSV 설문 결과를 업로드하면 같은 이름은 가장 최근 응답만 남겨 아이별 기본값을 만듭니다.
+              </div>
 
               <div style={styles.row}>
                 <Field label="학생명 직접 입력">
@@ -1147,14 +1194,14 @@ export default function App() {
 
               <div style={styles.softBox}>
                 <h3>구글폼 CSV 설문 파일 업로드</h3>
-                <Field label="구글폼 응답 스프레드시트에서 CSV로 다운로드한 파일을 업로드하세요.">
+                <Field label="구글폼 응답 CSV 전체를 업로드하면 같은 이름은 가장 최근 응답만 표시됩니다.">
                   <input type="file" accept=".csv" onChange={handleCSVUpload} style={styles.input} />
                 </Field>
 
                 {csvStudents.length > 0 && (
                   <div style={{ marginTop: 16 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-                      <strong>분석된 학생 {csvStudents.length}명</strong>
+                      <strong>최신 설문 기준 학생 {csvStudents.length}명</strong>
                       <div style={{ display: "flex", gap: 8 }}>
                         <button style={styles.primaryBtn} onClick={saveAllCSVProfiles}>
                           전체 학생 기본값 저장
@@ -1168,6 +1215,9 @@ export default function App() {
                     {csvStudents.map((student, index) => (
                       <div key={`${student.name}-${index}`} style={styles.recordCard}>
                         <strong>{student.name}</strong>
+                        <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
+                          제출일시: {student.submittedAt || "확인 안 됨"}
+                        </div>
                         <div style={{ marginTop: 8, fontSize: 13, lineHeight: 1.7 }}>
                           가정에서 함께 세워가는 성장 방향: {student.parentNeeds.homeDirection}
                           <br />
