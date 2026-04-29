@@ -1184,7 +1184,7 @@ export default function App() {
   const [csvStudents, setCsvStudents] = useState([]);
   const [recordSearch, setRecordSearch] = useState("");
   const [manualJarvisText, setManualJarvisText] = useState("");
-  const [crawlerLimit, setCrawlerLimit] = useState(12);
+  const [crawlerLimit, setCrawlerLimit] = useState(200);
   const [crawlerLoading, setCrawlerLoading] = useState(false);
   const [crawlerError, setCrawlerError] = useState("");
   const [visionResult, setVisionResult] = useState(null);
