@@ -973,7 +973,68 @@ function generatePrompt(form, visionResult) {
 /* =========================
    App
 ========================= */
-function buildStudentGrowthBase(observations) {
+function analyzeObservationText(rawText) {
+  const text = String(rawText || "");
+
+  const keywordMap = [
+    {
+      main: "자기표현",
+      subs: ["의견", "말", "표현", "이야기", "설명", "생각"],
+    },
+    {
+      main: "관계조율",
+      subs: ["친구", "함께", "협력", "양보", "조율", "갈등"],
+    },
+    {
+      main: "몰입경험",
+      subs: ["집중", "몰입", "끝까지", "지속", "계속", "반복"],
+    },
+    {
+      main: "감정표현",
+      subs: ["기분", "감정", "좋아", "싫어", "화", "속상"],
+    },
+    {
+      main: "자기주도성",
+      subs: ["스스로", "직접", "선택", "시작", "해보고", "하고 싶"],
+    },
+    {
+      main: "문제해결",
+      subs: ["어려", "방법", "해결", "수정", "다시", "도움"],
+    },
+    {
+      main: "과제지속",
+      subs: ["이어", "지속", "완성", "마무리", "포기하지", "끝까지"],
+    },
+    {
+      main: "도전경험",
+      subs: ["도전", "새로운", "처음", "시도", "재도전", "어렵지만"],
+    },
+  ];
+
+  const sentences = text
+    .split(/[\n.。!?]/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+
+  const results = [];
+
+  keywordMap.forEach((group) => {
+    group.subs.forEach((sub) => {
+      if (text.includes(sub)) {
+        const evidence =
+          sentences.find((sentence) => sentence.includes(sub)) || "";
+
+        results.push({
+          main: group.main,
+          sub,
+          evidence,
+        });
+      }
+    });
+  });
+
+  return results;
+}
   if (!observations || observations.length === 0) return null;
 
   const weeks = observations
