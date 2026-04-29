@@ -970,9 +970,6 @@ function generatePrompt(form, visionResult) {
 전체 문장은 6~8문장으로 작성하라.`;
 }
 
-/* =========================
-   App
-========================= */
 function analyzeObservationText(rawText) {
   const text = String(rawText || "");
 
@@ -1035,11 +1032,14 @@ function analyzeObservationText(rawText) {
 
   return results;
 }
+
+function buildStudentGrowthBase(observations) {
   if (!observations || observations.length === 0) return null;
 
   const weeks = observations
-    .map((o) => {
-      const match = o.rawText.match(/(\d+)주차/);
+    .map((observation) => {
+      const rawText = String(observation.rawText || "");
+      const match = rawText.match(/(\d+)주차/);
       return match ? Number(match[1]) : null;
     })
     .filter(Boolean);
@@ -1049,21 +1049,39 @@ function analyzeObservationText(rawText) {
 
   const keywordCount = {};
 
-  observations.forEach((obs) => {
-    (obs.mainKeywords || []).forEach((k) => {
-      keywordCount[k] = (keywordCount[k] || 0) + 1;
+  observations.forEach((observation) => {
+    (observation.mainKeywords || []).forEach((keyword) => {
+      keywordCount[keyword] = (keywordCount[keyword] || 0) + 1;
     });
   });
 
   const topKeywords = Object.entries(keywordCount)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 3)
-    .map(([k]) => k);
+    .map(([keyword]) => keyword);
 
   return {
     totalWeeks,
     yearsEnrolled,
     overallFlow: topKeywords,
+
+    yearlyFlow: Array.from({ length: yearsEnrolled }).map((_, index) => ({
+      year: `${index + 1}년차`,
+      summary: "데이터 기반 자동 생성 예정",
+    })),
+
+    quarterlyFlow: ["1분기", "2분기", "3분기", "4분기"].map((quarter) => ({
+      quarter,
+      summary: "데이터 기반 자동 생성 예정",
+    })),
+
+    monthlyBase: {
+      centerAxis: topKeywords.join(", "),
+      repeatedStrengths: topKeywords.join(", "),
+      repeatedDifficulties: "관계 조율 필요",
+      recentChange: "표현 증가 추세",
+      observationPoint: "관계 속 표현 방식 관찰",
+    },
   };
 }
 export default function App() {
