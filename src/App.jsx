@@ -1346,12 +1346,51 @@ export default function App() {
       const data = await response.json();
       if (!response.ok) throw new Error(data?.error || "로컬 JARVIS 크롤러 연결에 실패했습니다.");
 
-      const incoming = (data.observations || []).map((item) => buildObservationFromCrawler(item, form.student.trim(), form.ageBand));
-      const merged = mergeObservations(form.jarvisObservations, incoming);
-      const growthProfile = recomputeProfile(merged);
+     const incoming = (data.observations || []).map((item) => {
+  const observation = buildObservationFromCrawler(
+    item,
+    form.student.trim(),
+    form.ageBand
+  );
 
-      setForm((prev) => ({ ...prev, jarvisObservations: merged, growthProfile }));
-      alert(`${incoming.length}개의 JARVIS 관찰일지를 불러왔고, 기본값을 업데이트했습니다.`);
+  const analyzedKeywords = analyzeObservationText(observation.rawText);
+
+  observation.analyzedKeywords = analyzedKeywords;
+
+  observation.mainKeywords = [
+    ...new Set(analyzedKeywords.map((k) => k.main)),
+  ];
+
+  observation.subKeywords = [
+    ...new Set(analyzedKeywords.map((k) => k.sub)),
+  ];
+
+  observation.evidence = analyzedKeywords
+    .filter((k) => k.evidence)
+    .map((k) => ({
+      keyword: k.sub,
+      sentence: k.evidence,
+    }));
+
+  return observation;
+});
+
+const merged = mergeObservations(form.jarvisObservations, incoming);
+
+const growthProfile = recomputeProfile(merged);
+
+const growthBase = buildStudentGrowthBase(merged);
+
+console.log("성장 기본값:", growthBase);
+
+setForm((prev) => ({
+  ...prev,
+  jarvisObservations: merged,
+  growthProfile,
+  growthBase,
+}));
+
+alert(`${incoming.length}개의 JARVIS 관찰일지를 불러왔고, 기본값을 업데이트했습니다.`);
     } catch (error) {
       setCrawlerError(error.message || "JARVIS 크롤러 연결 중 오류가 발생했습니다. 로컬 크롤러 서버가 켜져 있는지 확인해 주세요.");
     } finally {
