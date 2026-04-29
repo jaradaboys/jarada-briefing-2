@@ -1113,14 +1113,14 @@ function buildStudentGrowthBase(observations) {
       summary: "데이터 기반 자동 생성 예정",
     })),
 
-    monthlyBase: {
+   monthlyBase: {
       centerAxis: topKeywords.join(", "),
       repeatedStrengths: topKeywords.join(", "),
       repeatedDifficulties: "관계 조율 필요",
       recentChange: "표현 증가 추세",
       observationPoint: "관계 속 표현 방식 관찰",
-     };
-  }
+    },
+  };
 }
 
 function buildGrowthBaseInsight(form) {
