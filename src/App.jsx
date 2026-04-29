@@ -1141,10 +1141,7 @@ function buildGrowthBaseInsight(form) {
     return `${name}의 누적 성장 기본값은 아직 충분히 생성되지 않았습니다. JARVIS 누적 성장 정보를 불러오면 아이의 재원 흐름, 반복되는 강점, 최근 변화, 이번 달 관찰 포인트가 문장으로 정리됩니다.`;
   }
 
-  const enrollmentText =
-    totalWeeks && yearsEnrolled
-      ? `${name}은 현재 총 ${totalWeeks}주차 흐름을 기준으로 약 ${yearsEnrolled}년차 재원 흐름에 있습니다.`
-      : `${name}의 누적 기록은 현재 ${sourceCount}개의 집중브리핑을 기준으로 정리되었습니다.`;
+ const enrollmentText = `${name}의 누적 기록은 현재 ${sourceCount}개의 집중브리핑을 기준으로 정리되었습니다. 실제 재원 주차와 연차는 JARVIS 학생 목록의 수업주차를 연결한 뒤 자동 계산됩니다.`;
 
   const mainText = mainKeywords.length
     ? `${mainKeywords.join(", ")}이 성장 흐름의 중심축으로 반복해서 나타납니다.`
