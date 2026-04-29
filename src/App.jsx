@@ -758,7 +758,45 @@ function interpretMemo(memo) {
 
   return `수업 안에서는 ${text} 모습이 관찰되었습니다. 이 장면은 자신의 방식으로 수업 흐름에 참여하고, 경험을 통해 다음 단계로 이어가려는 시도로 해석할 수 있습니다.`;
 }
+function buildParentNeedsInsight(form) {
+  const name = form.student?.trim() || "이 아이";
 
+  const homeKey = form.parentNeeds?.homeDirection || "";
+  const classKey = form.parentNeeds?.classFlow || "";
+  const peerKey = form.parentNeeds?.peerBehavior || "";
+
+  const homeMeaning = needMeaningMap[homeKey] || homeKey;
+  const classMeaning = needMeaningMap[classKey] || classKey;
+  const peerMeaning = needMeaningMap[peerKey] || peerKey;
+
+  const parts = [];
+
+  if (homeKey) {
+    parts.push(
+      `가정에서는 ${name}가 ${homeMeaning}을 조금 더 안정적으로 키워가기를 기대하고 있습니다.`
+    );
+  }
+
+  if (classKey) {
+    parts.push(
+      `수업 안에서는 ${classMeaning}을 반복적으로 경험하며, 단순히 결과를 만드는 것보다 자신의 상태를 알아차리고 조절해보는 과정이 중요합니다.`
+    );
+  }
+
+  if (peerKey) {
+    parts.push(
+      `또래 관계에서는 ${peerMeaning}이 핵심 관찰 포인트로 보이며, 친구와 생각이나 속도가 다를 때 관계 안에서 맞춰가는 경험이 필요합니다.`
+    );
+  }
+
+  if (parts.length === 0) {
+    return "아직 학부모 심화설문 기반 성장 방향이 충분히 정리되지 않았습니다. 구글폼 연계 후 이 영역에서 아이별 학부모 니즈가 문장으로 정리됩니다.";
+  }
+
+  return `${name}의 초기 심화설문을 보면, ${[homeKey, classKey, peerKey]
+    .filter(Boolean)
+    .join(", ")}이 중요한 성장 방향으로 보입니다. ${parts.join(" ")}`;
+}
 function buildNeedIntro(form) {
   const name = form.student?.trim() || "아이";
   const key = form.parentNeeds.homeDirection;
