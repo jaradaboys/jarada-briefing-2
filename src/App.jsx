@@ -1182,8 +1182,6 @@ function buildGrowthBaseInsight(form) {
 
 export default function App() {
   const [form, setForm] = useState(getDefaultForm);
-export default function App() {
-  const [form, setForm] = useState(getDefaultForm);
   const [studentProfiles, setStudentProfiles] = useState({});
   const [records, setRecords] = useState([]);
   const [csvStudents, setCsvStudents] = useState([]);
