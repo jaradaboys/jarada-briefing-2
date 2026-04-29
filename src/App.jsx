@@ -1122,6 +1122,69 @@ function buildStudentGrowthBase(observations) {
     },
   };
 }
+    };
+  }
+}
+
+function buildGrowthBaseInsight(form) {
+  const name = form.student?.trim() || "이 아이";
+  const profile = form.growthProfile || emptyGrowthProfile();
+  const growthBase = form.growthBase || null;
+
+  const mainKeywords = (profile.dominantMainKeywords || []).slice(0, 3);
+  const subKeywords = (profile.dominantSubKeywords || []).slice(0, 5);
+
+  const sourceCount = profile.sourceCount || 0;
+  const totalWeeks = growthBase?.totalWeeks || "";
+  const yearsEnrolled = growthBase?.yearsEnrolled || "";
+
+  const hasProfile = sourceCount > 0;
+
+  if (!hasProfile) {
+    return `${name}의 누적 성장 기본값은 아직 충분히 생성되지 않았습니다. JARVIS 누적 성장 정보를 불러오면 아이의 재원 흐름, 반복되는 강점, 최근 변화, 이번 달 관찰 포인트가 문장으로 정리됩니다.`;
+  }
+
+  const enrollmentText =
+    totalWeeks && yearsEnrolled
+      ? `${name}은 현재 총 ${totalWeeks}주차 흐름을 기준으로 약 ${yearsEnrolled}년차 재원 흐름에 있습니다.`
+      : `${name}의 누적 기록은 현재 ${sourceCount}개의 집중브리핑을 기준으로 정리되었습니다.`;
+
+  const mainText = mainKeywords.length
+    ? `${mainKeywords.join(", ")}이 성장 흐름의 중심축으로 반복해서 나타납니다.`
+    : "수업 참여와 관계 경험이 성장 흐름의 중심축으로 나타납니다.";
+
+  const subText = subKeywords.length
+    ? `세부적으로는 ${subKeywords.join(", ")} 흐름이 함께 확인됩니다.`
+    : "세부 흐름은 JARVIS 누적 기록이 쌓이면서 더 선명하게 정리됩니다.";
+
+  const strengthText =
+    profile.repeatedStrengths ||
+    "반복되는 작업 흐름 안에서 자신의 방식으로 참여하고 경험을 누적해가는 점이 강점으로 보입니다.";
+
+  const needText =
+    profile.repeatedNeeds ||
+    "강점이 안정적으로 드러날 수 있도록 수업 안에서 반복 경험과 관계 경험을 이어갈 필요가 있습니다.";
+
+  const recentText =
+    profile.recentTrend ||
+    "최근 기록에서는 기존 성장 흐름이 수업 안에서 반복적으로 이어지고 있습니다.";
+
+  const focusText =
+    profile.nextFocus ||
+    "이번 달에는 아이가 자신의 생각을 어떻게 표현하는지, 감정이나 관계 상황에서 어떻게 조절하는지를 중심으로 관찰하면 좋습니다.";
+
+  return [
+    enrollmentText,
+    `${name}의 누적 성장 흐름을 보면, 단순히 작품 결과를 만드는 것보다 ${mainText} ${subText}`,
+    `반복 강점으로는 ${strengthText}`,
+    `반복적으로 살펴볼 지점은 ${needText}`,
+    `최근 변화는 ${recentText}`,
+    `따라서 이번 달 브리핑에서는 ${focusText}`,
+  ].join("\n\n");
+}
+
+export default function App() {
+  const [form, setForm] = useState(getDefaultForm);
 export default function App() {
   const [form, setForm] = useState(getDefaultForm);
   const [studentProfiles, setStudentProfiles] = useState({});
