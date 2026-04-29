@@ -1119,10 +1119,7 @@ function buildStudentGrowthBase(observations) {
       repeatedDifficulties: "관계 조율 필요",
       recentChange: "표현 증가 추세",
       observationPoint: "관계 속 표현 방식 관찰",
-    },
-  };
-}
-    };
+     };
   }
 }
 
