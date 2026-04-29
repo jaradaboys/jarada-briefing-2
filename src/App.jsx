@@ -973,7 +973,38 @@ function generatePrompt(form, visionResult) {
 /* =========================
    App
 ========================= */
+function buildStudentGrowthBase(observations) {
+  if (!observations || observations.length === 0) return null;
 
+  const weeks = observations
+    .map((o) => {
+      const match = o.rawText.match(/(\d+)주차/);
+      return match ? Number(match[1]) : null;
+    })
+    .filter(Boolean);
+
+  const totalWeeks = weeks.length ? Math.max(...weeks) : observations.length;
+  const yearsEnrolled = Math.ceil(totalWeeks / 43);
+
+  const keywordCount = {};
+
+  observations.forEach((obs) => {
+    (obs.mainKeywords || []).forEach((k) => {
+      keywordCount[k] = (keywordCount[k] || 0) + 1;
+    });
+  });
+
+  const topKeywords = Object.entries(keywordCount)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([k]) => k);
+
+  return {
+    totalWeeks,
+    yearsEnrolled,
+    overallFlow: topKeywords,
+  };
+}
 export default function App() {
   const [form, setForm] = useState(getDefaultForm);
   const [studentProfiles, setStudentProfiles] = useState({});
