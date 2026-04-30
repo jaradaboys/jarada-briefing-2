@@ -1207,7 +1207,43 @@ const subText = subKeywords.length
     `따라서 이번 달 브리핑에서는 ${focusText}`,
   ].join("\n\n");
 }
+function buildYearlyGrowthText(form) {
+  const name = form.student?.trim() || "이 아이";
+  const profile = form.growthProfile || emptyGrowthProfile();
+  const meta = form.studentMeta || {};
 
+  const enrolledYear = Number(meta.enrolledYear || 0);
+  const sourceCount = profile.sourceCount || 0;
+
+  const mainKeywords = (profile.dominantMainKeywords || []).slice(0, 3);
+  const keywordText = mainKeywords.length
+    ? mainKeywords.join(", ")
+    : "수업 참여, 표현, 관계 경험";
+
+  if (!enrolledYear) {
+    return "- JARVIS 수업주차를 연결하면 현재 재원 연차를 기준으로 연차별 성장 흐름이 자동 정리됩니다.";
+  }
+
+  const lines = [];
+
+  for (let year = 1; year <= enrolledYear; year += 1) {
+    if (year < enrolledYear - 1) {
+      lines.push(
+        `- ${year}년차: 집중브리핑 기록 이전의 누적 재원 구간입니다. 이 시기는 현재 확인되는 성장 흐름의 기반이 형성된 시기로, 수업 공간 적응, 교사와의 라포, 애정 주제 탐색, 반복 경험이 쌓였던 구간으로 볼 수 있습니다.`
+      );
+    } else if (year === enrolledYear - 1) {
+      lines.push(
+        `- ${year}년차: 현재 집중브리핑에서 확인되는 ${keywordText} 흐름으로 이어지기 전 단계입니다. 이 시기에는 아이가 자신의 방식으로 수업에 참여하고, 좋아하는 주제와 작업 흐름 안에서 표현 경험을 넓혀갔던 구간으로 해석할 수 있습니다.`
+      );
+    } else {
+      lines.push(
+        `- ${year}년차: 현재 JARVIS 집중브리핑 ${sourceCount}개를 기준으로 보면, ${keywordText}이 성장의 중심축으로 반복 확인됩니다. 이번 연차에서는 단순히 작품을 완성하는 것보다, 수업 안에서 자신의 생각을 표현하고 관계 안에서 조율하는 경험이 중요한 흐름으로 보입니다.`
+      );
+    }
+  }
+
+  return lines.join("\n");
+}
 export default function App() {
   const [form, setForm] = useState(getDefaultForm);
   const [studentProfiles, setStudentProfiles] = useState({});
