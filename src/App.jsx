@@ -1570,6 +1570,7 @@ const growthProfile = recomputeProfile(merged);
 const growthBase = buildStudentGrowthBase(merged);
 
 console.log("성장 기본값:", growthBase);
+console.log("학생 메타 최종 저장:", studentMeta);
 
 setForm((prev) => ({
   ...prev,
