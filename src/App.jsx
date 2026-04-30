@@ -239,8 +239,10 @@ const getDefaultForm = () => ({
   memo: "",
   artworkFlow: "",
   images: [],
-  parentNeeds: emptyNeeds(),
+    parentNeeds: emptyNeeds(),
   growthProfile: emptyGrowthProfile(),
+  growthBase: null,
+  studentMeta: null,
   jarvisObservations: [],
 });
 
