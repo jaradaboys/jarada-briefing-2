@@ -1330,6 +1330,39 @@ function buildQuarterlyGrowthText(form) {
 
   return lines.join("\n");
 }
+function buildMonthlyBaseText(form) {
+  const name = form.student?.trim() || "이 아이";
+  const profile = form.growthProfile || emptyGrowthProfile();
+
+  const mainKeywords = (profile.dominantMainKeywords || []).slice(0, 3);
+  const keywordText = mainKeywords.length
+    ? mainKeywords.join(", ")
+    : "수업 참여와 관계 경험";
+
+  const strengthText =
+    profile.repeatedStrengths ||
+    "자신의 속도 안에서 수업 흐름에 참여하고 경험을 누적해가는 점이 강점으로 보입니다.";
+
+  const needText =
+    profile.repeatedNeeds ||
+    "강점이 안정적으로 드러날 수 있도록 반복 경험과 관계 경험을 이어갈 필요가 있습니다.";
+
+  const recentText =
+    profile.recentTrend ||
+    "최근 기록에서는 기존 성장 흐름이 수업 안에서 반복적으로 이어지고 있습니다.";
+
+  const focusText =
+    profile.nextFocus ||
+    "이번 달에는 아이가 자신의 생각을 어떻게 표현하는지, 감정이나 관계 상황에서 어떻게 조절하는지를 중심으로 관찰하면 좋습니다.";
+
+  return [
+    `지난달까지의 누적 흐름을 보면, ${name}에게는 ${keywordText}이 현재 성장의 중심축으로 보입니다.`,
+    `강점은 ${strengthText}`,
+    `다만 반복적으로 살펴볼 지점은 ${needText}`,
+    `최근 변화로는 ${recentText}`,
+    `따라서 이번 달 브리핑에서는 ${focusText}`,
+  ].join("\n");
+}
 export default function App() {
   const [form, setForm] = useState(getDefaultForm);
   const [studentProfiles, setStudentProfiles] = useState({});
