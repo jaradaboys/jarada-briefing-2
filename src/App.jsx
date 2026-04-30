@@ -1244,6 +1244,92 @@ function buildYearlyGrowthText(form) {
 
   return lines.join("\n");
 }
+function buildQuarterlyGrowthText(form) {
+  const observations = form.jarvisObservations || [];
+  const profile = form.growthProfile || emptyGrowthProfile();
+
+  const currentDate = form.date ? new Date(form.date) : new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentQuarter = Math.ceil(currentMonth / 3);
+
+  const keywordMeaningMap = {
+    관계조율: "또래와 생각이나 속도가 다를 때 관계 안에서 맞춰가는 경험",
+    자기주도성: "스스로 선택하고 시작해보는 경험",
+    자기표현: "자신의 생각을 관계 안에서 표현하는 경험",
+    감정표현: "감정을 말이나 행동으로 드러내는 경험",
+    감정조절: "감정이 흔들릴 때 다시 조절해보는 경험",
+    몰입경험: "작업 안에서 집중을 유지하는 경험",
+    과제지속: "어려운 지점에서도 과제를 이어가는 경험",
+    문제해결: "막히는 상황에서 방법을 찾아보는 경험",
+  };
+
+  const countKeywords = (items) => {
+    const counter = {};
+
+    items.forEach((item) => {
+      (item.mainKeywords || []).forEach((keyword) => {
+        counter[keyword] = (counter[keyword] || 0) + 1;
+      });
+    });
+
+    return Object.entries(counter)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([keyword]) => keyword);
+  };
+
+  const fallbackKeywords = (profile.dominantMainKeywords || []).slice(0, 3);
+
+  const getQuarterItems = (quarter) => {
+    return observations.filter((item) => {
+      if (!item.date) return false;
+
+      const date = new Date(item.date);
+      if (Number.isNaN(date.getTime())) return false;
+
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const itemQuarter = Math.ceil(month / 3);
+
+      return year === currentYear && itemQuarter === quarter;
+    });
+  };
+
+  const lines = [];
+
+  for (let quarter = 1; quarter <= 4; quarter += 1) {
+    const items = getQuarterItems(quarter);
+    const keywords = countKeywords(items);
+    const activeKeywords = keywords.length ? keywords : fallbackKeywords;
+
+    const keywordText = activeKeywords.length
+      ? activeKeywords.join(", ")
+      : "수업 참여와 관계 경험";
+
+    const meaningText = activeKeywords.length
+      ? activeKeywords
+          .map((keyword) => keywordMeaningMap[keyword] || `${keyword} 경험`)
+          .join(", ")
+      : "수업 안에서 반복되는 참여 경험";
+
+    if (items.length > 0) {
+      lines.push(
+        `- ${quarter}분기: ${currentYear}년 ${quarter}분기 집중브리핑 ${items.length}개를 기준으로 보면, ${keywordText} 흐름이 확인됩니다. 이 시기에는 ${meaningText}이 중요한 성장 장면으로 보입니다.`
+      );
+    } else if (quarter > currentQuarter) {
+      lines.push(
+        `- ${quarter}분기: 아직 진행 전인 구간입니다. 현재까지의 누적 흐름을 바탕으로 ${keywordText}을 안정적으로 이어가며, 새롭게 나타나는 변화와 반복되는 어려움을 관찰할 예정입니다.`
+      );
+    } else {
+      lines.push(
+        `- ${quarter}분기: 해당 분기의 집중브리핑 기록이 충분하지 않습니다. 현재까지 확인된 ${keywordText} 흐름과 연결해 수업 장면에서 추가 관찰이 필요합니다.`
+      );
+    }
+  }
+
+  return lines.join("\n");
+}
 export default function App() {
   const [form, setForm] = useState(getDefaultForm);
   const [studentProfiles, setStudentProfiles] = useState({});
