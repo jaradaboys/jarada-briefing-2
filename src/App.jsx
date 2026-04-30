@@ -1519,7 +1519,11 @@ export default function App() {
       const response = await fetch(url);
       const data = await response.json();
       if (!response.ok) throw new Error(data?.error || "로컬 JARVIS 크롤러 연결에 실패했습니다.");
+const studentMeta = data.studentMeta || null;
 
+if (studentMeta) {
+  console.log("학생 메타:", studentMeta);
+}
      const incoming = (data.observations || []).map((item) => {
   const observation = buildObservationFromCrawler(
     item,
@@ -1559,6 +1563,8 @@ console.log("성장 기본값:", growthBase);
 
 setForm((prev) => ({
   ...prev,
+  ageBand: studentMeta?.ageBand || prev.ageBand,
+  studentMeta,
   jarvisObservations: merged,
   growthProfile,
   growthBase,
