@@ -1910,7 +1910,23 @@ setForm((prev) => ({
   growthProfile,
   growthBase,
 }));
+const studentNameForProfile = form.student.trim();
 
+if (studentNameForProfile) {
+  setStudentProfiles((prev) => ({
+    ...prev,
+    [studentNameForProfile]: {
+      ...(prev[studentNameForProfile] || {}),
+      student: studentNameForProfile,
+      parentNeeds: form.parentNeeds,
+      jarvisObservations: merged,
+      growthProfile,
+      growthBase,
+      studentMeta,
+      jarvisUpdatedAt: new Date().toISOString(),
+    },
+  }));
+}
 alert(`${incoming.length}개의 JARVIS 관찰일지를 불러왔고, 기본값을 업데이트했습니다.`);
     } catch (error) {
       setCrawlerError(error.message || "JARVIS 크롤러 연결 중 오류가 발생했습니다. 로컬 크롤러 서버가 켜져 있는지 확인해 주세요.");
