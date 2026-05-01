@@ -1481,7 +1481,7 @@ export default function App() {
   const [visionLoading, setVisionLoading] = useState(false);
   const [visionError, setVisionError] = useState("");
   const [copied, setCopied] = useState("");
-
+const [showPrompt, setShowPrompt] = useState(false);
   useEffect(() => {
     const profiles = localStorage.getItem("jarada-student-profiles-v20");
     const savedRecords = localStorage.getItem("jarada-briefing-records-v20");
