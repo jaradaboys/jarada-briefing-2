@@ -1730,6 +1730,14 @@ const loadStudentProfile = (name) => {
     setCrawlerError("");
   }
 };
+   useEffect(() => {
+  const name = form.student.trim();
+
+  if (!name) return;
+  if (!studentProfiles[name]) return;
+
+  loadStudentProfile(name);
+}, [form.student, studentProfiles]);
   const copyText = async (text, key) => {
     await navigator.clipboard.writeText(text);
     setCopied(key);
