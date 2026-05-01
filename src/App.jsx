@@ -989,106 +989,131 @@ function generatePreview(form, visionResult) {
     .join("\n");
 }
 function generatePrompt(form, visionResult) {
+  const name = form.student?.trim() || "아이";
   const profile = form.growthProfile || emptyGrowthProfile();
+  const meta = form.studentMeta || {};
+  const parentNeeds = form.parentNeeds || emptyNeeds();
 
-  return `너는 자라다교육의 남아 전문 상담 교사다.
-입력된 정보를 바탕으로 학부모에게 전달할 월간 심화 브리핑을 작성하라.
+  const memo = String(form.memo || "").trim();
+  const artworkFlow = String(form.artworkFlow || "").trim();
+  const visionFlow = String(visionResult?.flow_summary || "").trim();
 
-[핵심 관점]
-이 브리핑은 단순 수업 요약이 아니다.
-초기 심화설문지에 담긴 학부모 니즈와 JARVIS 누적 관찰일지에서 확인된 아이의 실제 성장 흐름, 그리고 이번 달 교사의 관찰을 연결해 작성한다.
+  const enrollmentText =
+    meta.classWeek && meta.enrolledMonths && meta.enrolledYear
+      ? `${name}은 현재 ${meta.classWeek}주차, 약 ${meta.enrolledMonths}개월차, ${meta.enrolledYear}년차 재원 흐름에 있습니다.`
+      : `${name}의 재원 흐름은 JARVIS 누적 기록을 기준으로 정리하고 있습니다.`;
 
-[브리핑 작성 구조 - 반드시 지킬 것]
+  const ageText = meta.age
+    ? `${meta.age}세 / ${meta.ageBand || form.ageBand}`
+    : form.ageBand || "연령대 미확인";
 
-1. 첫 문장은 반드시 아래 형식으로 시작한다.
-"안녕하세요.
+  const mainKeywords = (profile.dominantMainKeywords || []).slice(0, 5);
+  const subKeywords = (profile.dominantSubKeywords || []).slice(0, 8);
 
-[학생이름]이는 이번 달에는 ..."
+  const selectedGrowthKeywords = [
+    form.ageDomain,
+    ...(form.ageSubKeywords || []),
+    form.project,
+    ...(form.projectKeywordsSelected || []),
+    form.socialDomain,
+    ...(form.socialKeywordsSelected || []),
+  ].filter(Boolean);
 
-2. 첫 문단은 반드시 아래 3가지를 포함한다.
-- 학부모가 기대하는 변화
-- 지난달까지 누적된 성장 흐름
-- 이번 달에 보인 변화
-- "인상적이었습니다"라는 자연스러운 마무리
+  return `너는 자라다교육의 심화브리핑 작성 보조자다.
+교사의 관찰 메모를 학부모에게 전달할 월간 심화 브리핑으로 정리한다.
 
-3. 브리핑은 아래 5단계 구조로 작성한다.
-
-(1) 핵심 변화
-- 학부모 니즈 기반 변화
-- 지난달까지의 누적 성장 흐름과 연결
-- 반드시 학생 이름 사용
-
-(2) 수업 안에서의 모습
-- 사회성코칭과 미술활동을 통합해서 해석
-- 교사 메모를 그대로 붙여넣지 말고 학부모용 문장으로 바꿀 것
-- JARVIS 누적 근거가 있으면 "이전에는 ~했는데 최근에는 ~로 이어지고 있다" 구조를 활용
-
-(3) 가정 연계 방법
-- 부모가 집에서 할 수 있는 행동을 반드시 제시
-- 1~2문장으로 구체적으로 작성
-
-(4) 다음달 수업계획
-- 반드시 "다음달 수업계획은"으로 시작
-
-(5) 3개월 뒤 기대 모습
-- 미래 변화 예측 포함
+[작성 원칙]
+- 교사 메모를 그대로 복사하지 말고, 아이의 누적 성장 흐름과 연결해 해석한다.
+- 과장하지 말고, 관찰된 장면을 기반으로 쓴다.
+- "좋았다", "잘했다"보다 어떤 성장 과정이 있었는지 설명한다.
+- 학부모가 읽었을 때 아이의 현재 방향과 다음 달 수업 목표가 이해되도록 쓴다.
+- 문장은 따뜻하지만 전문적으로 작성한다.
+- 전체 문장은 6~8문장 정도로 정리한다.
+- "아이"라는 표현보다 가능한 한 학생 이름을 사용한다.
 
 [학생 기본 정보]
-- 학생명: ${form.student}
-- 브리핑 월: ${form.briefingMonth}
-- 작성일: ${form.date}
-- 연령대: ${form.ageBand}
-- 재원기간: ${form.months}
+학생명: ${name}
+재원 흐름: ${enrollmentText}
+연령 흐름: ${ageText}
+집중브리핑 누적 수: ${profile.sourceCount || 0}개
 
-[초기 심화설문지 기반 학부모 니즈]
-- 가정에서 함께 세워가는 성장 방향: ${form.parentNeeds.homeDirection}
-- 수업 안에서 이어가는 성장 흐름: ${form.parentNeeds.classFlow}
-- 또래 관계 속에서 보완해가는 행동 변화: ${form.parentNeeds.peerBehavior}
-- 장기 목표: ${form.parentNeeds.longTermGoal}
-- 설문 근거: ${(form.parentNeeds.evidence || []).join(" / ")}
+[학부모 심화설문 기반 성장 니즈]
+가정 성장 방향: ${parentNeeds.homeDirection || "미입력"}
+수업 성장 흐름: ${parentNeeds.classFlow || "미입력"}
+또래 행동 변화: ${parentNeeds.peerBehavior || "미입력"}
+장기 목표: ${parentNeeds.longTermGoal || "미입력"}
 
-[지난달까지의 기본값: 누적 성장 프로필]
-- 기준일: ${profile.updatedUntil}
-- 누적 관찰 수: ${profile.sourceCount}
-- 반복 메인키워드: ${(profile.dominantMainKeywords || []).join(", ")}
-- 반복 파생키워드: ${(profile.dominantSubKeywords || []).join(", ")}
-- 장기 성장 흐름: ${profile.longTermFlow}
-- 반복 강점: ${profile.repeatedStrengths}
-- 반복 보완점: ${profile.repeatedNeeds}
-- 최근 변화: ${profile.recentTrend}
-- 다음 관찰 초점: ${profile.nextFocus}
-- 근거 문장: ${(profile.evidence || []).map((e) => `${e.keyword}: ${e.sentence}`).join(" / ")}
+학부모 니즈 해석:
+${buildParentNeedsInsight(form)}
 
-[이번 달 교사 선택값]
-- 프로젝트: ${form.project}
-- 재원기간 키워드: ${form.stage}
-- 연령 메인키워드: ${form.ageDomain}
-- 연령 파생키워드: ${form.ageSubKeywords.join(", ")}
-- 사회성 메인키워드: ${form.socialDomain}
-- 사회성 파생키워드: ${form.socialKeywordsSelected.join(", ")}
-- 프로젝트 키워드: ${form.projectKeywordsSelected.join(", ")}
-- 관찰 메모: ${form.memo}
-- 작품 흐름 메모: ${form.artworkFlow}
-- Vision 분석: ${visionResult?.flow_summary || ""}
+[아이 누적 성장 기본값]
+${buildGrowthBaseInsight(form)}
 
-[금지사항]
-- "어머님, 안녕하세요." 금지
-- "메모는 짧지만", "요약하면", "간단히 보면" 금지
-- 키워드 나열 금지
-- 교사 메모 그대로 붙여넣기 금지
-- 보고서처럼 딱딱한 설명 금지
-- "아이"라는 단어 남발 금지. 가능하면 학생 이름을 사용한다.
+[연차별 성장 흐름]
+${buildYearlyGrowthText(form)}
 
-[목표]
-학부모가 읽고
-"선생님이 우리 아이를 오래 보고 있구나"
-"처음 기대했던 변화가 실제로 쌓이고 있구나"
-"집에서 이렇게 도와주면 되겠네"
-라고 느끼게 만드는 브리핑을 작성한다.
+[올해 분기별 성장 흐름]
+${buildQuarterlyGrowthText(form)}
 
-전체 문장은 6~8문장으로 작성하라.`;
+[지난달까지의 기본값]
+${buildMonthlyBaseText(form)}
+
+[이번달 수업 선택값]
+이번달 성장 키워드: ${selectedGrowthKeywords.join(", ") || "미선택"}
+프로젝트: ${form.project || "미선택"}
+프로젝트 키워드: ${(form.projectKeywordsSelected || []).join(", ") || "미선택"}
+사회성 메인영역: ${form.socialDomain || "미선택"}
+사회성 파생키워드: ${(form.socialKeywordsSelected || []).join(", ") || "미선택"}
+
+[이번달 교사 관찰 메모]
+작품 흐름 메모:
+${artworkFlow || "미입력"}
+
+이번달 관찰 메모:
+${memo || "미입력"}
+
+작품 이미지 분석 흐름:
+${visionFlow || "이미지 분석 없음"}
+
+[누적 키워드 참고]
+반복 메인키워드: ${mainKeywords.join(", ") || "없음"}
+반복 파생키워드: ${subKeywords.join(", ") || "없음"}
+반복 강점: ${profile.repeatedStrengths || "아직 없음"}
+반복 보완점: ${profile.repeatedNeeds || "아직 없음"}
+최근 변화: ${profile.recentTrend || "아직 없음"}
+이번달 관찰 포인트: ${profile.nextFocus || "아직 없음"}
+
+[브리핑 작성 구조]
+아래 6개 흐름으로 작성한다.
+
+1. 지난달 계획과 누적 성장 흐름 연결
+- 아이가 지금 어떤 재원 흐름과 성장 단계에 있는지 짧게 연결한다.
+- JARVIS 누적 기본값과 학부모 니즈를 함께 반영한다.
+
+2. 이번달 실제 관찰 장면
+- 교사 메모와 작품 흐름 메모를 바탕으로 실제 장면을 설명한다.
+- 관찰 장면은 구체적이되 너무 길게 쓰지 않는다.
+
+3. 이번달 성장 해석
+- 이번달 키워드, 프로젝트, 사회성 방향을 연결해 해석한다.
+- 단순 활동 설명이 아니라 아이의 변화와 성장 의미를 쓴다.
+
+4. 가정 연계 포인트
+- 학부모가 가정에서 이해하거나 도와줄 수 있는 방향을 제안한다.
+- 부담스러운 과제처럼 쓰지 말고 자연스러운 관찰 포인트로 쓴다.
+
+5. 다음달 계획
+- 다음달 수업에서 이어갈 방향을 제시한다.
+- 현재 강점과 보완점을 함께 반영한다.
+
+6. 3개월 후 기대 방향
+- 3개월 뒤 기대할 수 있는 변화를 현실적으로 쓴다.
+- 과장하지 말고, 반복 경험을 통해 기대되는 모습을 쓴다.
+
+[최종 출력]
+학부모에게 바로 전달 가능한 브리핑 문장만 작성한다.
+제목이나 대괄호 항목명은 쓰지 말고 자연스러운 문단으로 작성한다.`;
 }
-
 function analyzeObservationText(rawText) {
   const text = String(rawText || "");
 
