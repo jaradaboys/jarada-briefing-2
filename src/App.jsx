@@ -1522,14 +1522,33 @@ const [showPrompt, setShowPrompt] = useState(false);
   }, [records, recordSearch]);
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
-   const fetchGoogleFormNeeds = () => {
-  if (!form.student.trim()) {
+  const fetchGoogleFormNeeds = () => {
+  const studentName = form.student.trim();
+
+  if (!studentName) {
     setGoogleFormMessage("학생명을 먼저 입력하면 구글폼 응답을 불러올 수 있습니다.");
     return;
   }
 
+  const temporaryNeeds = {
+    homeDirection: "자기표현",
+    classFlow: "감정조절",
+    peerBehavior: "관계조율",
+    longTermGoal:
+      "자신의 생각과 감정을 안정적으로 표현하고, 또래 관계 안에서 차이를 조율하는 힘을 기르는 것",
+    evidence: [
+      "구글폼 API 연계 전 임시 확인값입니다.",
+      "실제 연계 후에는 학생명 기준 가장 최근 학부모 응답이 자동 반영됩니다.",
+    ],
+  };
+
+  setForm((prev) => ({
+    ...prev,
+    parentNeeds: temporaryNeeds,
+  }));
+
   setGoogleFormMessage(
-    `${form.student.trim()} 학생의 구글폼 심화설문 응답을 불러올 준비 중입니다. 현재는 아래 입력값을 임시 확인값으로 사용합니다.`
+    `${studentName} 학생의 구글폼 심화설문 응답을 불러온 것처럼 임시값을 반영했습니다. 실제 API 연계 후에는 이 자리에 최신 학부모 응답이 자동 입력됩니다.`
   );
 };
   const updateNeeds = (key, value) => setForm((prev) => ({ ...prev, parentNeeds: { ...prev.parentNeeds, [key]: value } }));
