@@ -1522,7 +1522,7 @@ const [showPrompt, setShowPrompt] = useState(false);
   }, [records, recordSearch]);
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
-  const fetchGoogleFormNeeds = () => {
+const fetchGoogleFormNeeds = () => {
   const studentName = form.student.trim();
 
   if (!studentName) {
@@ -1547,8 +1547,18 @@ const [showPrompt, setShowPrompt] = useState(false);
     parentNeeds: temporaryNeeds,
   }));
 
+  setStudentProfiles((prev) => ({
+    ...prev,
+    [studentName]: {
+      ...(prev[studentName] || {}),
+      student: studentName,
+      parentNeeds: temporaryNeeds,
+      googleFormUpdatedAt: new Date().toISOString(),
+    },
+  }));
+
   setGoogleFormMessage(
-    `${studentName} 학생의 구글폼 심화설문 응답을 불러온 것처럼 임시값을 반영했습니다. 실제 API 연계 후에는 이 자리에 최신 학부모 응답이 자동 입력됩니다.`
+    `${studentName} 학생의 구글폼 심화설문 응답을 불러온 것처럼 임시값을 반영하고, 학생별 학부모 니즈 기본값으로 저장했습니다. 실제 API 연계 후에는 이 자리에 최신 학부모 응답이 자동 입력됩니다.`
   );
 };
   const updateNeeds = (key, value) => setForm((prev) => ({ ...prev, parentNeeds: { ...prev.parentNeeds, [key]: value } }));
