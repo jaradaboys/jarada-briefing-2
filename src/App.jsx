@@ -1688,19 +1688,31 @@ const fetchGoogleFormNeeds = () => {
     alert(`${name} 학생의 기본값과 누적 성장 프로필을 저장했습니다.`);
   };
 
-  const loadStudentProfile = (name) => {
-    if (!name) return;
-    const profile = studentProfiles[name];
+const loadStudentProfile = (name) => {
+  if (!name) return;
 
-    setForm((prev) => ({
-      ...prev,
-      student: name,
-      parentNeeds: profile?.parentNeeds ? { ...profile.parentNeeds } : emptyNeeds(),
-      jarvisObservations: profile?.jarvisObservations || [],
-      growthProfile: profile?.growthProfile || emptyGrowthProfile(),
-    }));
-  };
+  const profile = studentProfiles[name];
 
+  setForm((prev) => ({
+    ...prev,
+    student: name,
+    parentNeeds: profile?.parentNeeds ? { ...profile.parentNeeds } : emptyNeeds(),
+    jarvisObservations: profile?.jarvisObservations || [],
+    growthProfile: profile?.growthProfile || emptyGrowthProfile(),
+    growthBase: profile?.growthBase || prev.growthBase,
+    studentMeta: profile?.studentMeta || prev.studentMeta,
+  }));
+
+  if (profile?.parentNeeds) {
+    setGoogleFormMessage(
+      `${name} 학생의 저장된 학부모 니즈 기본값을 불러왔습니다.`
+    );
+  } else {
+    setGoogleFormMessage(
+      `${name} 학생의 저장된 학부모 니즈가 아직 없습니다. 구글폼 응답 불러오기를 눌러 기본값을 생성할 수 있습니다.`
+    );
+  }
+};
   const copyText = async (text, key) => {
     await navigator.clipboard.writeText(text);
     setCopied(key);
