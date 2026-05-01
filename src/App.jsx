@@ -889,27 +889,105 @@ function buildThreeMonthExpectation(form) {
 }
 
 function generatePreview(form, visionResult) {
-  if (!form.memo.trim() && !form.artworkFlow.trim() && !visionResult?.flow_summary && !form.growthProfile?.sourceCount) {
+  const memo = String(form.memo || "").trim();
+  const artworkFlow = String(form.artworkFlow || "").trim();
+  const visionFlow = String(visionResult?.flow_summary || "").trim();
+  const profile = form.growthProfile || emptyGrowthProfile();
+  const meta = form.studentMeta || {};
+  const sourceCount = Number(profile.sourceCount || 0);
+
+  if (!memo && !artworkFlow && !visionFlow && !sourceCount) {
     return "관찰 메모, 작품 흐름, 또는 JARVIS 누적 기록이 있으면 브리핑 초안이 여기에 표시됩니다.";
   }
+
+  const name = form.student?.trim() || "아이";
+
+  const enrollmentText =
+    meta.classWeek && meta.enrolledMonths && meta.enrolledYear
+      ? `${name}은 현재 ${meta.classWeek}주차, 약 ${meta.enrolledMonths}개월차, ${meta.enrolledYear}년차 재원 흐름에 있습니다.`
+      : `${name}의 재원 흐름은 JARVIS 누적 기록을 기준으로 정리하고 있습니다.`;
+
+  const ageText = meta.age
+    ? `현재 ${meta.age}세로 ${meta.ageBand || form.ageBand} 발달 흐름에 해당합니다.`
+    : "";
+
+  const mainKeywords = (profile.dominantMainKeywords || []).slice(0, 3);
+  const subKeywords = (profile.dominantSubKeywords || []).slice(0, 4);
+
+  const centerAxis = mainKeywords.length
+    ? mainKeywords.join(", ")
+    : "수업 참여와 관계 경험";
+
+  const detailAxis = subKeywords.length
+    ? subKeywords.join(", ")
+    : "표현, 관계, 몰입 경험";
+
+  const selectedGrowthKeywords = [
+    form.ageDomain,
+    ...(form.ageSubKeywords || []),
+    form.project,
+    ...(form.projectKeywordsSelected || []),
+    form.socialDomain,
+    ...(form.socialKeywordsSelected || []),
+  ].filter(Boolean);
+
+  const monthlyKeywordText = selectedGrowthKeywords.length
+    ? selectedGrowthKeywords.join(", ")
+    : "이번달 수업에서 관찰된 성장 흐름";
+
+  const actualObservation = [
+    artworkFlow ? `작품 흐름에서는 ${artworkFlow}` : "",
+    memo ? `수업 장면에서는 ${memo}` : "",
+    visionFlow ? `작품 이미지 흐름에서는 ${visionFlow}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const repeatedStrength =
+    profile.repeatedStrengths ||
+    "자신의 속도 안에서 수업 흐름에 참여하고 경험을 누적해가는 점이 강점으로 보입니다.";
+
+  const repeatedNeeds =
+    profile.repeatedNeeds ||
+    "강점이 안정적으로 드러날 수 있도록 반복 경험과 관계 경험을 이어갈 필요가 있습니다.";
+
+  const recentTrend =
+    profile.recentTrend ||
+    "최근 기록에서는 기존 성장 흐름이 수업 안에서 반복적으로 이어지고 있습니다.";
+
+  const nextFocus =
+    profile.nextFocus ||
+    "이번 달에는 아이가 자신의 생각을 어떻게 표현하는지, 감정이나 관계 상황에서 어떻게 조절하는지를 중심으로 관찰하면 좋습니다.";
 
   return [
     "안녕하세요.",
     "",
-    buildNeedIntro(form),
+    `${name}의 이번 달 심화 브리핑입니다.`,
     "",
-    buildClassSummary(form, visionResult),
+    "1. 지난달 계획과 누적 성장 흐름 연결",
+    `${enrollmentText} ${ageText}`,
+    `지난달까지의 누적 흐름을 보면 ${name}에게는 ${centerAxis}이 중심 성장축으로 반복 확인됩니다. 세부적으로는 ${detailAxis} 흐름이 함께 나타나며, 이번 달 수업은 이 누적 기본값 위에서 새롭게 보인 변화와 반복되는 어려움을 함께 살펴보는 방향으로 정리했습니다.`,
     "",
+    "2. 이번달 실제 관찰 장면",
+    actualObservation || `${name}의 이번 달 수업에서는 교사의 관찰 메모를 바탕으로 실제 장면을 더 구체화할 수 있습니다.`,
+    "",
+    "3. 이번달 성장 해석",
+    `이번 달에는 ${monthlyKeywordText} 흐름을 중심으로 관찰했습니다. ${name}은 단순히 결과물을 완성하는 것보다, 수업 안에서 자신의 생각과 감정을 어떻게 표현하고 관계 안에서 어떻게 조율하는지가 중요한 성장 장면으로 보입니다. 반복 강점으로는 ${repeatedStrength} 반면 ${repeatedNeeds}`,
+    "",
+    "4. 가정 연계 포인트",
     buildHomeGuide(form),
     "",
+    "5. 다음달 계획",
     buildNextMonthPlan(form),
     "",
+    "6. 3개월 후 기대 방향",
     buildThreeMonthExpectation(form),
+    "",
+    `최근 변화로는 ${recentTrend} 따라서 다음 관찰에서는 ${nextFocus}`,
   ]
     .filter(Boolean)
     .join("\n");
 }
-
 function generatePrompt(form, visionResult) {
   const profile = form.growthProfile || emptyGrowthProfile();
 
