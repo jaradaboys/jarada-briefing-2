@@ -1699,18 +1699,21 @@ const loadStudentProfile = (name) => {
     parentNeeds: profile?.parentNeeds ? { ...profile.parentNeeds } : emptyNeeds(),
     jarvisObservations: profile?.jarvisObservations || [],
     growthProfile: profile?.growthProfile || emptyGrowthProfile(),
-    growthBase: profile?.growthBase || prev.growthBase,
-    studentMeta: profile?.studentMeta || prev.studentMeta,
+    growthBase: profile?.growthBase || null,
+    studentMeta: profile?.studentMeta || null,
+    ageBand: profile?.studentMeta?.ageBand || prev.ageBand,
   }));
 
   if (profile?.parentNeeds) {
-    setGoogleFormMessage(
-      `${name} 학생의 저장된 학부모 니즈 기본값을 불러왔습니다.`
-    );
+    setGoogleFormMessage(`${name} 학생의 저장된 학부모 니즈 기본값을 불러왔습니다.`);
   } else {
     setGoogleFormMessage(
       `${name} 학생의 저장된 학부모 니즈가 아직 없습니다. 구글폼 응답 불러오기를 눌러 기본값을 생성할 수 있습니다.`
     );
+  }
+
+  if (profile?.studentMeta || profile?.growthProfile?.sourceCount) {
+    setCrawlerError("");
   }
 };
   const copyText = async (text, key) => {
