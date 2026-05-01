@@ -1692,11 +1692,15 @@ const loadStudentProfile = (name) => {
   if (!name) return;
 
   const profile = studentProfiles[name];
+  const hasParentNeeds = Boolean(profile?.parentNeeds);
+  const hasJarvisBase = Boolean(
+    profile?.studentMeta || profile?.growthProfile?.sourceCount
+  );
 
   setForm((prev) => ({
     ...prev,
     student: name,
-    parentNeeds: profile?.parentNeeds ? { ...profile.parentNeeds } : emptyNeeds(),
+    parentNeeds: hasParentNeeds ? { ...profile.parentNeeds } : emptyNeeds(),
     jarvisObservations: profile?.jarvisObservations || [],
     growthProfile: profile?.growthProfile || emptyGrowthProfile(),
     growthBase: profile?.growthBase || null,
@@ -1704,15 +1708,25 @@ const loadStudentProfile = (name) => {
     ageBand: profile?.studentMeta?.ageBand || prev.ageBand,
   }));
 
-  if (profile?.parentNeeds) {
-    setGoogleFormMessage(`${name} 학생의 저장된 학부모 니즈 기본값을 불러왔습니다.`);
+  if (hasParentNeeds && hasJarvisBase) {
+    setGoogleFormMessage(
+      `${name} 학생의 저장된 학부모 니즈와 JARVIS 성장 기본값을 불러왔습니다.`
+    );
+  } else if (hasParentNeeds && !hasJarvisBase) {
+    setGoogleFormMessage(
+      `${name} 학생의 학부모 니즈는 불러왔지만, JARVIS 성장 기본값은 아직 없습니다. JARVIS 누적 성장 불러오기를 눌러 생성할 수 있습니다.`
+    );
+  } else if (!hasParentNeeds && hasJarvisBase) {
+    setGoogleFormMessage(
+      `${name} 학생의 JARVIS 성장 기본값은 불러왔지만, 학부모 니즈는 아직 없습니다. 구글폼 응답 불러오기를 눌러 기본값을 생성할 수 있습니다.`
+    );
   } else {
     setGoogleFormMessage(
-      `${name} 학생의 저장된 학부모 니즈가 아직 없습니다. 구글폼 응답 불러오기를 눌러 기본값을 생성할 수 있습니다.`
+      `${name} 학생의 저장된 기본값이 아직 없습니다. 구글폼 응답 불러오기와 JARVIS 누적 성장 불러오기를 순서대로 진행해 주세요.`
     );
   }
 
-  if (profile?.studentMeta || profile?.growthProfile?.sourceCount) {
+  if (hasJarvisBase) {
     setCrawlerError("");
   }
 };
