@@ -1483,6 +1483,7 @@ export default function App() {
   const [copied, setCopied] = useState("");
 const [showPrompt, setShowPrompt] = useState(false);
    const [googleFormMessage, setGoogleFormMessage] = useState("");
+   const [googleFormCandidates, setGoogleFormCandidates] = useState([]);
   useEffect(() => {
     const profiles = localStorage.getItem("jarada-student-profiles-v20");
     const savedRecords = localStorage.getItem("jarada-briefing-records-v20");
