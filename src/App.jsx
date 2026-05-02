@@ -1734,7 +1734,13 @@ const connectGoogleFormCandidate = (candidate) => {
   setGoogleFormMessage(`${studentName} 학생의 구글폼 응답 연결을 해제했습니다.`);
   setGoogleFormCandidates([]);
 };
+const isCurrentGoogleFormCandidate = (candidate) => {
+  const studentName = form.student.trim();
 
+  if (!studentName) return false;
+
+  return studentProfiles[studentName]?.googleFormSource?.id === candidate.id;
+};
   const updateNeeds = (key, value) => setForm((prev) => ({ ...prev, parentNeeds: { ...prev.parentNeeds, [key]: value } }));
   const toggle = (list, value) => (list.includes(value) ? list.filter((item) => item !== value) : [...list, value]);
 
