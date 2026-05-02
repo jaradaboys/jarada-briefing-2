@@ -1523,7 +1523,7 @@ const [showPrompt, setShowPrompt] = useState(false);
   }, [records, recordSearch]);
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
-const fetchGoogleFormNeeds = () => {
+
    const getTemporaryGoogleFormCandidates = (studentName, age) => [
   {
     id: "temp-google-form-1",
