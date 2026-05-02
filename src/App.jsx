@@ -1582,15 +1582,27 @@ if (studentName.includes("후보없음")) {
   );
   return;
 }
-const candidates = await fetchGoogleFormCandidates(
-  studentName,
-  form.studentMeta?.age
-);
-setGoogleFormCandidates(candidates);
+setGoogleFormLoading(true);
 
-setGoogleFormMessage(
-  `${studentName} 학생 이름으로 구글폼 심화설문 후보 ${candidates.length}건을 찾았습니다. 연결할 설문을 선택해 주세요.`
-);
+try {
+  const candidates = await fetchGoogleFormCandidates(
+    studentName,
+    form.studentMeta?.age
+  );
+
+  setGoogleFormCandidates(candidates);
+
+  setGoogleFormMessage(
+    `${studentName} 학생 이름으로 구글폼 심화설문 후보 ${candidates.length}건을 찾았습니다. 연결할 설문을 선택해 주세요.`
+  );
+} catch (error) {
+  setGoogleFormCandidates([]);
+  setGoogleFormMessage(
+    "구글폼 응답을 불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+  );
+} finally {
+  setGoogleFormLoading(false);
+}
 };
 
 const connectGoogleFormCandidate = (candidate) => {
