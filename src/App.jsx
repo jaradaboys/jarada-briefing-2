@@ -1602,7 +1602,27 @@ const isValidGoogleFormCandidate = (candidate) => {
    if (studentName.includes("오류")) {
     throw new Error("구글폼 임시 조회 실패 테스트");
   }
-
+// TODO: 실제 Google Form API 연계 후에는 응답 데이터가 불완전할 때 검증에서 제외되는지 확인합니다.
+if (studentName.includes("무효후보")) {
+  return [
+    {
+      id: "invalid-google-form-1",
+      studentName,
+      age: age || "",
+      phoneLast4: "",
+      submittedAt: "",
+      parentNeeds: {
+        homeDirection: "",
+        classFlow: "",
+        peerBehavior: "",
+        longTermGoal: "",
+        evidence: [],
+      },
+    },
+  ]
+    .map(normalizeGoogleFormCandidate)
+    .filter(isValidGoogleFormCandidate);
+}
 return getTemporaryGoogleFormCandidates(studentName, age)
   .map(normalizeGoogleFormCandidate)
   .filter(isValidGoogleFormCandidate);
