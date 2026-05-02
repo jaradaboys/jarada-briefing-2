@@ -1562,6 +1562,11 @@ const fetchGoogleFormNeeds = () => {
     },
   },
 ];
+   const fetchGoogleFormCandidates = async (studentName, age) => {
+  return getTemporaryGoogleFormCandidates(studentName, age);
+};
+
+const fetchGoogleFormNeeds = async () => {
   const studentName = form.student.trim();
 
   if (!studentName) {
@@ -1576,7 +1581,7 @@ if (studentName.includes("후보없음")) {
   );
   return;
 }
-const candidates = getTemporaryGoogleFormCandidates(
+const candidates = await fetchGoogleFormCandidates(
   studentName,
   form.studentMeta?.age
 );
