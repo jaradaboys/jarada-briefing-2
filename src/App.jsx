@@ -1576,45 +1576,10 @@ if (studentName.includes("후보없음")) {
   );
   return;
 }
-  const temporaryCandidates = [
-    {
-      id: "temp-google-form-1",
-      studentName,
-      age: form.studentMeta?.age || "",
-      phoneLast4: "1234",
-      submittedAt: "2026-04-12",
-      parentNeeds: {
-        homeDirection: "자기표현",
-        classFlow: "감정조절",
-        peerBehavior: "관계조율",
-        longTermGoal:
-          "자신의 생각과 감정을 안정적으로 표현하고, 또래 관계 안에서 차이를 조율하는 힘을 기르는 것",
-        evidence: [
-          "구글폼 API 연계 전 임시 후보값입니다.",
-          "실제 연계 후에는 학생명과 나이 기준으로 후보가 자동 조회됩니다.",
-        ],
-      },
-    },
-    {
-      id: "temp-google-form-2",
-      studentName,
-      age: form.studentMeta?.age || "",
-      phoneLast4: "5678",
-      submittedAt: "2026-04-15",
-      parentNeeds: {
-        homeDirection: "자기주도성",
-        classFlow: "몰입경험",
-        peerBehavior: "관계유지",
-        longTermGoal:
-          "수업 안에서 스스로 선택하고 몰입하는 힘을 키우며, 또래와 안정적으로 관계를 이어가는 것",
-        evidence: [
-          "동명이인 상황을 가정한 임시 후보값입니다.",
-          "실제 연계 후에는 교사가 후보 중 맞는 응답을 선택하게 됩니다.",
-        ],
-      },
-    },
-  ];
-
+const temporaryCandidates = getTemporaryGoogleFormCandidates(
+  studentName,
+  form.studentMeta?.age
+);
   setGoogleFormCandidates(temporaryCandidates);
 
   setGoogleFormMessage(
