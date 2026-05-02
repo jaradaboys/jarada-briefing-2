@@ -1588,7 +1588,7 @@ const normalizeGoogleFormCandidate = (candidate) => ({
     throw new Error("구글폼 임시 조회 실패 테스트");
   }
 
-  return getTemporaryGoogleFormCandidates(studentName, age);
+return getTemporaryGoogleFormCandidates(studentName, age).map(normalizeGoogleFormCandidate);
 };
 const fetchGoogleFormNeeds = async () => {
   const studentName = form.student.trim();
