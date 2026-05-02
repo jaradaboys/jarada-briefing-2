@@ -1531,7 +1531,13 @@ const fetchGoogleFormNeeds = () => {
     setGoogleFormCandidates([]);
     return;
   }
-
+if (studentName.includes("후보없음")) {
+  setGoogleFormCandidates([]);
+  setGoogleFormMessage(
+    `${studentName} 학생 이름으로 연결 가능한 구글폼 심화설문 응답이 없습니다.`
+  );
+  return;
+}
   const temporaryCandidates = [
     {
       id: "temp-google-form-1",
