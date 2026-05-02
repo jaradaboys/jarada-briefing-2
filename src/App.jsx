@@ -1980,6 +1980,9 @@ setForm((prev) => ({
   growthBase,
 }));
 const studentNameForProfile = form.student.trim();
+       const currentStudentProfile = studentNameForProfile
+  ? studentProfiles[studentNameForProfile]
+  : null;
 
 if (studentNameForProfile) {
   setStudentProfiles((prev) => ({
