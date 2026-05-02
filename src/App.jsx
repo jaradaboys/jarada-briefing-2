@@ -1563,10 +1563,11 @@ const [showPrompt, setShowPrompt] = useState(false);
     },
   },
 ];
-   const fetchGoogleFormCandidates = async (studentName, age) => {
+ const fetchGoogleFormCandidates = async (studentName, age) => {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   return getTemporaryGoogleFormCandidates(studentName, age);
 };
-
 const fetchGoogleFormNeeds = async () => {
   const studentName = form.student.trim();
 
