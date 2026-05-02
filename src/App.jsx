@@ -1563,8 +1563,12 @@ const [showPrompt, setShowPrompt] = useState(false);
     },
   },
 ];
- const fetchGoogleFormCandidates = async (studentName, age) => {
+const fetchGoogleFormCandidates = async (studentName, age) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  if (studentName.includes("오류")) {
+    throw new Error("구글폼 임시 조회 실패 테스트");
+  }
 
   return getTemporaryGoogleFormCandidates(studentName, age);
 };
