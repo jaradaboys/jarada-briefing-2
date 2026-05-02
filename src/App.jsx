@@ -1779,7 +1779,9 @@ const loadStudentProfile = (name) => {
     studentMeta: profile?.studentMeta || null,
     ageBand: profile?.studentMeta?.ageBand || prev.ageBand,
   }));
-
+if (profile?.googleFormSource === null) {
+  return;
+}
   if (hasParentNeeds && hasJarvisBase) {
     setGoogleFormMessage(
       `${name} 학생의 저장된 학부모 니즈와 JARVIS 성장 기본값을 불러왔습니다.`
