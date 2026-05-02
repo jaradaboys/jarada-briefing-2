@@ -1604,6 +1604,34 @@ const connectGoogleFormCandidate = (candidate) => {
 
   setGoogleFormCandidates([]);
 };
+   const disconnectGoogleFormCandidate = () => {
+  const studentName = form.student.trim();
+
+  if (!studentName) {
+    setGoogleFormMessage("학생명을 먼저 입력해야 연결을 해제할 수 있습니다.");
+    return;
+  }
+
+  const emptyParentNeeds = getDefaultForm().parentNeeds;
+
+  setForm((prev) => ({
+    ...prev,
+    parentNeeds: emptyParentNeeds,
+  }));
+
+  setStudentProfiles((prev) => ({
+    ...prev,
+    [studentName]: {
+      ...(prev[studentName] || {}),
+      student: studentName,
+      parentNeeds: emptyParentNeeds,
+      googleFormSource: null,
+    },
+  }));
+
+  setGoogleFormMessage(`${studentName} 학생의 구글폼 응답 연결을 해제했습니다.`);
+  setGoogleFormCandidates([]);
+};
 
   const updateNeeds = (key, value) => setForm((prev) => ({ ...prev, parentNeeds: { ...prev.parentNeeds, [key]: value } }));
   const toggle = (list, value) => (list.includes(value) ? list.filter((item) => item !== value) : [...list, value]);
