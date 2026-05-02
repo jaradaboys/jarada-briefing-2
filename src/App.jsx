@@ -1566,7 +1566,8 @@ const [showPrompt, setShowPrompt] = useState(false);
 const fetchGoogleFormCandidates = async (studentName, age) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  if (studentName.includes("오류")) {
+// TODO: 실제 Google Form API 연계 후에는 API 호출 실패 시 catch 분기로 처리합니다.
+   if (studentName.includes("오류")) {
     throw new Error("구글폼 임시 조회 실패 테스트");
   }
 
