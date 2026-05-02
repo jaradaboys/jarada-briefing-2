@@ -1525,6 +1525,8 @@ const [showPrompt, setShowPrompt] = useState(false);
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 const fetchGoogleFormNeeds = () => {
 const connectGoogleFormCandidate = (candidate) => {
+  alert("설문 연결 버튼 클릭됨");
+
   setForm((prev) => ({
     ...prev,
     parentNeeds: candidate.parentNeeds,
