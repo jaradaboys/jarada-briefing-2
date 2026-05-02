@@ -1604,7 +1604,7 @@ const isValidGoogleFormCandidate = (candidate) => {
    await new Promise((resolve) => setTimeout(resolve, 1000));
 
 // TODO: 실제 Google Form API 연계 후에는 API 호출 실패 시 catch 분기로 처리합니다.
-   if (studentName.includes("오류")) {
+if (studentName.includes(GOOGLE_FORM_TEST_KEYWORDS.error)) {
     throw new Error("구글폼 임시 조회 실패 테스트");
   }
 // TODO: 실제 Google Form API 연계 후에는 응답 데이터가 불완전할 때 검증에서 제외되는지 확인합니다.
