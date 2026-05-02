@@ -1524,9 +1524,61 @@ const [showPrompt, setShowPrompt] = useState(false);
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 const fetchGoogleFormNeeds = () => {
-const connectGoogleFormCandidate = (candidate) => {
-  alert("설문 연결 버튼 클릭됨");
+  const studentName = form.student.trim();
 
+  if (!studentName) {
+    setGoogleFormMessage("학생명을 먼저 입력하면 구글폼 응답을 불러올 수 있습니다.");
+    setGoogleFormCandidates([]);
+    return;
+  }
+
+  const temporaryCandidates = [
+    {
+      id: "temp-google-form-1",
+      studentName,
+      age: form.studentMeta?.age || "",
+      phoneLast4: "1234",
+      submittedAt: "2026-04-12",
+      parentNeeds: {
+        homeDirection: "자기표현",
+        classFlow: "감정조절",
+        peerBehavior: "관계조율",
+        longTermGoal:
+          "자신의 생각과 감정을 안정적으로 표현하고, 또래 관계 안에서 차이를 조율하는 힘을 기르는 것",
+        evidence: [
+          "구글폼 API 연계 전 임시 후보값입니다.",
+          "실제 연계 후에는 학생명과 나이 기준으로 후보가 자동 조회됩니다.",
+        ],
+      },
+    },
+    {
+      id: "temp-google-form-2",
+      studentName,
+      age: form.studentMeta?.age || "",
+      phoneLast4: "5678",
+      submittedAt: "2026-04-15",
+      parentNeeds: {
+        homeDirection: "자기주도성",
+        classFlow: "몰입경험",
+        peerBehavior: "관계유지",
+        longTermGoal:
+          "수업 안에서 스스로 선택하고 몰입하는 힘을 키우며, 또래와 안정적으로 관계를 이어가는 것",
+        evidence: [
+          "동명이인 상황을 가정한 임시 후보값입니다.",
+          "실제 연계 후에는 교사가 후보 중 맞는 응답을 선택하게 됩니다.",
+        ],
+      },
+    },
+  ];
+
+  setGoogleFormCandidates(temporaryCandidates);
+
+  setGoogleFormMessage(
+    `${studentName} 학생 이름으로 구글폼 심화설문 후보 ${temporaryCandidates.length}건을 찾았습니다. 연결할 설문을 선택해 주세요.`
+  );
+};
+
+const connectGoogleFormCandidate = (candidate) => {
   setForm((prev) => ({
     ...prev,
     parentNeeds: candidate.parentNeeds,
@@ -1536,6 +1588,7 @@ const connectGoogleFormCandidate = (candidate) => {
     ...prev,
     [candidate.studentName]: {
       ...(prev[candidate.studentName] || {}),
+      student: candidate.studentName,
       parentNeeds: candidate.parentNeeds,
       googleFormSource: {
         id: candidate.id,
@@ -1550,7 +1603,7 @@ const connectGoogleFormCandidate = (candidate) => {
   );
 
   setGoogleFormCandidates([]);
-};   
+};
   const studentName = form.student.trim();
 
   if (!studentName) {
