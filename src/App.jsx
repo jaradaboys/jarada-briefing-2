@@ -1580,7 +1580,8 @@ const fetchGoogleFormNeeds = async () => {
     setGoogleFormCandidates([]);
     return;
   }
-if (studentName.includes("후보없음")) {
+// TODO: 실제 Google Form API 연계 후에는 응답 결과가 0건일 때 이 분기로 대체합니다.
+   if (studentName.includes("후보없음")) {
   setGoogleFormCandidates([]);
   setGoogleFormMessage(
     `${studentName} 학생 이름으로 연결 가능한 구글폼 심화설문 응답이 없습니다.`
