@@ -1524,6 +1524,11 @@ const [showPrompt, setShowPrompt] = useState(false);
   }, [records, recordSearch]);
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
+   const GOOGLE_FORM_TEST_KEYWORDS = {
+  empty: "후보없음",
+  error: "오류",
+  invalid: "무효후보",
+};
 
    const getTemporaryGoogleFormCandidates = (studentName, age) => [
   {
