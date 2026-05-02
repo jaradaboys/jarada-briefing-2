@@ -1601,7 +1601,7 @@ try {
     `${studentName} 학생 이름으로 구글폼 심화설문 후보 ${candidates.length}건을 찾았습니다. 연결할 설문을 선택해 주세요.`
   );
 } catch (error) {
-  alert("구글폼 오류 처리 진입");
+
 
   setGoogleFormCandidates([]);
   setGoogleFormMessage(
