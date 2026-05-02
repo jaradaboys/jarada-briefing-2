@@ -1524,6 +1524,7 @@ const [showPrompt, setShowPrompt] = useState(false);
   }, [records, recordSearch]);
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
+ // Google Form integration helpers
    const GOOGLE_FORM_TEST_KEYWORDS = {
   empty: "후보없음",
   error: "오류",
