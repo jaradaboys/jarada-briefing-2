@@ -1631,11 +1631,18 @@ try {
     form.studentMeta?.age
   );
 
-  setGoogleFormCandidates(candidates);
+ setGoogleFormCandidates(candidates);
 
+if (candidates.length === 0) {
   setGoogleFormMessage(
-    `${studentName} 학생 이름으로 구글폼 심화설문 후보 ${candidates.length}건을 찾았습니다. 연결할 설문을 선택해 주세요.`
+    `${studentName} 학생 이름으로 연결 가능한 구글폼 심화설문 응답이 없습니다.`
   );
+  return;
+}
+
+setGoogleFormMessage(
+  `${studentName} 학생 이름으로 구글폼 심화설문 후보 ${candidates.length}건을 찾았습니다. 연결할 설문을 선택해 주세요.`
+);
 } catch (error) {
 
 
