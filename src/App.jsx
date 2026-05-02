@@ -1580,11 +1580,11 @@ const candidates = getTemporaryGoogleFormCandidates(
   studentName,
   form.studentMeta?.age
 );
-  setGoogleFormCandidates(temporaryCandidates);
+setGoogleFormCandidates(candidates);
 
-  setGoogleFormMessage(
-    `${studentName} 학생 이름으로 구글폼 심화설문 후보 ${temporaryCandidates.length}건을 찾았습니다. 연결할 설문을 선택해 주세요.`
-  );
+setGoogleFormMessage(
+  `${studentName} 학생 이름으로 구글폼 심화설문 후보 ${candidates.length}건을 찾았습니다. 연결할 설문을 선택해 주세요.`
+);
 };
 
 const connectGoogleFormCandidate = (candidate) => {
