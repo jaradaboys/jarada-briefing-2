@@ -1576,7 +1576,7 @@ if (studentName.includes("후보없음")) {
   );
   return;
 }
-const temporaryCandidates = getTemporaryGoogleFormCandidates(
+const candidates = getTemporaryGoogleFormCandidates(
   studentName,
   form.studentMeta?.age
 );
