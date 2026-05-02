@@ -1579,6 +1579,21 @@ const normalizeGoogleFormCandidate = (candidate) => ({
       : [],
   },
 });
+const isValidGoogleFormCandidate = (candidate) => {
+  if (!candidate) return false;
+  if (!candidate.id) return false;
+  if (!candidate.studentName) return false;
+  if (!candidate.submittedAt) return false;
+  if (!candidate.parentNeeds) return false;
+
+  const hasAnyParentNeed =
+    candidate.parentNeeds.homeDirection ||
+    candidate.parentNeeds.classFlow ||
+    candidate.parentNeeds.peerBehavior ||
+    candidate.parentNeeds.longTermGoal;
+
+  return Boolean(hasAnyParentNeed);
+};
    const fetchGoogleFormCandidates = async (studentName, age) => {
  // TODO: 실제 Google Form API 연계 후에는 네트워크 요청 시간이 생기므로 이 임시 지연 코드는 제거합니다.
    await new Promise((resolve) => setTimeout(resolve, 1000));
