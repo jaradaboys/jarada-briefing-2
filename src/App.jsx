@@ -1524,6 +1524,31 @@ const [showPrompt, setShowPrompt] = useState(false);
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 const fetchGoogleFormNeeds = () => {
+const connectGoogleFormCandidate = (candidate) => {
+  setForm((prev) => ({
+    ...prev,
+    parentNeeds: candidate.parentNeeds,
+  }));
+
+  setStudentProfiles((prev) => ({
+    ...prev,
+    [candidate.studentName]: {
+      ...(prev[candidate.studentName] || {}),
+      parentNeeds: candidate.parentNeeds,
+      googleFormSource: {
+        id: candidate.id,
+        submittedAt: candidate.submittedAt,
+        phoneLast4: candidate.phoneLast4,
+      },
+    },
+  }));
+
+  setGoogleFormMessage(
+    `${candidate.studentName} 학생의 ${candidate.submittedAt} 구글폼 응답을 연결했습니다.`
+  );
+
+  setGoogleFormCandidates([]);
+};   
   const studentName = form.student.trim();
 
   if (!studentName) {
