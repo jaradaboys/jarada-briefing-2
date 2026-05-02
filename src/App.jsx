@@ -1563,7 +1563,23 @@ const [showPrompt, setShowPrompt] = useState(false);
     },
   },
 ];
-const fetchGoogleFormCandidates = async (studentName, age) => {
+const normalizeGoogleFormCandidate = (candidate) => ({
+  id: candidate.id || `google-form-${candidate.submittedAt || Date.now()}`,
+  studentName: candidate.studentName || "",
+  age: candidate.age || "",
+  phoneLast4: candidate.phoneLast4 || "",
+  submittedAt: candidate.submittedAt || "",
+  parentNeeds: {
+    homeDirection: candidate.parentNeeds?.homeDirection || "",
+    classFlow: candidate.parentNeeds?.classFlow || "",
+    peerBehavior: candidate.parentNeeds?.peerBehavior || "",
+    longTermGoal: candidate.parentNeeds?.longTermGoal || "",
+    evidence: Array.isArray(candidate.parentNeeds?.evidence)
+      ? candidate.parentNeeds.evidence
+      : [],
+  },
+});
+   const fetchGoogleFormCandidates = async (studentName, age) => {
  // TODO: 실제 Google Form API 연계 후에는 네트워크 요청 시간이 생기므로 이 임시 지연 코드는 제거합니다.
    await new Promise((resolve) => setTimeout(resolve, 1000));
 
