@@ -1741,6 +1741,13 @@ const isCurrentGoogleFormCandidate = (candidate) => {
 
   return studentProfiles[studentName]?.googleFormSource?.id === candidate.id;
 };
+   const getCurrentGoogleFormSource = () => {
+  const studentName = form.student.trim();
+
+  if (!studentName) return null;
+
+  return studentProfiles[studentName]?.googleFormSource || null;
+};
   const updateNeeds = (key, value) => setForm((prev) => ({ ...prev, parentNeeds: { ...prev.parentNeeds, [key]: value } }));
   const toggle = (list, value) => (list.includes(value) ? list.filter((item) => item !== value) : [...list, value]);
 
