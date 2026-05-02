@@ -1564,7 +1564,8 @@ const [showPrompt, setShowPrompt] = useState(false);
   },
 ];
 const fetchGoogleFormCandidates = async (studentName, age) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+ // TODO: 실제 Google Form API 연계 후에는 네트워크 요청 시간이 생기므로 이 임시 지연 코드는 제거합니다.
+   await new Promise((resolve) => setTimeout(resolve, 1000));
 
 // TODO: 실제 Google Form API 연계 후에는 API 호출 실패 시 catch 분기로 처리합니다.
    if (studentName.includes("오류")) {
