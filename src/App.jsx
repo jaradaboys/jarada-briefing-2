@@ -254,7 +254,7 @@ const styles = {
   page: { minHeight: "100vh", background: "linear-gradient(180deg, #eef2ff 0%, #f8fafc 45%, #ffffff 100%)", color: "#0f172a", fontFamily: "Arial, sans-serif" },
   container: { maxWidth: 1480, margin: "0 auto", padding: "28px 20px 40px" },
   grid: { display: "grid", gridTemplateColumns: "1.08fr 0.92fr", gap: 24, alignItems: "start" },
-  topGrid: { display: "grid", gridTemplateColumns: "1.15fr 0.85fr", gap: 16, marginBottom: 24 },
+ topGrid: { display: "grid", gridTemplateColumns: "1.08fr 0.92fr", gap: 24, marginBottom: 24 },
   card: { background: "white", borderRadius: 28, padding: 28, boxShadow: "0 8px 24px rgba(15,23,42,0.06)", border: "1px solid #e2e8f0" },
   darkCard: { background: "#0f172a", color: "white", borderRadius: 28, padding: 28, boxShadow: "0 8px 24px rgba(15,23,42,0.14)" },
   title: { fontSize: 42, fontWeight: 800, margin: 0 },
