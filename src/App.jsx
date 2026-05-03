@@ -586,14 +586,32 @@ function buildGrowthTaskParentLine(form) {
   const keywords = form.growthTaskKeywords || [];
 
   if (!task) {
-    return `${name}의 이번 달 성장과제는 수업 관찰을 통해 더 구체화할 수 있습니다.`;
+    return `${name}의 이번 달 성장 방향은 수업 관찰을 통해 더 구체화할 수 있습니다.`;
   }
 
   const detail = keywords.length
-    ? ` 그중에서도 ${keywords.join(", ")} 경험을 중심으로 살펴볼 수 있습니다.`
+    ? ` 이번 달에는 ${keywords.join(", ")} 장면을 중심으로 이 힘이 어떻게 자라고 있는지 살펴보았습니다.`
     : "";
 
-  return `${name}에게 이번 달 중요한 성장과제는 ${task.parentText}입니다.${detail}`;
+  return `${name}에게 이번 달 중요한 성장 방향은 ${task.parentText}입니다.${detail}`;
+}
+
+function buildAgeGrowthStageParentLine(form) {
+  const ageBand = form.studentMeta?.ageBand || form.ageBand;
+
+  if (ageBand === "6–7세") {
+    return "이 시기에는 하고 싶은 행동을 잠깐 멈추고 기다려보는 경험, 자신의 마음을 말로 표현해보는 경험이 중요합니다.";
+  }
+
+  if (ageBand === "8–11세") {
+    return "이 시기에는 스스로 계획하고 끝까지 해보는 힘과, 친구와 생각을 맞춰보는 경험이 중요해집니다.";
+  }
+
+  if (ageBand === "12–13세") {
+    return "이 시기에는 자신의 강점과 흔들리는 지점을 알아차리고, 시켜서가 아니라 스스로 의미를 찾아가는 경험이 중요해집니다.";
+  }
+
+  return "이 시기에는 아이가 자신의 방식으로 시도하고 관계 안에서 경험을 쌓아가는 흐름이 중요합니다.";
 }
 
 /* =========================
@@ -1092,9 +1110,10 @@ function generatePreview(form, visionResult) {
       ? `${name}은 현재 ${meta.classWeek}주차, 약 ${meta.enrolledMonths}개월차, ${meta.enrolledYear}년차 재원 흐름에 있습니다.`
       : `${name}의 재원 흐름은 JARVIS 누적 기록을 기준으로 정리하고 있습니다.`;
 
+  const ageStageText = buildAgeGrowthStageParentLine(form);
   const ageText = meta.age
-    ? `현재 ${meta.age}세로 ${meta.ageBand || form.ageBand} 발달 흐름에 해당합니다.`
-    : "";
+    ? `현재 ${meta.age}세입니다. ${ageStageText}`
+    : ageStageText;
 
   const mainKeywords = (profile.dominantMainKeywords || []).slice(0, 3);
   const subKeywords = (profile.dominantSubKeywords || []).slice(0, 4);
@@ -1162,7 +1181,7 @@ function generatePreview(form, visionResult) {
     "",
     "3. 이번달 성장 해석",
     buildGrowthTaskParentLine(form),
-    `이번 달에는 ${monthlyKeywordText} 흐름을 중심으로 관찰했습니다. ${name}은 단순히 결과물을 완성하는 것보다, 수업 안에서 자신의 생각과 감정을 어떻게 표현하고 관계 안에서 어떻게 조율하는지가 중요한 성장 장면으로 보입니다. 반복 강점으로는 ${repeatedStrength} 반면 ${repeatedNeeds}`,
+    `이번 달 수업에서는 ${name}이 단순히 결과물을 완성하는 것보다, 선택한 것을 이어가고 관계 안에서 맞춰보는 경험이 중요했습니다. 반복 강점으로는 ${repeatedStrength} 반면 ${repeatedNeeds}`,
     "",
     "4. 가정 연계 포인트",
     buildHomeGuide(form),
@@ -1306,7 +1325,7 @@ ${visionFlow || "이미지 분석 없음"}
 아래 6개 흐름으로 작성한다.
 
 1. 지난달 계획과 누적 성장 흐름 연결
-- 아이가 지금 어떤 재원 흐름과 성장 단계에 있는지 짧게 연결한다.
+- 아이가 지금 어떤 재원 흐름과 성장 시기에 있는지 학부모가 쉽게 이해하도록 연결한다.
 - JARVIS 누적 기본값과 학부모 니즈를 함께 반영한다.
 
 2. 이번달 실제 관찰 장면
@@ -1314,8 +1333,8 @@ ${visionFlow || "이미지 분석 없음"}
 - 관찰 장면은 구체적이되 너무 길게 쓰지 않는다.
 
 3. 이번달 성장 해석
-- 이번달 키워드, 프로젝트, 사회성 방향을 연결해 해석한다.
-- 단순 활동 설명이 아니라 아이의 변화와 성장 의미를 쓴다.
+- 이번달 성장과제, 프로젝트, 사회성코칭 방향을 연결해 해석한다.
+- 단순 활동 설명이 아니라 아이의 변화와 성장 의미를 쉬운 말로 쓴다.
 
 4. 가정 연계 포인트
 - 학부모가 가정에서 이해하거나 도와줄 수 있는 방향을 제안한다.
