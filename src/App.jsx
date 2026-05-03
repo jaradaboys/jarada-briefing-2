@@ -354,6 +354,8 @@ const getDefaultForm = () => ({
   ageBand: "6–7세",
   ageDomain: "감정이해",
   ageSubKeywords: [],
+   growthTask: "",
+growthTaskKeywords: [],
   project: "연작",
   projectKeywordsSelected: [],
   socialDomain: "관계인식",
