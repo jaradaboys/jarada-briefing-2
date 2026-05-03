@@ -47,7 +47,129 @@ const ageDomains = {
     역할정체성: ["역할찾기", "역할수행", "팀기여"],
   },
 };
+const ageGrowthTasks = {
+  "6–7세": {
+    summary: "행동적 자기조절과 내면적 자기조절을 배워가는 시기",
+    tasks: [
+      {
+        key: "behavioralSelfRegulation",
+        label: "행동적 자기조절",
+        axis: "자아효능감",
+        training: "인지적 자기조절",
+        description: "충동을 조절하고 행동을 멈추며 교실의 기본 흐름을 따라보는 힘",
+        keywords: ["멈추기", "기다리기", "차례지키기", "교실규칙", "만족지연"],
+      },
+      {
+        key: "innerSelfRegulation",
+        label: "내면적 자기조절",
+        axis: "사회적효능감",
+        training: "정서적 자기조절",
+        description: "자신의 감정을 이해하고 바르게 표현해보는 힘",
+        keywords: ["감정인식", "감정표현", "감정말하기", "정서안정"],
+      },
+      {
+        key: "teacherTrust",
+        label: "교사신뢰와 분리안정",
+        axis: "사회적효능감",
+        training: "정서적 자기조절",
+        description: "부모와 떨어져 교사와 안정적인 신뢰 관계를 형성하는 힘",
+        keywords: ["교사신뢰", "분리안정", "공간적응", "환경안정"],
+      },
+    ],
+  },
 
+  "8–11세": {
+    summary: "인지적 자기조절과 사회적 자기조절을 훈련하는 시기",
+    tasks: [
+      {
+        key: "cognitiveSelfRegulation",
+        label: "인지적 자기조절",
+        axis: "자아효능감",
+        training: "인지적 자기조절",
+        description: "과제를 정하고 계획하며 어려워도 끝까지 완성해보는 힘",
+        keywords: ["과제설정", "계획하기", "단계수행", "과제지속", "완성해보기"],
+      },
+      {
+        key: "socialSelfRegulation",
+        label: "사회적 자기조절",
+        axis: "사회적효능감",
+        training: "정서적 자기조절",
+        description: "또래 관계 안에서 감정과 의견을 조율하고 인정받아보는 힘",
+        keywords: ["의견조율", "갈등조절", "관계조율", "의견표현", "인정받기"],
+      },
+      {
+        key: "toolMastery",
+        label: "도구적 숙달",
+        axis: "자아효능감",
+        training: "인지적 자기조절",
+        description: "글루건, 톱, 칼 등 도구를 안전하고 능숙하게 다루는 힘",
+        keywords: ["도구사용", "도구숙달", "안전사용", "재료이해"],
+      },
+      {
+        key: "dailyTaskResponsibility",
+        label: "생활과제 수행",
+        axis: "자아효능감",
+        training: "인지적 자기조절",
+        description: "자기 자리 정리, 숙제, 준비물처럼 주어진 과제를 책임지는 힘",
+        keywords: ["책임지기", "자기자리정리", "숙제수행", "역할수행"],
+      },
+    ],
+  },
+
+  "12–13세": {
+    summary: "메타인지적 자기조절과 정서적 자기경영을 시작하는 시기",
+    tasks: [
+      {
+        key: "metacognitiveSelfRegulation",
+        label: "메타인지적 자기조절",
+        axis: "자아효능감",
+        training: "인지적 자기조절",
+        description: "자신의 상태를 파악하고 자신에게 맞는 방향을 스스로 제안하는 힘",
+        keywords: ["상태파악", "방향설정", "방법선택", "자기조절"],
+      },
+      {
+        key: "emotionalSelfManagement",
+        label: "정서적 자기경영",
+        axis: "사회적효능감",
+        training: "정서적 자기조절",
+        description: "불안과 어려움을 마주하고 감정을 성장 동력으로 활용하는 힘",
+        keywords: ["불안마주하기", "감정활용", "회복탄력성", "정서조절"],
+      },
+      {
+        key: "selfUnderstanding",
+        label: "자신의 강점·약점 이해",
+        axis: "자아효능감",
+        training: "인지적 자기조절",
+        description: "자신이 잘하는 것과 흔들리는 지점을 알아차리는 힘",
+        keywords: ["강점이해", "약점이해", "자기이해", "상태파악"],
+      },
+      {
+        key: "beyondLimits",
+        label: "한계넘기",
+        axis: "자아효능감",
+        training: "인지적 자기조절",
+        description: "익숙한 수준을 넘어 더 어려운 기준에 도전해보는 힘",
+        keywords: ["한계넘기", "재도전", "어려움버티기", "기준넘기"],
+      },
+      {
+        key: "innerMotivation",
+        label: "내적동기",
+        axis: "자아효능감",
+        training: "인지적 자기조절",
+        description: "시켜서가 아니라 스스로 의미를 찾고 해내는 힘",
+        keywords: ["의미찾기", "스스로시작", "주도유지", "내적동기"],
+      },
+      {
+        key: "roleIdentity",
+        label: "역할과 정체성",
+        axis: "사회적효능감",
+        training: "정서적 자기조절",
+        description: "팀 안에서 자신의 역할과 기여 방식을 찾아가는 힘",
+        keywords: ["역할찾기", "팀기여", "역할수행", "정체성형성"],
+      },
+    ],
+  },
+};
 const projects = ["연작", "협동작업", "100호캔버스"];
 
 const projectKeywords = {
