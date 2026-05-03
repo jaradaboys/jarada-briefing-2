@@ -1658,6 +1658,18 @@ const [showPrompt, setShowPrompt] = useState(false);
       setForm((prev) => ({ ...prev, ageDomain: next, ageSubKeywords: [] }));
     }
   }, [form.ageBand, form.ageDomain]);
+   useEffect(() => {
+  const tasks = ageGrowthTasks[form.ageBand]?.tasks || [];
+  const isValidTask = tasks.some((task) => task.key === form.growthTask);
+
+  if (!isValidTask) {
+    setForm((prev) => ({
+      ...prev,
+      growthTask: tasks[0]?.key || "",
+      growthTaskKeywords: [],
+    }));
+  }
+}, [form.ageBand, form.growthTask]);
 
   const prompt = useMemo(() => generatePrompt(form, visionResult), [form, visionResult]);
   const preview = useMemo(() => generatePreview(form, visionResult), [form, visionResult]);
