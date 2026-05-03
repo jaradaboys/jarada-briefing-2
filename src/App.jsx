@@ -659,6 +659,7 @@ function hasAnyText(text, words) {
   return words.some((word) => String(text || "").includes(word));
 }
 
+
 function buildBriefingTitleCandidates(form, visionResult) {
   const childName = getBriefingChildName(form.student);
   const task = getSelectedGrowthTask(form);
@@ -666,16 +667,26 @@ function buildBriefingTitleCandidates(form, visionResult) {
     `${form.artworkFlow || ""} ${form.memo || ""} ${visionResult?.flow_summary || ""}`
   );
   const topic = extractActivityTopic(form, visionResult);
+  const hasSocialScene = hasAnyText(text, ["친구", "함께", "의견", "갈등", "양보", "조율", "협동"]);
   const candidates = [];
+
+  // 1. 제목은 이번 달 실제 관찰 장면을 가장 먼저 반영한다.
+  if (topic.includes("자동차")) {
+    candidates.push("자동차 안에서 자기 생각이 움직이기 시작한 시간");
+    candidates.push("좋아하는 자동차에서 자기 이야기가 시작된 수업");
+  } else if (topic.includes("도라에몽") || topic.includes("캐릭터") || topic.includes("포켓몬") || topic.includes("마인크래프트") || topic.includes("로블록스")) {
+    candidates.push("좋아하는 주제에서 자기 이야기가 시작된 수업");
+    candidates.push("좋아하는 마음이 표현으로 이어진 시간");
+  } else if (topic.includes("스케치")) {
+    candidates.push("스케치 안에서 자기 생각이 자라난 시간");
+    candidates.push("머릿속 이야기를 화면에 옮겨본 수업");
+  } else if (topic && topic !== "작업") {
+    candidates.push(`${topic} 안에서 자기 생각을 꺼내본 시간`);
+  }
 
   if (hasAnyText(text, ["스케치", "아이디어"])) {
     candidates.push("스케치 안에서 자기 생각이 자라난 시간");
     candidates.push("머릿속 이야기를 화면에 옮겨본 수업");
-  }
-
-  if (hasAnyText(text, ["도라에몽", "캐릭터", "포켓몬", "마인크래프트", "로블록스"])) {
-    candidates.push("좋아하는 주제에서 자기 이야기가 시작된 수업");
-    candidates.push("좋아하는 마음이 표현으로 이어진 시간");
   }
 
   if (hasAnyText(text, ["재밌", "즐겁", "흥미", "좋아"])) {
@@ -686,14 +697,16 @@ function buildBriefingTitleCandidates(form, visionResult) {
     candidates.push("좋아하는 것을 붙잡고 끝까지 이어간 시간");
   }
 
-  if (hasAnyText(text, ["친구", "함께", "의견", "갈등", "양보", "조율"])) {
+  // 2. 사회성 제목은 이번 달 실제 메모에 관계 장면이 있을 때만 강하게 제안한다.
+  if (hasSocialScene) {
     candidates.push("친구와 함께하며 내 생각을 꺼내본 수업");
     candidates.push("관계 안에서 한 걸음 맞춰본 시간");
   }
 
+  // 3. 성장과제는 실제 장면을 보완하는 후보로 사용한다.
   if (task?.key === "cognitiveSelfRegulation") {
     candidates.push("스스로 떠올린 생각을 끝까지 이어가본 시간");
-  } else if (task?.key === "socialSelfRegulation") {
+  } else if (task?.key === "socialSelfRegulation" && hasSocialScene) {
     candidates.push("관계 안에서 자기 마음을 조율해본 시간");
   } else if (task?.key === "toolMastery") {
     candidates.push("손끝의 시도가 자신감으로 이어진 시간");
@@ -705,12 +718,8 @@ function buildBriefingTitleCandidates(form, visionResult) {
     candidates.push("자기 상태를 알아차리고 방향을 찾아본 시간");
   } else if (task?.key === "emotionalSelfManagement") {
     candidates.push("어려운 마음을 성장의 힘으로 바꿔본 시간");
-  } else if (task?.key === "roleIdentity") {
+  } else if (task?.key === "roleIdentity" && hasSocialScene) {
     candidates.push("팀 안에서 자기 역할을 찾아본 시간");
-  }
-
-  if (topic && topic !== "작업") {
-    candidates.push(`${topic} 안에서 자기 생각을 꺼내본 시간`);
   }
 
   candidates.push(`${childName}의 작은 선택이 성장으로 이어진 한 달`);
@@ -719,7 +728,6 @@ function buildBriefingTitleCandidates(form, visionResult) {
 
   return uniq(candidates).slice(0, 3);
 }
-
 
 function getSelectedBriefingTitle(form, visionResult) {
   const customTitle = String(form.briefingTitle || "").trim();
@@ -752,6 +760,7 @@ function buildAgeGrowthContextLine(form) {
   return `${childName}는 이번 달 수업 안에서 자기 방식으로 한 걸음 성장해가는 중입니다.`;
 }
 
+
 function buildObservationInsightLine(form, visionResult) {
   const childName = getBriefingChildName(form.student);
   const text = cleanBriefingText(`${form.artworkFlow || ""} ${form.memo || ""} ${visionResult?.flow_summary || ""}`);
@@ -759,6 +768,10 @@ function buildObservationInsightLine(form, visionResult) {
 
   if (!text) {
     return `${childName}의 이번 달 수업 장면은 교사의 관찰 메모를 바탕으로 더 구체화할 수 있습니다.`;
+  }
+
+  if (topic.includes("자동차")) {
+    return `이번 달 ${childName}는 자동차를 주제로 작업하며, 자신이 떠올린 생각을 화면에 옮겨보는 시간을 가졌습니다.`;
   }
 
   if (hasAnyText(text, ["스케치", "아이디어"]) && hasAnyText(text, ["재밌", "즐겁", "좋아", "흥미"])) {
@@ -779,7 +792,6 @@ function buildObservationInsightLine(form, visionResult) {
 
   return `이번 달 ${childName}는 ${topic}을 통해 자신의 방식으로 생각을 표현하고 수업에 참여했습니다.`;
 }
-
 
 function buildGrowthHistoryLine(form) {
   const childName = getBriefingChildName(form.student);
@@ -808,22 +820,34 @@ function buildGrowthHistoryLine(form) {
   return `지난 기록에서도 ${childName}는 자신의 속도 안에서 수업에 참여하고, 경험을 조금씩 쌓아가는 흐름을 보여주었습니다.`;
 }
 
+
 function buildMonthlyGrowthInterpretation(form, visionResult) {
   const childName = getBriefingChildName(form.student);
   const task = getSelectedGrowthTask(form);
   const topic = extractActivityTopic(form, visionResult);
   const text = cleanBriefingText(`${form.artworkFlow || ""} ${form.memo || ""} ${visionResult?.flow_summary || ""}`);
+  const hasSocialScene = hasAnyText(text, ["친구", "함께", "의견", "갈등", "양보", "조율", "협동"]);
 
-  if (task?.key === "cognitiveSelfRegulation") {
-    if (hasAnyText(text, ["스케치", "아이디어"])) {
-      return `이번 달에는 ${childName}가 ${topic} 안에서 무엇을 먼저 그리고, 어떤 장면을 살릴지 스스로 정해보는 과정이 돋보였습니다. 처음 떠올린 생각을 스케치로 옮겨보는 경험은 스스로 계획하고 끝까지 해보는 힘으로 이어질 수 있습니다.`;
-    }
-
-    return `이번 달에는 ${childName}가 스스로 무엇을 해볼지 정하고, 그 선택을 작업 안에서 이어가보는 과정이 돋보였습니다. 이런 경험은 계획하고 끝까지 해보는 힘을 조금씩 키워줍니다.`;
+  // 이번 달 실제 장면이 작품/주제 중심이면 그 장면을 우선 해석한다.
+  if (topic.includes("자동차")) {
+    return `익숙하고 좋아하는 주제에서 출발하자 ${childName}는 무엇을 어떻게 표현할지 스스로 떠올리며 작업에 들어갔습니다. 이 과정은 ${childName}가 자기 생각을 꺼내고, 그 생각을 그림 안에서 구체화해보는 의미 있는 경험이었습니다.`;
   }
 
-  if (task?.key === "socialSelfRegulation") {
+  if (hasAnyText(text, ["스케치", "아이디어"])) {
+    return `이번 달에는 ${childName}가 ${topic} 안에서 무엇을 먼저 그리고, 어떤 장면을 살릴지 스스로 정해보는 과정이 돋보였습니다. 처음 떠올린 생각을 스케치로 옮겨보는 경험은 스스로 계획하고 끝까지 해보는 힘으로 이어질 수 있습니다.`;
+  }
+
+  if (hasAnyText(text, ["재밌", "즐겁", "흥미", "좋아"])) {
+    return `이번 달에는 ${childName}가 좋아하는 주제 안에서 자연스럽게 작업에 몰입하는 모습이 보였습니다. 좋아하는 마음에서 출발한 참여가 자기 생각을 표현하는 힘으로 이어진 점이 의미 있었습니다.`;
+  }
+
+  // 사회성코칭은 이번 달 메모에 실제 관계 장면이 있을 때만 본문 중심으로 쓴다.
+  if (task?.key === "socialSelfRegulation" && hasSocialScene) {
     return `이번 달에는 ${childName}가 자기 생각을 꺼내면서도 친구와의 흐름을 함께 살피는 경험이 중요했습니다. 관계 안에서 맞춰보는 작은 장면들이 사회성코칭의 중요한 출발점이 됩니다.`;
+  }
+
+  if (task?.key === "cognitiveSelfRegulation") {
+    return `이번 달에는 ${childName}가 스스로 무엇을 해볼지 정하고, 그 선택을 작업 안에서 이어가보는 과정이 돋보였습니다. 이런 경험은 계획하고 끝까지 해보는 힘을 조금씩 키워줍니다.`;
   }
 
   if (task?.key === "toolMastery") {
@@ -842,10 +866,6 @@ function buildMonthlyGrowthInterpretation(form, visionResult) {
     return `이번 달에는 ${childName}가 어려운 마음을 피하지 않고, 다시 수업의 흐름 안으로 돌아오는 경험이 중요했습니다.`;
   }
 
-  if (hasAnyText(text, ["스케치", "아이디어", "재밌", "즐겁"])) {
-    return `이번 달에는 ${childName}가 좋아하는 주제 안에서 생각을 떠올리고, 그 생각을 표현으로 옮겨보는 과정이 돋보였습니다.`;
-  }
-
   return `이번 달에는 ${childName}가 자신의 방식으로 참여하며, 다음 성장으로 이어질 만한 작은 변화를 보여주었습니다.`;
 }
 
@@ -853,9 +873,14 @@ function buildMonthlyGrowthInterpretation(form, visionResult) {
 function buildContextualHomeGuide(form, visionResult) {
   const childName = getBriefingChildName(form.student);
   const text = cleanBriefingText(`${form.artworkFlow || ""} ${form.memo || ""} ${visionResult?.flow_summary || ""}`);
+  const topic = extractActivityTopic(form, visionResult);
   const task = getSelectedGrowthTask(form);
 
-  if (hasAnyText(text, ["스케치", "아이디어", "그리기", "도라에몽", "캐릭터"])) {
+  if (topic.includes("자동차")) {
+    return `가정에서는 완성된 그림을 평가하기보다 “이 자동차는 어떤 장면에 있는 거야?”, “이 부분은 어떻게 생각해서 그린 거야?”처럼 ${childName}가 떠올린 이야기를 물어봐 주시면 좋습니다. 자기 생각을 말로 정리해보는 경험은 다음 작업을 이어가는 자신감으로 연결될 수 있습니다.`;
+  }
+
+  if (hasAnyText(text, ["스케치", "아이디어", "그리기", "도라에몽", "캐릭터", "포켓몬", "마인크래프트", "로블록스"])) {
     return `가정에서는 완성된 그림을 평가하기보다 “이 장면은 어떻게 생각해서 그린 거야?”, “여기에는 어떤 이야기가 담겨 있어?”처럼 아이디어를 물어봐 주시면 좋습니다. ${childName}가 떠올린 생각을 말로 정리해보는 경험이 다음 작업을 이어가는 자신감으로 연결될 수 있습니다.`;
   }
 
@@ -875,13 +900,19 @@ function buildContextualNextPlan(form, visionResult) {
   const childName = getBriefingChildName(form.student);
   const task = getSelectedGrowthTask(form);
   const topic = extractActivityTopic(form, visionResult);
+  const text = cleanBriefingText(`${form.artworkFlow || ""} ${form.memo || ""} ${visionResult?.flow_summary || ""}`);
+  const hasSocialScene = hasAnyText(text, ["친구", "함께", "의견", "갈등", "양보", "조율", "협동"]);
+
+  if (topic.includes("자동차") || hasAnyText(text, ["스케치", "아이디어", "그리기", "캐릭터", "도라에몽"])) {
+    return `다음 달에는 ${childName}가 좋아하는 주제에서 출발한 아이디어를 조금 더 긴 작업으로 이어가며, 처음 떠올린 생각을 계획하고 끝까지 완성해보는 경험을 확장하겠습니다.`;
+  }
+
+  if (task?.key === "socialSelfRegulation" && hasSocialScene) {
+    return `다음 달에는 ${childName}가 수업 안에서 자기 생각을 표현하면서도 친구와의 흐름을 함께 맞춰보는 장면을 더 자연스럽게 경험할 수 있도록 구성하겠습니다.`;
+  }
 
   if (task?.key === "cognitiveSelfRegulation") {
     return `다음 달에는 ${childName}가 ${topic}에서 출발한 아이디어를 조금 더 긴 작업으로 이어가며, 처음 떠올린 생각을 계획하고 끝까지 완성해보는 경험을 확장하겠습니다.`;
-  }
-
-  if (task?.key === "socialSelfRegulation") {
-    return `다음 달에는 ${childName}가 수업 안에서 자기 생각을 표현하면서도 친구와의 흐름을 함께 맞춰보는 장면을 더 자연스럽게 경험할 수 있도록 구성하겠습니다.`;
   }
 
   if (task?.key === "toolMastery") {
@@ -895,12 +926,18 @@ function buildContextualNextPlan(form, visionResult) {
 function buildContextualExpectation(form) {
   const childName = getBriefingChildName(form.student);
   const task = getSelectedGrowthTask(form);
+  const text = cleanBriefingText(`${form.artworkFlow || ""} ${form.memo || ""}`);
+  const hasSocialScene = hasAnyText(text, ["친구", "함께", "의견", "갈등", "양보", "조율", "협동"]);
+
+  if (hasAnyText(text, ["자동차", "스케치", "아이디어", "그리기", "캐릭터", "도라에몽"])) {
+    return `이런 경험이 반복될수록 ${childName}는 좋아하는 마음에서 출발해 스스로 생각하고 표현하는 힘을 조금씩 더 안정적으로 쌓아갈 수 있을 것입니다.`;
+  }
 
   if (task?.key === "cognitiveSelfRegulation") {
     return `이런 경험이 반복될수록 ${childName}는 좋아하는 마음에서 출발해, 스스로 계획하고 끝까지 해보는 힘을 조금씩 더 안정적으로 쌓아갈 수 있습니다.`;
   }
 
-  if (task?.key === "socialSelfRegulation") {
+  if (task?.key === "socialSelfRegulation" && hasSocialScene) {
     return `이런 경험이 반복될수록 ${childName}는 관계 안에서 자기 생각을 표현하면서도 친구와 함께 맞춰가는 힘을 조금 더 편안하게 사용할 수 있습니다.`;
   }
 
@@ -910,11 +947,6 @@ function buildContextualExpectation(form) {
 
   return `이런 경험이 반복될수록 ${childName}는 자신만의 속도로 시도하고, 그 안에서 “나는 할 수 있다”는 믿음을 조금씩 쌓아갈 수 있습니다.`;
 }
-
-
-/* =========================
-   CSV 파싱 / 설문 분석
-========================= */
 
 function parseCSVLine(line) {
   const result = [];
@@ -1508,7 +1540,10 @@ function generatePrompt(form, visionResult) {
 - 제목에는 아이의 성장 이야기, 부모님을 향한 따뜻한 격려, 자라다와 함께 성장하고 있다는 소속감이 은근히 담겨야 한다.
 - 제목은 15~35자 정도로 짧고 읽고 싶게 쓴다.
 - 공식 키워드를 그대로 쓰지 않는다.
-- 예: "스케치 안에서 자기 생각이 자라난 시간", "좋아하는 주제에서 자기 이야기가 시작된 수업", "작은 선택이 자신감으로 이어진 시간"
+- 제목은 이번 달 실제 관찰 메모의 소재와 장면을 가장 먼저 반영한다.
+- 사회성코칭 키워드는 이번 달 메모에 친구, 함께, 의견, 갈등, 조율 같은 실제 관계 장면이 있을 때만 제목과 본문 중심에 강하게 반영한다.
+- 실제 메모가 작품/주제 중심이면 사회성코칭은 지난 기록과 연결하는 정도로 부드럽게 쓴다.
+- 예: "스케치 안에서 자기 생각이 자라난 시간", "자동차 안에서 자기 생각이 움직이기 시작한 시간", "좋아하는 주제에서 자기 이야기가 시작된 수업"
 
 [학생 기본 정보]
 학생명: ${name}
