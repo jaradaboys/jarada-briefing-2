@@ -1751,6 +1751,12 @@ const isCurrentGoogleFormCandidate = (candidate) => {
 };
   const updateNeeds = (key, value) => setForm((prev) => ({ ...prev, parentNeeds: { ...prev.parentNeeds, [key]: value } }));
   const toggle = (list, value) => (list.includes(value) ? list.filter((item) => item !== value) : [...list, value]);
+   const toggleArray = (key, value) => {
+  setForm((prev) => ({
+    ...prev,
+    [key]: toggle(prev[key] || [], value),
+  }));
+};
 
   const recomputeProfile = (observations, parentNeeds = form.parentNeeds, student = form.student) => {
     return generateGrowthProfile({ student, observations, parentNeeds });
